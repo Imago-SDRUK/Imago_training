@@ -1,0 +1,35 @@
+project:
+  type: book
+  output-dir: docs
+  4
+book:
+  title: "Imago training"
+  
+  author: "Elisabetta Pietrostefani, Martina Pardy, Shaonlee Patranabis & Imago team"
+  date: today
+  
+  page-footer:
+    left: |
+      Imago | UKRI Imagery Data Service
+    right: |
+      This book was built with <a href="https://quarto.org/">Quarto</a>.
+  cover-image: assets/Imago-logo.png
+  favicon: assets/Imago-logo.png
+  repo-url: https://github.com/Imago-SDRUK/Imago-training
+  repo-branch: main
+  repo-actions: [edit, issue]
+  
+  chapters:
+    - docs/index.qmd
+    - docs/satellites_to_areas.qmd
+    - docs/policy.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
