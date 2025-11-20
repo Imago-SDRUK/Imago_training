@@ -1,0 +1,20 @@
+# Welcome {.unnumbered}
+
+## Using Imago Data Products for Social Research & Policy
+
+Join us for a hands-on introduction to using [Imago: Data Service for Imagery](https://imago.ac.uk/) data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.
+
+This session has been developed by the [Imago team](https://imago.ac.uk/about).
+
+Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.
+
+Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.
+
+The website is **free to use** and is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/). A compilation of this web course is hosted as a GitHub repository that you can access:
+
+-   As an [html website](https://pietrostefani.github.io/navigatingnight/).
+-   As a [GitHub repository](https://github.com/pietrostefani/navigatingnight).
+
+## Contact {.unnumbered}
+
+> Elisabetta Pietrostefani - e.pietrostefani \[at\] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.

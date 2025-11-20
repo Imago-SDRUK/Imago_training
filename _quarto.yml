@@ -1,11 +1,11 @@
 project:
   type: book
   output-dir: docs
-  4
+
 book:
   title: "Imago training"
   
-  author: "Elisabetta Pietrostefani, Martina Pardy, Shaonlee Patranabis & Imago team"
+  author: "Imago team"
   date: today
   
   page-footer:
@@ -20,9 +20,10 @@ book:
   repo-actions: [edit, issue]
   
   chapters:
-    - docs/index.qmd
+    - index.qmd
     - docs/satellites_to_areas.qmd
     - docs/policy.qmd
+    - docs/demo1.qmd
 
 bibliography: references.bib
 
