@@ -13,7 +13,7 @@ Whether you’re completely new to satellite data, comfortable with geospatial t
 The website is **free to use** and is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/). A compilation of this web course is hosted as a GitHub repository that you can access:
 
 -   As an [html website](https://pietrostefani.github.io/navigatingnight/).
--   As a [GitHub repository](https://github.com/pietrostefani/navigatingnight).
+-   As a [GitHub repository](https://github.com/Imago-SDRUK/Imago_training).
 
 ## Contact {.unnumbered}
 
