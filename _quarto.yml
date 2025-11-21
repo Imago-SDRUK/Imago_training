@@ -20,6 +20,8 @@ book:
   
   chapters:
     - index.qmd
+    - docs/datasets.qmd
+    - docs/preparing.qmd
     - docs/satellites_to_areas.qmd
     - docs/policy.qmd
     - docs/demo1.qmd

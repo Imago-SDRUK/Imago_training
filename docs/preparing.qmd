@@ -1,0 +1,37 @@
+# Setting up for the workshop {.unnumbered}
+
+<!--
+Shaonlee can you think through how to put this together
+-->
+
+## Google Colab
+
+## Starting a session
+
+## File organization
+
+## Installing Packages
+
+<!--
+Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
+-->
+
+
+::: callout-important
+Important packages for raster data in R.
+
+-   `terra`: the best way of loading and processing raster data.
+-   `sf`: the go-to package for dealing with polygons, lines and spatial points.
+-   `exactextractor`: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the `exactextract` package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.
+-   `tmap`: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.
+-   `ggplot`: the best package for building beautiful maps. Allows for more customisation than `tmap`.
+
+There are also the following packages which we will not be using in this workshop:
+
+-   `rgeedim`: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.
+-   `rgee`: an R wrapper for Google Earth Engine, so you can run GEE commands in R
+-   `gganimate`: a package that allows you to turn your ggplot2 graphs into gifs.
+-   `rayshader`: create animated 3D graphs and maps in R.
+-   `countrycode`: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.
+-   `doparallel`: my go-to package for parallel processing.
+:::

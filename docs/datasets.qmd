@@ -1,0 +1,8 @@
+# Data sets {.unnumbered}
+
+<!--
+Martina please put together a short page about how to download IMAGO data products - where the metadata is etc.
+-->
+
+To access Imago data sets....
+

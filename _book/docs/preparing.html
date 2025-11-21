@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Insights with Excel – Imago training</title>
+<title>Setting up for the workshop – Imago training</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../docs/demo1.html" rel="next">
-<link href="../docs/satellites_to_areas.html" rel="prev">
+<link href="../docs/satellites_to_areas.html" rel="next">
+<link href="../docs/datasets.html" rel="prev">
 <link href="../assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -83,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../docs/policy.html">Data Insights with Excel</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../docs/preparing.html">Setting up for the workshop</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -125,7 +125,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../docs/preparing.html" class="sidebar-item-text sidebar-link">
+  <a href="../docs/preparing.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Setting up for the workshop</span></a>
   </div>
 </li>
@@ -137,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../docs/policy.html" class="sidebar-item-text sidebar-link active">
+  <a href="../docs/policy.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Insights with Excel</span></a>
   </div>
 </li>
@@ -157,19 +157,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#load-the-imago-product-csvexcel-file" id="toc-load-the-imago-product-csvexcel-file" class="nav-link active" data-scroll-target="#load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</a></li>
-  <li><a href="#add-contextual-data-optional" id="toc-add-contextual-data-optional" class="nav-link" data-scroll-target="#add-contextual-data-optional">Add Contextual Data (Optional)</a></li>
-  <li><a href="#explore-patterns-using-excel-tools" id="toc-explore-patterns-using-excel-tools" class="nav-link" data-scroll-target="#explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</a></li>
-  <li><a href="#further-exporation" id="toc-further-exporation" class="nav-link" data-scroll-target="#further-exporation">Further exporation</a></li>
+  <li><a href="#google-colab" id="toc-google-colab" class="nav-link active" data-scroll-target="#google-colab">Google Colab</a></li>
+  <li><a href="#starting-a-session" id="toc-starting-a-session" class="nav-link" data-scroll-target="#starting-a-session">Starting a session</a></li>
+  <li><a href="#file-organization" id="toc-file-organization" class="nav-link" data-scroll-target="#file-organization">File organization</a></li>
+  <li><a href="#installing-packages" id="toc-installing-packages" class="nav-link" data-scroll-target="#installing-packages">Installing Packages</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/preparing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span id="sec-excel" class="quarto-section-identifier">Data Insights with Excel</span></h1>
+<h1 class="title">Setting up for the workshop</h1>
 </div>
 
 
@@ -186,25 +186,52 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><strong>Goal</strong>: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.</p>
-<section id="load-the-imago-product-csvexcel-file" class="level2">
-<h2 class="anchored" data-anchor-id="load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</h2>
-<p>Open the product file (e.g., Heat, Pollution, SPF at LSOA level).</p>
-<p>Ensure columns such as LSOA Code, Metric Value, Region, Deprivation Decile are visible.</p>
-<p>Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.</p>
-<p>JOIN AND CORRELATIONS -</p>
+<!--
+Shaonlee can you think through how to put this together
+-->
+<section id="google-colab" class="level2">
+<h2 class="anchored" data-anchor-id="google-colab">Google Colab</h2>
 </section>
-<section id="add-contextual-data-optional" class="level2">
-<h2 class="anchored" data-anchor-id="add-contextual-data-optional">Add Contextual Data (Optional)</h2>
+<section id="starting-a-session" class="level2">
+<h2 class="anchored" data-anchor-id="starting-a-session">Starting a session</h2>
 </section>
-<section id="explore-patterns-using-excel-tools" class="level2">
-<h2 class="anchored" data-anchor-id="explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</h2>
-<p>Filtering &amp; Sorting</p>
-<p>Ranking</p>
-<p>Conditional Formatting</p>
+<section id="file-organization" class="level2">
+<h2 class="anchored" data-anchor-id="file-organization">File organization</h2>
 </section>
-<section id="further-exporation" class="level2">
-<h2 class="anchored" data-anchor-id="further-exporation">Further exporation</h2>
+<section id="installing-packages" class="level2">
+<h2 class="anchored" data-anchor-id="installing-packages">Installing Packages</h2>
+<!--
+Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
+-->
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Important packages for raster data in R.</p>
+<ul>
+<li><code>terra</code>: the best way of loading and processing raster data.</li>
+<li><code>sf</code>: the go-to package for dealing with polygons, lines and spatial points.</li>
+<li><code>exactextractor</code>: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the <code>exactextract</code> package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.</li>
+<li><code>tmap</code>: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.</li>
+<li><code>ggplot</code>: the best package for building beautiful maps. Allows for more customisation than <code>tmap</code>.</li>
+</ul>
+<p>There are also the following packages which we will not be using in this workshop:</p>
+<ul>
+<li><code>rgeedim</code>: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.</li>
+<li><code>rgee</code>: an R wrapper for Google Earth Engine, so you can run GEE commands in R</li>
+<li><code>gganimate</code>: a package that allows you to turn your ggplot2 graphs into gifs.</li>
+<li><code>rayshader</code>: create animated 3D graphs and maps in R.</li>
+<li><code>countrycode</code>: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.</li>
+<li><code>doparallel</code>: my go-to package for parallel processing.</li>
+</ul>
+</div>
+</div>
 
 
 </section>
@@ -611,13 +638,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../docs/satellites_to_areas.html" class="pagination-link" aria-label="From grids to areas">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">From grids to areas</span>
+      <a href="../docs/datasets.html" class="pagination-link" aria-label="Data sets">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Data sets</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../docs/demo1.html" class="pagination-link" aria-label="Demo 1">
-        <span class="nav-page-text">Demo 1</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../docs/satellites_to_areas.html" class="pagination-link" aria-label="From grids to areas">
+        <span class="nav-page-text">From grids to areas</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -629,7 +656,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/preparing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
