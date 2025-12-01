@@ -1,25 +1,25 @@
 # Data Insights with Excel {#sec-excel .unnumbered}
 
-**Goal**: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns. 
+**Goal**: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.
 
-## Load the Imago Product (CSV/Excel File) 
+## Load the Imago Product (CSV/Excel File)
 
-Open the product file (e.g., Heat, Pollution, SPF at LSOA level). 
+Open the product file (e.g., Heat, Pollution, SPF at LSOA level).
 
-Ensure columns such as LSOA Code, Metric Value, Region, Deprivation Decile are visible. 
+Ensure columns such as LSOA Code, Metric Value, Region, Deprivation Decile are visible.
 
-Format the dataset as a Table (Ctrl+T) for easy filtering and formulas. 
+Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.
 
-JOIN AND CORRELATIONS -  
+JOIN AND CORRELATIONS -
 
-## Add Contextual Data (Optional) 
+## Add Contextual Data (Optional)
 
-## Explore Patterns Using Excel Tools 
+## Explore Patterns Using Excel Tools
 
-Filtering & Sorting 
+Filtering & Sorting
 
-Ranking 
+Ranking
 
-Conditional Formatting 
+Conditional Formatting
 
 ## Further exporation

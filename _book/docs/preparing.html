@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -35,14 +70,15 @@ ul.task-list li input[type="checkbox"] {
 <link href="../assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -96,7 +132,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -158,9 +196,28 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#google-colab" id="toc-google-colab" class="nav-link active" data-scroll-target="#google-colab">Google Colab</a></li>
-  <li><a href="#starting-a-session" id="toc-starting-a-session" class="nav-link" data-scroll-target="#starting-a-session">Starting a session</a></li>
-  <li><a href="#file-organization" id="toc-file-organization" class="nav-link" data-scroll-target="#file-organization">File organization</a></li>
-  <li><a href="#installing-packages" id="toc-installing-packages" class="nav-link" data-scroll-target="#installing-packages">Installing Packages</a></li>
+  <li><a href="#getting-started-with-google-colaboratory" id="toc-getting-started-with-google-colaboratory" class="nav-link" data-scroll-target="#getting-started-with-google-colaboratory">Getting Started with Google Colaboratory</a>
+  <ul class="collapse">
+  <li><a href="#why-are-we-using-colab" id="toc-why-are-we-using-colab" class="nav-link" data-scroll-target="#why-are-we-using-colab">Why are we using Colab?</a></li>
+  </ul></li>
+  <li><a href="#starting-a-session" id="toc-starting-a-session" class="nav-link" data-scroll-target="#starting-a-session">Starting a session</a>
+  <ul class="collapse">
+  <li><a href="#creating-and-connecting-to-a-runtime" id="toc-creating-and-connecting-to-a-runtime" class="nav-link" data-scroll-target="#creating-and-connecting-to-a-runtime">Creating and Connecting to a Runtime</a></li>
+  <li><a href="#choosing-your-runtime-type-python-or-r" id="toc-choosing-your-runtime-type-python-or-r" class="nav-link" data-scroll-target="#choosing-your-runtime-type-python-or-r">Choosing Your Runtime Type (Python or R?)</a></li>
+  </ul></li>
+  <li><a href="#file-organization" id="toc-file-organization" class="nav-link" data-scroll-target="#file-organization">File organization</a>
+  <ul class="collapse">
+  <li><a href="#recipe-1-mounting-your-google-drive" id="toc-recipe-1-mounting-your-google-drive" class="nav-link" data-scroll-target="#recipe-1-mounting-your-google-drive">Recipe 1: Mounting Your Google Drive</a></li>
+  <li><a href="#recipe-2-accessing-the-workshop-data-folder" id="toc-recipe-2-accessing-the-workshop-data-folder" class="nav-link" data-scroll-target="#recipe-2-accessing-the-workshop-data-folder">Recipe 2: Accessing the Workshop Data Folder</a></li>
+  <li><a href="#downloading-data-from-imago" id="toc-downloading-data-from-imago" class="nav-link" data-scroll-target="#downloading-data-from-imago">Downloading Data from imago</a></li>
+  <li><a href="#quick-data-check" id="toc-quick-data-check" class="nav-link" data-scroll-target="#quick-data-check">Quick Data Check</a></li>
+  </ul></li>
+  <li><a href="#installing-and-loading-packages" id="toc-installing-and-loading-packages" class="nav-link" data-scroll-target="#installing-and-loading-packages">Installing and loading Packages</a>
+  <ul class="collapse">
+  <li><a href="#installing-packages" id="toc-installing-packages" class="nav-link" data-scroll-target="#installing-packages">Installing packages</a></li>
+  <li><a href="#loading-packages" id="toc-loading-packages" class="nav-link" data-scroll-target="#loading-packages">Loading Packages</a></li>
+  </ul></li>
+  <li><a href="#key-geospatial-and-statistical-packages" id="toc-key-geospatial-and-statistical-packages" class="nav-link" data-scroll-target="#key-geospatial-and-statistical-packages">Key Geospatial and Statistical Packages</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/preparing.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -191,29 +248,460 @@ Shaonlee can you think through how to put this together
 -->
 <section id="google-colab" class="level2">
 <h2 class="anchored" data-anchor-id="google-colab">Google Colab</h2>
-</section>
-<section id="starting-a-session" class="level2">
-<h2 class="anchored" data-anchor-id="starting-a-session">Starting a session</h2>
-</section>
-<section id="file-organization" class="level2">
-<h2 class="anchored" data-anchor-id="file-organization">File organization</h2>
-</section>
-<section id="installing-packages" class="level2">
-<h2 class="anchored" data-anchor-id="installing-packages">Installing Packages</h2>
-<!--
-Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
--->
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Important
+<span class="screen-reader-only">Important</span>What You’ll Need
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Important packages for raster data in R.</p>
+<ul>
+<li>A Google account (free)</li>
+<li>A modern web browser</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="getting-started-with-google-colaboratory" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started-with-google-colaboratory">Getting Started with Google Colaboratory</h2>
+<p><a href="https://colab.research.google.com/">Google Colaboratory</a> (or “Colab” for short) is a free cloud-based service that provides hosted Jupyter Notebooks<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> directly in your browser. No installation or setup is required—you can start coding immediately.</p>
+<section id="why-are-we-using-colab" class="level3">
+<h3 class="anchored" data-anchor-id="why-are-we-using-colab">Why are we using Colab?</h3>
+<p>We use Colab in this course to ensure everyone has a consistent development environment. This approach helps us avoid common problems like:</p>
+<ul>
+<li>Environment setup issues on different operating systems (Windows, Mac, Linux)</li>
+<li>Package dependency conflicts between different Python versions</li>
+<li>Hardware limitations on personal computers</li>
+<li>To avoid troubleshooting installation problems</li>
+</ul>
+<p>While Colab is free to use, paid subscriptions (Colab Pro and Pro+) provide access to more powerful GPUs, higher RAM, and longer runtime limits. For this workshop, the free tier is sufficient.</p>
+</section>
+</section>
+<section id="starting-a-session" class="level2">
+<h2 class="anchored" data-anchor-id="starting-a-session">Starting a session</h2>
+<p>To begin working in Colab, you’ll need to start a runtime—this is the virtual machine that will execute your code.</p>
+<section id="creating-and-connecting-to-a-runtime" class="level3">
+<h3 class="anchored" data-anchor-id="creating-and-connecting-to-a-runtime">Creating and Connecting to a Runtime</h3>
+<ol type="1">
+<li>Navigate to <a href="https://colab.research.google.com/">Google Colaboratory</a>.</li>
+<li>Click <strong>File &gt; New Notebook</strong> or open an existing notebook</li>
+<li>Colab will automatically allocate a runtime when you open a notebook</li>
+<li>Look for the connection status in the upper right corner:
+<ul>
+<li><strong>Disconnected</strong>: No runtime is active</li>
+<li><strong>Connecting…</strong>: Runtime is being allocated</li>
+<li><strong>Connected</strong>: You’re ready to run code (shows RAM and disk usage)</li>
+</ul></li>
+</ol>
+</section>
+<section id="choosing-your-runtime-type-python-or-r" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-your-runtime-type-python-or-r">Choosing Your Runtime Type (Python or R?)</h3>
+<p>Since we’ll be working with both R and Python in this workshop, you may need to change the runtime type:</p>
+<ol type="1">
+<li>Click <strong>Runtime &gt; Change runtime type</strong> in the menu</li>
+<li>Select your preferred language:
+<ul>
+<li><strong>Python 3</strong> (default)</li>
+<li><strong>R</strong> (for R sessions)</li>
+</ul></li>
+<li>Choose a hardware accelerator if needed (None, GPU, or TPU)</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Changing the runtime type will restart your session, so do this before running any code. You can only use one language per notebook.</p>
+</div>
+</div>
+<p>Once connected, you can start writing and executing code!</p>
+</section>
+</section>
+<section id="file-organization" class="level2">
+<h2 class="anchored" data-anchor-id="file-organization">File organization</h2>
+<section id="recipe-1-mounting-your-google-drive" class="level3">
+<h3 class="anchored" data-anchor-id="recipe-1-mounting-your-google-drive">Recipe 1: Mounting Your Google Drive</h3>
+<p>To access files from your Google Drive within Colab, you need to “mount” it first.</p>
+<p><strong>For Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>drive.mount(<span class="st">'/content/drive'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>For R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googledrive)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">drive_auth</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You’ll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>After mounting, your Drive files will be accessible at <code>/content/drive/MyDrive/</code> in the session.</p>
+</div>
+</div>
+</section>
+<section id="recipe-2-accessing-the-workshop-data-folder" class="level3">
+<h3 class="anchored" data-anchor-id="recipe-2-accessing-the-workshop-data-folder">Recipe 2: Accessing the Workshop Data Folder</h3>
+<!-- How are we sharing data? Do we want them to download this data? -->
+<p>We’ve prepared a shared Google Drive folder with all the necessary datasets for this workshop.</p>
+<p><strong>Step 1: Add the shared folder to your Drive</strong></p>
+<ol type="1">
+<li>Open the shared folder link: <a href="#">Workshop Data Folder</a> <!-- Replace with actual link --></li>
+<li>Right-click the folder and select <strong>“Add shortcut to Drive”</strong></li>
+<li>Choose where to place it (we recommend your root “My Drive”)</li>
+</ol>
+<p><strong>Step 2: Set your working directory</strong></p>
+<p>After mounting your Drive, change to the workshop data directory so you can use relative paths.</p>
+<p><strong>Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>os.chdir(<span class="st">'/content/drive/MyDrive/WorkshopData/'</span>)  <span class="co"># Adjust path if needed</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Now you can use relative paths</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/dataset.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">'/content/drive/MyDrive/WorkshopData/'</span>)  <span class="co"># Adjust path if needed</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Now you can use relative paths</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/dataset.csv'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="downloading-data-from-imago" class="level3">
+<h3 class="anchored" data-anchor-id="downloading-data-from-imago">Downloading Data from imago</h3>
+<p><a href="https://imago.com">Imago</a> hosts the datasets we’ll use. Here’s how to download them directly to your Drive.</p>
+<p><strong>Using Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Mount drive first (see Recipe 1)</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a directory to save your outputs</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>output_dir <span class="op">=</span> <span class="st">'/content/drive/MyDrive/workshop_data/'</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>os.makedirs(output_dir, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Download file</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://imago.example.com/dataset.csv'</span>  <span class="co"># Replace with actual URL</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>filename <span class="op">=</span> url.split(<span class="st">'/'</span>)[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> os.path.join(output_dir, filename)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(output_path, <span class="st">'wb'</span>) <span class="im">as</span> f:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    f.write(response.content)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Downloaded to: </span><span class="sc">{</span>output_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Using R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googledrive)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up output directory</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>output_dir <span class="ot">&lt;-</span> <span class="st">"workshop_data/"</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(output_dir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Download file</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>url <span class="ot">&lt;-</span> <span class="st">"https://imago.example.com/dataset.csv"</span>  <span class="co"># Replace with actual URL</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>filename <span class="ot">&lt;-</span> <span class="fu">basename</span>(url)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(output_dir, filename)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(url, <span class="at">destfile =</span> output_path, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">paste</span>(<span class="st">"Downloaded to:"</span>, output_path))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="quick-data-check" class="level3">
+<h3 class="anchored" data-anchor-id="quick-data-check">Quick Data Check</h3>
+<p>After downloading, verify your data loaded correctly:</p>
+<p><strong>Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'/content/drive/MyDrive/workshop_data/dataset.csv'</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.head())</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.info())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'/content/drive/MyDrive/workshop_data/dataset.csv'</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(df)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="installing-and-loading-packages" class="level2">
+<h2 class="anchored" data-anchor-id="installing-and-loading-packages">Installing and loading Packages</h2>
+<p>Before you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.</p>
+<!--
+Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
+
+SP: I compiled information from the workshop Martina, Vivian and I ran for our PhD colleagues at the LSE
+-->
+<section id="installing-packages" class="level3">
+<h3 class="anchored" data-anchor-id="installing-packages">Installing packages</h3>
+<p><strong>Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Using conda (preferred for local installations)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run in terminal/command line:</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>conda install geopandas rasterio xarray <span class="op">-</span>c conda<span class="op">-</span>forge</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Using pip (in Colab or Jupyter notebooks)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install geopandas rasterio xarray pyfixest</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Install specific version</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>pip install geopandas<span class="op">==</span><span class="fl">0.14.0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install from CRAN</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"sf"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"terra"</span>, <span class="st">"exactextractr"</span>, <span class="st">"ggplot2"</span>))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Install from GitHub (development versions)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"r-spatial/sf"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Install specific version</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_version</span>(<span class="st">"sf"</span>, <span class="at">version =</span> <span class="st">"1.0-14"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Installation in Colab
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In Google Colab: - Python packages use <code>%pip</code> (magic command) to ensure installation in the correct environment - R packages use the standard <code>install.packages()</code> function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook</p>
+</div>
+</div>
+</section>
+<section id="loading-packages" class="level3">
+<h3 class="anchored" data-anchor-id="loading-packages">Loading Packages</h3>
+<p><strong>Python:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import packages</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> geopandas <span class="im">as</span> gpd</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> rasterio</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># You can also import specific functions</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pyfixest.estimation <span class="im">import</span> feols</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>R:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(exactextractr)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative way to load packages</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<!-- 
+
+Maybe better to put stuff after this in a separate chapter.
+
+-->
+</section>
+</section>
+<section id="key-geospatial-and-statistical-packages" class="level2">
+<h2 class="anchored" data-anchor-id="key-geospatial-and-statistical-packages">Key Geospatial and Statistical Packages</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 44%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Purpose</th>
+<th>Package</th>
+<th>Key Functions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Vector data handling</strong> (points, lines, polygons)</td>
+<td><strong>geopandas</strong> (Python)</td>
+<td><code>read_file()</code>, <code>sjoin()</code>, <code>to_crs()</code>, <code>dissolve()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>sf</strong> (R)</td>
+<td><code>st_read()</code>, <code>st_join()</code>, <code>st_transform()</code>, <code>st_union()</code>, <code>st_as_sf()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Raster data handling</strong> (reading/writing gridded data)</td>
+<td><strong>rasterio</strong> (Python)</td>
+<td><code>open()</code>, <code>read()</code>, <code>mask()</code>, <code>warp.reproject()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>terra</strong> (R)</td>
+<td><code>rast()</code>, <code>vect()</code>, <code>crop()</code>, <code>mask()</code>, <code>extract()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Multi-dimensional arrays</strong> (NetCDF, climate data)</td>
+<td><strong>xarray</strong> (Python)</td>
+<td><code>open_dataset()</code>, <code>sel()</code>, <code>mean()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>terra</strong> (R)</td>
+<td><code>rast()</code>, <code>app()</code>, <code>subset()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Geospatial xarray operations</strong></td>
+<td><strong>rioxarray</strong> (Python)</td>
+<td><code>open_rasterio()</code>, <code>rio.reproject()</code>, <code>rio.clip()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Vector-raster operations</strong></td>
+<td><strong>xvec</strong> (Python)</td>
+<td><code>zonal_stats()</code>, <code>extract_points()</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>rasterstats</strong> (Python)</td>
+<td><code>zonal_stats()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>terra</strong> (R)</td>
+<td><code>extract()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Fast raster extraction to polygons</strong> (area-weighted)</td>
+<td><strong>exactextract</strong> (Python)</td>
+<td><code>exact_extract()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>exactextractr</strong> (R)</td>
+<td><code>exact_extract()</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Static visualization and plotting</strong></td>
+<td><strong>matplotlib</strong> (Python)</td>
+<td><code>pyplot.plot()</code>, <code>pyplot.imshow()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>ggplot2</strong> (R)</td>
+<td><code>ggplot()</code>, <code>geom_sf()</code>, <code>geom_raster()</code> - Best for customizable, beautiful maps</td>
+</tr>
+<tr class="odd">
+<td><strong>Interactive web maps</strong></td>
+<td><strong>folium</strong> (Python)</td>
+<td><code>Map()</code>, <code>Choropleth()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>tmap</strong> (R)</td>
+<td><code>tm_shape()</code>, <code>tm_polygons()</code>, <code>tm_layout()</code> - Quick maps with interactive “view” mode</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>leaflet</strong> (R)</td>
+<td><code>leaflet()</code>, <code>addTiles()</code>, <code>addPolygons()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Statistical modeling and econometrics</strong></td>
+<td><strong>statsmodels</strong> (Python)</td>
+<td><code>OLS()</code>, <code>summary()</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>linearmodels</strong> (Python)</td>
+<td><code>PanelOLS()</code></td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>fixest</strong> (R)</td>
+<td><code>feols()</code>, <code>etable()</code></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>pyfixest</strong> (Python))</td>
+<td><code>feols()</code>, <code>etable()</code></td>
+</tr>
+<tr class="even">
+<td><strong>Google Earth Engine access</strong></td>
+<td><strong>ee</strong> (Python)*</td>
+<td><code>ee.Initialize()</code>, <code>ee.ImageCollection()</code>, <code>ee.Image.reduceRegion()</code>- Python wrapper for GEE-api</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>rgeedim</strong> (R)*</td>
+<td>Download data directly from GEE as GeoTiffs</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>rgee</strong> (R)*</td>
+<td>R wrapper to run GEE commands</td>
+</tr>
+<tr class="odd">
+<td><strong>Animated visualizations</strong></td>
+<td><strong>matplotlib.animation</strong> (Python)*</td>
+<td><code>FuncAnimation()</code>, <code>save()</code> - Create animated plots and save as gifs</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>plotly</strong> (Python)*</td>
+<td><code>px.scatter()</code>, <code>animation_frame=</code> - Interactive animated plots</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>gganimate</strong> (R)*</td>
+<td>Turn ggplot2 graphs into gifs</td>
+</tr>
+<tr class="even">
+<td><strong>3D visualizations</strong></td>
+<td><strong>pyvista</strong> (Python)*</td>
+<td><code>plot()</code>, <code>add_mesh()</code> - 3D plotting and terrain visualization</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td><strong>plotly</strong> (Python)*</td>
+<td><code>graph_objects.Surface()</code>, <code>Scatter3d()</code> - Interactive 3D plots</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>rayshader</strong> (R)*</td>
+<td>Create animated 3D graphs and maps</td>
+</tr>
+<tr class="odd">
+<td><strong>Geographic utilities</strong></td>
+<td><strong>country_converter</strong> (Python)*</td>
+<td><code>convert()</code>, <code>continent()</code> - Convert country names/codes and assign regions</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>countrycode</strong> (R)*</td>
+<td>Generate ISO codes, assign continents to countries</td>
+</tr>
+<tr class="odd">
+<td><strong>Parallel processing</strong></td>
+<td><strong>dask</strong> (Python)*</td>
+<td><code>compute()</code>, <code>delayed()</code>, <code>array()</code> - Parallel computing with pandas/xarray</td>
+</tr>
+<tr class="even">
+<td></td>
+<td><strong>doparallel</strong> (R)*</td>
+<td>Parallel processing for faster computation</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Packages marked with * will not be used in this workshop but are useful for advanced workflows.</p>
+</div>
+</div>
+<p>&lt;!– ::: callout-important Important packages for raster data in R.</p>
 <ul>
 <li><code>terra</code>: the best way of loading and processing raster data.</li>
 <li><code>sf</code>: the go-to package for dealing with polygons, lines and spatial points.</li>
@@ -228,12 +716,16 @@ Important
 <li><code>gganimate</code>: a package that allows you to turn your ggplot2 graphs into gifs.</li>
 <li><code>rayshader</code>: create animated 3D graphs and maps in R.</li>
 <li><code>countrycode</code>: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.</li>
-<li><code>doparallel</code>: my go-to package for parallel processing.</li>
+<li><code>doparallel</code>: my go-to package for parallel processing. ::: –!&gt;</li>
 </ul>
-</div>
-</div>
 
 
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>A <a href="https://jupyter.org/">Jupyter Notebook</a> is an interactive development environment (IDE) that combines live code, visualizations, and explanatory text in a single document. It allows you to write and execute code in cells, making it ideal for data analysis, machine learning, and educational purposes.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
 </section>
 
 </main> <!-- /main -->
@@ -288,13 +780,14 @@ Important
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
