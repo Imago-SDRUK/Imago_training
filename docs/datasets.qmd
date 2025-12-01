@@ -1,6 +1,6 @@
 # Data sets {.unnumbered}
 
-Accessing IMAGO Data Products
+## Accessing IMAGO Data Products
 
 This page provides guidance on how to access and download the IMAGO data products for this training.
 
@@ -12,17 +12,15 @@ https://imago.ac.uk/data
 
 The website hosts all available files along with supporting documentation.
 
-Available Data Formats
+## Available Data Formats
 
 The data products are provided in multiple formats to support different analytical needs:
 
-CSV (.csv) – Tabular data suitable for use in most statistical and data analysis software.
+- CSV (.csv) – Tabular data suitable for use in most statistical and data analysis software.
+- GeoPackage (.gpkg) – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
+- Metadata files – Documentation describing variables, measurement units, methodologies, and data sources.
 
-GeoPackage (.gpkg) – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
-
-Metadata files – Documentation describing variables, measurement units, methodologies, and data sources.
-
-# Included Data for This Release
+## Included Data for This Release
 
 The current IMAGO data release includes the following thematic datasets:
 
@@ -34,22 +32,16 @@ Flooding – Flood risk and flood-related environmental measures.
 
 Sun probability measure – A spatial metric capturing probability of sunlight exposure.
 
-Metadata Information
+## Metadata Information
 
-Metadata is provided alongside each dataset and includes:
+Metadata is provided alongside each dataset and includes rich information on variable descriptions, definitions, spatial and temporal coverage, data provenance and methodology.
 
-Variable descriptions and definitions
+## File structure and format details
 
-Spatial and temporal coverage
+Data users are encouraged to consult the metadata before working with the datasets, as it provides essential context for interpretation and analysis.
 
-Data provenance and methodology
-
-File structure and format details
-
-Students are encouraged to consult the metadata before working with the datasets, as it provides essential context for interpretation and analysis.
-
-Downloading the Data
+## Downloading the Data
 
 Simply visit the IMAGO data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.
 
-If you have questions about accessing or interpreting the data, please get in touch with the training team.
+If you have questions about accessing or interpreting the data, please get in touch with us (imago@liverpool.ac.uk).
