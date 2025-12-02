@@ -1,24 +1,331 @@
 # Setting up for the workshop {.unnumbered}
 
+```{=html}
 <!--
 Shaonlee can you think through how to put this together
 -->
+```
 
 ## Google Colab
 
+::: callout-important
+## What You'll Need
+
+-   A Google account (free)
+-   A modern web browser
+:::
+
+## Getting Started with Google Colaboratory
+
+[Google Colaboratory](https://colab.research.google.com/) (or "Colab" for short) is a free cloud-based service that provides hosted Jupyter Notebooks[^preparing-1] directly in your browser. No installation or setup is required—you can start coding immediately.
+
+[^preparing-1]: A [Jupyter Notebook](https://jupyter.org/) is an interactive development environment (IDE) that combines live code, visualizations, and explanatory text in a single document. It allows you to write and execute code in cells, making it ideal for data analysis, machine learning, and educational purposes.
+
+### Why are we using Colab?
+
+We use Colab in this course to ensure everyone has a consistent development environment. This approach helps us avoid common problems like:
+
+-   Environment setup issues on different operating systems (Windows, Mac, Linux)
+-   Package dependency conflicts between different Python versions
+-   Hardware limitations on personal computers
+-   To avoid troubleshooting installation problems
+
+While Colab is free to use, paid subscriptions (Colab Pro and Pro+) provide access to more powerful GPUs, higher RAM, and longer runtime limits. For this workshop, the free tier is sufficient.
+
 ## Starting a session
+
+To begin working in Colab, you'll need to start a runtime—this is the virtual machine that will execute your code.
+
+### Creating and Connecting to a Runtime
+
+1.  Navigate to [Google Colaboratory](https://colab.research.google.com/).
+2.  Click **File \> New Notebook** or open an existing notebook
+3.  Colab will automatically allocate a runtime when you open a notebook
+4.  Look for the connection status in the upper right corner:
+    -   **Disconnected**: No runtime is active
+    -   **Connecting...**: Runtime is being allocated
+    -   **Connected**: You're ready to run code (shows RAM and disk usage)
+
+### Choosing Your Runtime Type (Python or R?)
+
+Since we'll be working with both R and Python in this workshop, you may need to change the runtime type:
+
+1.  Click **Runtime \> Change runtime type** in the menu
+2.  Select your preferred language:
+    -   **Python 3** (default)
+    -   **R** (for R sessions)
+3.  Choose a hardware accelerator if needed (None, GPU, or TPU)
+4.  Click **Save**
+
+::: callout-note
+Changing the runtime type will restart your session, so do this before running any code. You can only use one language per notebook.
+:::
+
+Once connected, you can start writing and executing code!
 
 ## File organization
 
-## Installing Packages
+### Recipe 1: Mounting Your Google Drive
 
+To access files from your Google Drive within Colab, you need to "mount" it first.
+
+**For Python:**
+
+``` python
+from google.colab import drive
+drive.mount('/content/drive')
+```
+
+**For R:**
+
+``` r
+library(googledrive)
+drive_auth() 
+```
+
+You'll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.
+
+::: callout-tip
+After mounting, your Drive files will be accessible at `/content/drive/MyDrive/` in the session.
+:::
+
+### Recipe 2: Accessing the Workshop Data Folder
+
+<!-- How are we sharing data? Do we want them to download this data? -->
+
+We've prepared a shared Google Drive folder with all the necessary datasets for this workshop.
+
+**Step 1: Add the shared folder to your Drive**
+
+1.  Open the shared folder link: [Workshop Data Folder](#) <!-- Replace with actual link -->
+2.  Right-click the folder and select **"Add shortcut to Drive"**
+3.  Choose where to place it (we recommend your root "My Drive")
+
+**Step 2: Set your working directory**
+
+After mounting your Drive, change to the workshop data directory so you can use relative paths.
+
+**Python:**
+
+``` python
+import os
+os.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
+
+# Now you can use relative paths
+import pandas as pd
+df = pd.read_csv('data/dataset.csv')
+```
+
+**R:**
+
+``` r
+setwd('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
+
+# Now you can use relative paths
+library(readr)
+df <- read_csv('data/dataset.csv')
+```
+
+### Downloading Data from imago
+
+[Imago](https://imago.com) hosts the datasets we'll use. Here's how to download them directly to your Drive.
+
+**Using Python:**
+
+``` python
+import requests
+import os
+
+# Mount drive first (see Recipe 1)
+# Make a directory to save your outputs
+output_dir = '/content/drive/MyDrive/workshop_data/'
+os.makedirs(output_dir, exist_ok=True)
+
+# Download file
+url = 'https://imago.example.com/dataset.csv'  # Replace with actual URL
+filename = url.split('/')[-1]
+output_path = os.path.join(output_dir, filename)
+
+response = requests.get(url)
+with open(output_path, 'wb') as f:
+    f.write(response.content)
+    
+print(f"Downloaded to: {output_path}")
+```
+
+**Using R:**
+
+``` r
+library(googledrive)
+
+# Set up output directory
+output_dir <- "workshop_data/"
+dir.create(output_dir, showWarnings = FALSE)
+
+# Download file
+url <- "https://imago.example.com/dataset.csv"  # Replace with actual URL
+filename <- basename(url)
+output_path <- file.path(output_dir, filename)
+
+download.file(url, destfile = output_path, mode = "wb")
+print(paste("Downloaded to:", output_path))
+```
+
+### Quick Data Check
+
+After downloading, verify your data loaded correctly:
+
+**Python:**
+
+``` python
+import pandas as pd
+df = pd.read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')
+print(df.head())
+print(df.info())
+```
+
+**R:**
+
+``` r
+library(readr)
+df <- read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')
+head(df)
+str(df)
+```
+
+## Installing and loading Packages
+
+
+Before you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.
+
+
+```{=html}
 <!--
 Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
+
+SP: I compiled information from the workshop Martina, Vivian and I ran for our PhD colleagues at the LSE
+-->
+```
+
+### Installing packages
+
+**Python:**
+
+``` python
+# Using conda (preferred for local installations)
+# Run in terminal/command line:
+conda install geopandas rasterio xarray -c conda-forge
+
+# Using pip (in Colab or Jupyter notebooks)
+%pip install geopandas rasterio xarray pyfixest
+
+# Install specific version
+%pip install geopandas==0.14.0
+```
+
+
+**R:**
+
+``` r
+# Install from CRAN
+install.packages("sf")
+install.packages(c("terra", "exactextractr", "ggplot2"))
+
+# Install from GitHub (development versions)
+remotes::install_github("r-spatial/sf")
+
+# Install specific version
+remotes::install_version("sf", version = "1.0-14")
+```
+
+::: callout-note
+## Installation in Colab
+
+In Google Colab:
+- Python packages use `%pip` (magic command) to ensure installation in the correct environment
+- R packages use the standard `install.packages()` function
+- Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab
+- For geospatial packages, you'll typically need to install them at the start of your notebook
+:::
+
+### Loading Packages
+
+**Python:**
+
+``` python
+# Import packages
+import geopandas as gpd
+import rasterio
+import pandas as pd
+
+# You can also import specific functions
+from pyfixest.estimation import feols
+```
+
+**R:**
+
+``` r
+# Load packages
+library(sf)
+library(terra)
+library(exactextractr)
+library(ggplot2)
+
+# Alternative way to load packages
+require(dplyr)
+```
+
+<!-- 
+
+Maybe better to put stuff after this in a separate chapter.
+
 -->
 
+## Key Geospatial and Statistical Packages
 
-::: callout-important
-Important packages for raster data in R.
+| Purpose | Package | Key Functions |
+|--------------------|--------------------|--------------------------------|
+| **Vector data handling** (points, lines, polygons) | **geopandas** (Python) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` |
+|  | **sf** (R) | `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
+| **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) | `open()`, `read()`, `mask()`, `warp.reproject()` |
+|  | **terra** (R) | `rast()`, `vect()`, `crop()`, `mask()`, `extract()` |
+| **Multi-dimensional arrays** (NetCDF, climate data) | **xarray** (Python) | `open_dataset()`, `sel()`, `mean()` |
+|  | **terra** (R) | `rast()`, `app()`, `subset()` |
+| **Geospatial xarray operations** | **rioxarray** (Python) | `open_rasterio()`, `rio.reproject()`, `rio.clip()` |
+| **Vector-raster operations** | **xvec** (Python) | `zonal_stats()`, `extract_points()` |
+|  | **rasterstats** (Python) | `zonal_stats()` |
+|  | **terra** (R) | `extract()` |
+| **Fast raster extraction to polygons** (area-weighted) | **exactextract** (Python) | `exact_extract()` |
+|  | **exactextractr** (R) | `exact_extract()` |
+| **Static visualization and plotting** | **matplotlib** (Python) | `pyplot.plot()`, `pyplot.imshow()` |
+|  | **ggplot2** (R) | `ggplot()`, `geom_sf()`, `geom_raster()` - Best for customizable, beautiful maps |
+| **Interactive web maps** | **folium** (Python) | `Map()`, `Choropleth()` |
+|  | **tmap** (R) | `tm_shape()`, `tm_polygons()`, `tm_layout()` - Quick maps with interactive "view" mode |
+|  | **leaflet** (R) | `leaflet()`, `addTiles()`, `addPolygons()` |
+| **Statistical modeling and econometrics** | **statsmodels** (Python) | `OLS()`, `summary()` |
+|  | **linearmodels** (Python) | `PanelOLS()` |
+|  | **fixest** (R) | `feols()`, `etable()` |
+|  | **pyfixest** (Python)) | `feols()`, `etable()` |
+| **Google Earth Engine access** | **ee** (Python)\* | `ee.Initialize()`, `ee.ImageCollection()`, `ee.Image.reduceRegion()`- Python wrapper for GEE-api |
+|  | **rgeedim** (R)\* | Download data directly from GEE as GeoTiffs |
+|  | **rgee** (R)\* | R wrapper to run GEE commands |
+| **Animated visualizations** | **matplotlib.animation** (Python)\* | `FuncAnimation()`, `save()` - Create animated plots and save as gifs |
+|  | **plotly** (Python)\* | `px.scatter()`, `animation_frame=` - Interactive animated plots |
+|  | **gganimate** (R)\* | Turn ggplot2 graphs into gifs |
+| **3D visualizations** | **pyvista** (Python)\* | `plot()`, `add_mesh()` - 3D plotting and terrain visualization |
+|  | **plotly** (Python)\* | `graph_objects.Surface()`, `Scatter3d()` - Interactive 3D plots |
+|  | **rayshader** (R)\* | Create animated 3D graphs and maps |
+| **Geographic utilities** | **country_converter** (Python)\* | `convert()`, `continent()` - Convert country names/codes and assign regions |
+|  | **countrycode** (R)\* | Generate ISO codes, assign continents to countries |
+| **Parallel processing** | **dask** (Python)\* | `compute()`, `delayed()`, `array()` - Parallel computing with pandas/xarray |
+|  | **doparallel** (R)\* | Parallel processing for faster computation |
+
+::: callout-note
+Packages marked with \* will not be used in this workshop but are useful for advanced workflows.
+:::
+
+<!-- 
+::: callout-important Important packages for raster data in R.
 
 -   `terra`: the best way of loading and processing raster data.
 -   `sf`: the go-to package for dealing with polygons, lines and spatial points.
@@ -33,5 +340,4 @@ There are also the following packages which we will not be using in this worksho
 -   `gganimate`: a package that allows you to turn your ggplot2 graphs into gifs.
 -   `rayshader`: create animated 3D graphs and maps in R.
 -   `countrycode`: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.
--   `doparallel`: my go-to package for parallel processing.
-:::
+-   `doparallel`: my go-to package for parallel processing. ::: --!\>

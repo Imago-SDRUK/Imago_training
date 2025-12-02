@@ -194,7 +194,7 @@
     "href": "docs/preparing.html#starting-a-session",
     "title": "Setting up for the workshop",
     "section": "Starting a session",
-    "text": "Starting a session",
+    "text": "Starting a session\nTo begin working in Colab, you’ll need to start a runtime—this is the virtual machine that will execute your code.\n\nCreating and Connecting to a Runtime\n\nNavigate to Google Colaboratory.\nClick File &gt; New Notebook or open an existing notebook\nColab will automatically allocate a runtime when you open a notebook\nLook for the connection status in the upper right corner:\n\nDisconnected: No runtime is active\nConnecting…: Runtime is being allocated\nConnected: You’re ready to run code (shows RAM and disk usage)\n\n\n\n\nChoosing Your Runtime Type (Python or R?)\nSince we’ll be working with both R and Python in this workshop, you may need to change the runtime type:\n\nClick Runtime &gt; Change runtime type in the menu\nSelect your preferred language:\n\nPython 3 (default)\nR (for R sessions)\n\nChoose a hardware accelerator if needed (None, GPU, or TPU)\nClick Save\n\n\n\n\n\n\n\nNote\n\n\n\nChanging the runtime type will restart your session, so do this before running any code. You can only use one language per notebook.\n\n\nOnce connected, you can start writing and executing code!",
     "crumbs": [
       "Setting up for the workshop"
     ]
@@ -204,7 +204,7 @@
     "href": "docs/preparing.html#file-organization",
     "title": "Setting up for the workshop",
     "section": "File organization",
-    "text": "File organization",
+    "text": "File organization\n\nRecipe 1: Mounting Your Google Drive\nTo access files from your Google Drive within Colab, you need to “mount” it first.\nFor Python:\nfrom google.colab import drive\ndrive.mount('/content/drive')\nFor R:\nlibrary(googledrive)\ndrive_auth() \nYou’ll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.\n\n\n\n\n\n\nTip\n\n\n\nAfter mounting, your Drive files will be accessible at /content/drive/MyDrive/ in the session.\n\n\n\n\nRecipe 2: Accessing the Workshop Data Folder\n\nWe’ve prepared a shared Google Drive folder with all the necessary datasets for this workshop.\nStep 1: Add the shared folder to your Drive\n\nOpen the shared folder link: Workshop Data Folder \nRight-click the folder and select “Add shortcut to Drive”\nChoose where to place it (we recommend your root “My Drive”)\n\nStep 2: Set your working directory\nAfter mounting your Drive, change to the workshop data directory so you can use relative paths.\nPython:\nimport os\nos.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed\n\n# Now you can use relative paths\nimport pandas as pd\ndf = pd.read_csv('data/dataset.csv')\nR:\nsetwd('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed\n\n# Now you can use relative paths\nlibrary(readr)\ndf &lt;- read_csv('data/dataset.csv')\n\n\nDownloading Data from imago\nImago hosts the datasets we’ll use. Here’s how to download them directly to your Drive.\nUsing Python:\nimport requests\nimport os\n\n# Mount drive first (see Recipe 1)\n# Make a directory to save your outputs\noutput_dir = '/content/drive/MyDrive/workshop_data/'\nos.makedirs(output_dir, exist_ok=True)\n\n# Download file\nurl = 'https://imago.example.com/dataset.csv'  # Replace with actual URL\nfilename = url.split('/')[-1]\noutput_path = os.path.join(output_dir, filename)\n\nresponse = requests.get(url)\nwith open(output_path, 'wb') as f:\n    f.write(response.content)\n    \nprint(f\"Downloaded to: {output_path}\")\nUsing R:\nlibrary(googledrive)\n\n# Set up output directory\noutput_dir &lt;- \"workshop_data/\"\ndir.create(output_dir, showWarnings = FALSE)\n\n# Download file\nurl &lt;- \"https://imago.example.com/dataset.csv\"  # Replace with actual URL\nfilename &lt;- basename(url)\noutput_path &lt;- file.path(output_dir, filename)\n\ndownload.file(url, destfile = output_path, mode = \"wb\")\nprint(paste(\"Downloaded to:\", output_path))\n\n\nQuick Data Check\nAfter downloading, verify your data loaded correctly:\nPython:\nimport pandas as pd\ndf = pd.read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')\nprint(df.head())\nprint(df.info())\nR:\nlibrary(readr)\ndf &lt;- read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')\nhead(df)\nstr(df)",
     "crumbs": [
       "Setting up for the workshop"
     ]
@@ -214,7 +214,7 @@
     "href": "docs/preparing.html#installing-packages",
     "title": "Setting up for the workshop",
     "section": "Installing Packages",
-    "text": "Installing Packages\n\n\n\n\n\n\n\nImportant\n\n\n\nImportant packages for raster data in R.\n\nterra: the best way of loading and processing raster data.\nsf: the go-to package for dealing with polygons, lines and spatial points.\nexactextractor: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the exactextract package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.\ntmap: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.\nggplot: the best package for building beautiful maps. Allows for more customisation than tmap.\n\nThere are also the following packages which we will not be using in this workshop:\n\nrgeedim: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.\nrgee: an R wrapper for Google Earth Engine, so you can run GEE commands in R\ngganimate: a package that allows you to turn your ggplot2 graphs into gifs.\nrayshader: create animated 3D graphs and maps in R.\ncountrycode: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.\ndoparallel: my go-to package for parallel processing.",
+    "text": "Installing Packages\n\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")",
     "crumbs": [
       "Setting up for the workshop"
     ]
@@ -257,6 +257,66 @@
     "text": "Further exporation",
     "crumbs": [
       "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#google-colab",
+    "href": "docs/preparing.html#google-colab",
+    "title": "Setting up for the workshop",
+    "section": "",
+    "text": "ImportantWhat You’ll Need\n\n\n\n\nA Google account (free)\nA modern web browser",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#footnotes",
+    "href": "docs/preparing.html#footnotes",
+    "title": "Setting up for the workshop",
+    "section": "",
+    "text": "A Jupyter Notebook is an interactive development environment (IDE) that combines live code, visualizations, and explanatory text in a single document. It allows you to write and execute code in cells, making it ideal for data analysis, machine learning, and educational purposes.↩︎",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#getting-started-with-google-colaboratory",
+    "href": "docs/preparing.html#getting-started-with-google-colaboratory",
+    "title": "Setting up for the workshop",
+    "section": "Getting Started with Google Colaboratory",
+    "text": "Getting Started with Google Colaboratory\nGoogle Colaboratory (or “Colab” for short) is a free cloud-based service that provides hosted Jupyter Notebooks1 directly in your browser. No installation or setup is required—you can start coding immediately.\n\nWhy are we using Colab?\nWe use Colab in this course to ensure everyone has a consistent development environment. This approach helps us avoid common problems like:\n\nEnvironment setup issues on different operating systems (Windows, Mac, Linux)\nPackage dependency conflicts between different Python versions\nHardware limitations on personal computers\nTo avoid troubleshooting installation problems\n\nWhile Colab is free to use, paid subscriptions (Colab Pro and Pro+) provide access to more powerful GPUs, higher RAM, and longer runtime limits. For this workshop, the free tier is sufficient.",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#key-geospatial-and-statistical-packages",
+    "href": "docs/preparing.html#key-geospatial-and-statistical-packages",
+    "title": "Setting up for the workshop",
+    "section": "Key Geospatial and Statistical Packages",
+    "text": "Key Geospatial and Statistical Packages\n\n\n\n\n\n\n\n\nPurpose\nPackage\nKey Functions\n\n\n\n\nVector data handling (points, lines, polygons)\ngeopandas (Python)\nread_file(), sjoin(), to_crs(), dissolve()\n\n\n\nsf (R)\nst_read(), st_join(), st_transform(), st_union(), st_as_sf()\n\n\nRaster data handling (reading/writing gridded data)\nrasterio (Python)\nopen(), read(), mask(), warp.reproject()\n\n\n\nterra (R)\nrast(), vect(), crop(), mask(), extract()\n\n\nMulti-dimensional arrays (NetCDF, climate data)\nxarray (Python)\nopen_dataset(), sel(), mean()\n\n\n\nterra (R)\nrast(), app(), subset()\n\n\nGeospatial xarray operations\nrioxarray (Python)\nopen_rasterio(), rio.reproject(), rio.clip()\n\n\nVector-raster operations\nxvec (Python)\nzonal_stats(), extract_points()\n\n\n\nrasterstats (Python)\nzonal_stats()\n\n\n\nterra (R)\nextract()\n\n\nFast raster extraction to polygons (area-weighted)\nexactextract (Python)\nexact_extract()\n\n\n\nexactextractr (R)\nexact_extract()\n\n\nStatic visualization and plotting\nmatplotlib (Python)\npyplot.plot(), pyplot.imshow()\n\n\n\nggplot2 (R)\nggplot(), geom_sf(), geom_raster() - Best for customizable, beautiful maps\n\n\nInteractive web maps\nfolium (Python)\nMap(), Choropleth()\n\n\n\ntmap (R)\ntm_shape(), tm_polygons(), tm_layout() - Quick maps with interactive “view” mode\n\n\n\nleaflet (R)\nleaflet(), addTiles(), addPolygons()\n\n\nStatistical modeling and econometrics\nstatsmodels (Python)\nOLS(), summary()\n\n\n\nlinearmodels (Python)\nPanelOLS()\n\n\n\nfixest (R)\nfeols(), etable()\n\n\n\npyfixest (Python))\nfeols(), etable()\n\n\nGoogle Earth Engine access\nee (Python)*\nee.Initialize(), ee.ImageCollection(), ee.Image.reduceRegion()- Python wrapper for GEE-api\n\n\n\nrgeedim (R)*\nDownload data directly from GEE as GeoTiffs\n\n\n\nrgee (R)*\nR wrapper to run GEE commands\n\n\nAnimated visualizations\nmatplotlib.animation (Python)*\nFuncAnimation(), save() - Create animated plots and save as gifs\n\n\n\nplotly (Python)*\npx.scatter(), animation_frame= - Interactive animated plots\n\n\n\ngganimate (R)*\nTurn ggplot2 graphs into gifs\n\n\n3D visualizations\npyvista (Python)*\nplot(), add_mesh() - 3D plotting and terrain visualization\n\n\n\nplotly (Python)*\ngraph_objects.Surface(), Scatter3d() - Interactive 3D plots\n\n\n\nrayshader (R)*\nCreate animated 3D graphs and maps\n\n\nGeographic utilities\ncountry_converter (Python)*\nconvert(), continent() - Convert country names/codes and assign regions\n\n\n\ncountrycode (R)*\nGenerate ISO codes, assign continents to countries\n\n\nParallel processing\ndask (Python)*\ncompute(), delayed(), array() - Parallel computing with pandas/xarray\n\n\n\ndoparallel (R)*\nParallel processing for faster computation\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nPackages marked with * will not be used in this workshop but are useful for advanced workflows.\n\n\n&lt;!– ::: callout-important Important packages for raster data in R.\n\nterra: the best way of loading and processing raster data.\nsf: the go-to package for dealing with polygons, lines and spatial points.\nexactextractor: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the exactextract package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.\ntmap: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.\nggplot: the best package for building beautiful maps. Allows for more customisation than tmap.\n\nThere are also the following packages which we will not be using in this workshop:\n\nrgeedim: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.\nrgee: an R wrapper for Google Earth Engine, so you can run GEE commands in R\ngganimate: a package that allows you to turn your ggplot2 graphs into gifs.\nrayshader: create animated 3D graphs and maps in R.\ncountrycode: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.\ndoparallel: my go-to package for parallel processing. ::: –!&gt;",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#loading-packages",
+    "href": "docs/preparing.html#loading-packages",
+    "title": "Setting up for the workshop",
+    "section": "Loading Packages",
+    "text": "Loading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "docs/preparing.html#installing-and-loading-packages",
+    "href": "docs/preparing.html#installing-and-loading-packages",
+    "title": "Setting up for the workshop",
+    "section": "Installing and loading Packages",
+    "text": "Installing and loading Packages\nBefore you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.\n\n\nInstalling packages\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")\n\n\n\n\n\n\nNoteInstallation in Colab\n\n\n\nIn Google Colab: - Python packages use %pip (magic command) to ensure installation in the correct environment - R packages use the standard install.packages() function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook\n\n\n\n\nLoading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
+    "crumbs": [
+      "Setting up for the workshop"
     ]
   }
 ]
