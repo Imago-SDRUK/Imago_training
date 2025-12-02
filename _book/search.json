@@ -132,11 +132,11 @@
   {
     "objectID": "docs/demo1.html",
     "href": "docs/demo1.html",
-    "title": "Demo 1",
+    "title": "Imago data product with R",
     "section": "",
-    "text": "Goal: Explore Imago datasets programmatically and replicate analyses across products (Pollution, Heat, SPF).\nApproach: Instructor demonstrates using one product; participants repeat steps using other dataset combinations.\n\nLoad LSOA boundary data + chosen Imago product\n\n\nClean and inspect: basic summary statistics\n\n\nMerge with IMD (deprivation)\n\n\nCreate a scatterplot: exposure vs. deprivation decile\n\n\nCalculate correlations and simple inequality metrics\n\n\nIdentify highest-exposure deciles / hotspots\n\n\nProduce a small output table or lightweight report\n\n\nGenerate a static map (Python: geopandas / R: sf + ggplot)\n\n\nCreate an interactive map (Python: folium / R: leaflet)",
+    "text": "Approach:\nInstructor demonstrates using one product; participants repeat steps using other dataset combinations.\nThis demo will explore pollution PM2.5 data and IMD 2025.\nTo have more fun. explore heat? lots of possibilities - and specific aspects of IMD? Domains of deprivation or other MSOA level data",
     "crumbs": [
-      "Demo 1"
+      "Imago data product with R"
     ]
   },
   {
@@ -260,6 +260,7 @@
     ]
   },
   {
+<<<<<<< Updated upstream
     "objectID": "docs/preparing.html#google-colab",
     "href": "docs/preparing.html#google-colab",
     "title": "Setting up for the workshop",
@@ -317,6 +318,35 @@
     "text": "Installing and loading Packages\nBefore you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.\n\n\nInstalling packages\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")\n\n\n\n\n\n\nNoteInstallation in Colab\n\n\n\nIn Google Colab: - Python packages use %pip (magic command) to ensure installation in the correct environment - R packages use the standard install.packages() function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook\n\n\n\n\nLoading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
     "crumbs": [
       "Setting up for the workshop"
+=======
+    "objectID": "docs/demo1.html#merge",
+    "href": "docs/demo1.html#merge",
+    "title": "Imago data product with R",
+    "section": "Merge",
+    "text": "Merge\nMerge and then plot variable pm2.5_mean with ggplot\n\nmsoa_pm25 &lt;- msoa_uk %&gt;%\n  left_join(pm25, by = c(\"dt_zn_c\" = \"dt_zn_c\"))",
+    "crumbs": [
+      "Imago data product with R"
+    ]
+  },
+  {
+    "objectID": "docs/demo1.html#summary-stats",
+    "href": "docs/demo1.html#summary-stats",
+    "title": "Imago data product with R",
+    "section": "Summary stats",
+    "text": "Summary stats\n\nsummary(msoa_pm25$pm2.5_mean)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n  4.891   7.388   8.010   7.973   8.602  10.543       6 \n\n\nUseful for understanding tail behaviour and skewness.\n\nquantile(msoa_pm25$pm2.5_mean, probs = seq(0, 1, 0.1), na.rm = TRUE)\n\n       0%       10%       20%       30%       40%       50%       60%       70% \n 4.891121  6.862401  7.242492  7.513803  7.758437  8.009963  8.242344  8.488465 \n      80%       90%      100% \n 8.724281  9.064899 10.543109",
+    "crumbs": [
+      "Imago data product with R"
+    ]
+  },
+  {
+    "objectID": "docs/demo1.html#aggregate-up-to-msoa-and-merge-with-pollution-dataset",
+    "href": "docs/demo1.html#aggregate-up-to-msoa-and-merge-with-pollution-dataset",
+    "title": "Imago data product with R",
+    "section": "Aggregate up to MSOA and merge with pollution dataset",
+    "text": "Aggregate up to MSOA and merge with pollution dataset\nhttps://geoportal.statistics.gov.uk/datasets/589ae01495bf4ddfaaa25b96476d53d7/about Postcode to OA (2021) to LSOA to MSOA to LAD (May 2025) Best Fit Lookup in the UK\n\n# 1. Load lookup\nLSOA21_MSOA21 &lt;- read_csv(\"../data/PCD_OA21_LSOA21_MSOA21_LAD_MAY25_UK_LU.csv\") %&gt;%\n  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm)\n\nRows: 2714964 Columns: 14\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (11): pcd7, pcd8, pcds, oa21cd, lsoa21cd, msoa21cd, ladcd, lsoa21nm, mso...\ndbl  (3): dointr, doterm, usertype\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n# 2. Join to IMD \nlsoa_msoa_imd &lt;- LSOA21_MSOA21 %&gt;%\n  left_join(imd, by = c(\"lsoa21cd\" = \"LSOA code (2021)\"))\n\n\nJoin IMD (LSOA-level)\n\n\nlsoa_msoa_imd_clean &lt;- lsoa_msoa_imd %&gt;%\n  select(\n    lsoa21cd,\n    msoa21cd,\n    ladcd,\n    lsoa21nm,\n    msoa21nm,\n    ladnm,\n    `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,\n    `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`\n  ) %&gt;%\n  rename(\n    imd_rank = `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,\n    imd_decile = `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`\n  )\n\n\nmean(!is.na(lsoa_msoa_imd_clean$imd_rank)) * 100\n\n[1] 83.24475\n\n\nThis gives the mean PM2.5 per MSOA, averaging across all LSOAs inside each MSOA.\n\nmsoa_imd_agg &lt;- lsoa_msoa_imd_clean %&gt;%\n  group_by(msoa21cd, msoa21nm, ladcd, ladnm) %&gt;%\n  summarise(\n    imd_rank_msoa = mean(imd_rank, na.rm = TRUE)\n  ) %&gt;%\n  ungroup()\n\n`summarise()` has grouped output by 'msoa21cd', 'msoa21nm', 'ladcd'. You can\noverride using the `.groups` argument.\n\n\n\nmsoa_imd_agg &lt;- msoa_imd_agg %&gt;%\n  mutate(msoa21cd = trimws(as.character(msoa21cd)))\n\nmsoa_pm25 &lt;- msoa_pm25 %&gt;%\n  mutate(msoa21cd = trimws(as.character(MSOA21C)))\n\nmsoa_final &lt;- msoa_imd_agg %&gt;%\n  left_join(msoa_pm25 %&gt;% select(msoa21cd, pm2.5_mean), by = \"msoa21cd\")",
+    "crumbs": [
+      "Imago data product with R"
+>>>>>>> Stashed changes
     ]
   }
 ]
