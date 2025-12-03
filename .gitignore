@@ -210,3 +210,33 @@ __marimo__/
 /.quarto/
 
 **/*.quarto_ipynb
+.vscode/extensions.json
+.vscode/settings.json
+data/UK_MSOA_IZB_SDZ/__MACOSX/UK_MSOA_IZB_SDZ/._UK_MSOA_IZB_SDZ.shx
+data/UK_MSOA_IZB_SDZ/__MACOSX/UK_MSOA_IZB_SDZ/._UK_MSOA_IZB_SDZ.shp
+data/UK_MSOA_IZB_SDZ/__MACOSX/UK_MSOA_IZB_SDZ/._UK_MSOA_IZB_SDZ.prj
+data/UK_MSOA_IZB_SDZ/__MACOSX/UK_MSOA_IZB_SDZ/._UK_MSOA_IZB_SDZ.dbf
+data/UK_MSOA_IZB_SDZ/__MACOSX/UK_MSOA_IZB_SDZ/._.DS_Store
+data/__MACOSX/._IoD2025 Local Authority District Summaries (lower-tier) - Rank of average rank(Rank of average rank).csv
+data/__MACOSX/._File_3_IoD2025 Supplementary Indices_IDACI and IDAOPI(IoD2025 IDACI & IDAOPI).csv
+data/__MACOSX/._File_2_IoD2025 Domains of Deprivation(IoD2025 Domains).csv
+data/__MACOSX/._File_1_IoD2025 Index of Multiple Deprivation(IMD25).csv
+data/UK_MSOA_IZB_SDZ.zip
+data/UK_MSOA_IZB_SDZ.shx
+data/UK_MSOA_IZB_SDZ.shp
+data/UK_MSOA_IZB_SDZ.prj
+data/UK_MSOA_IZB_SDZ.dbf
+data/PM25_concentration_MSOA_2023.xlsx
+data/PM25_concentration_MSOA_2023.csv
+data/PCD_OA21_LSOA21_MSOA21_LAD_MAY25_UK_LU.csv
+data/msoa_pm25_exceldemo_fig1.png
+data/IoD2025 Local Authority District Summaries (lower-tier) - Rank of average rank(Rank of average rank).csv
+data/imd_msoa.xlsx
+data/imd_msoa.csv
+data/imd_merge.ipynb
+data/imd_combined.xlsx
+data/imd_combined_lsoa.xlsx
+data/File_8_IoD2025_Underlying_Indicators.xlsx
+data/File_3_IoD2025 Supplementary Indices_IDACI and IDAOPI(IoD2025 IDACI & IDAOPI).csv
+data/File_2_IoD2025 Domains of Deprivation(IoD2025 Domains).csv
+data/File_1_IoD2025 Index of Multiple Deprivation(IMD25).csv

@@ -193,7 +193,19 @@ ul.task-list li input[type="checkbox"] {
 <section id="load-the-imago-product-csvexcel-file" class="level2">
 <h2 class="anchored" data-anchor-id="load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</h2>
 <p>Open the product file (e.g., Heat, Pollution, SPF at LSOA level).</p>
-<p>Ensure columns such as LSOA Code, Metric Value, Region, Deprivation Decile are visible.</p>
+<p>The imago dataproducts can be found <a href="https://imago.ac.uk/data">here</a>. Have a look!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
+<figcaption>Here is what the raw PM 2.5 (MSOA-level) looks like.</figcaption>
+</figure>
+</div>
+<p><strong>Check your data includes these key columns:</strong></p>
+<ul>
+<li><p>MSOA Code (unique identifier) - “dt_zn_c”</p></li>
+<li><p>pm2.5_mean</p></li>
+<li><p>MSOA Name</p></li>
+</ul>
 <p>Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.</p>
 <p>JOIN AND CORRELATIONS -</p>
 </section>
