@@ -6,19 +6,63 @@
 
 Open the product file (e.g., Heat, Pollution, SPF at LSOA level).
 
-Ensure columns such as LSOA Code, Metric Value, Region, Deprivation Decile are visible.
+The imago dataproducts can be found [here](https://imago.ac.uk/data). Have a look!
 
-Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.
+![Here is what the raw PM 2.5 (MSOA-level) looks like.](/data/msoa_pm25_exceldemo_fig1.png)
 
-JOIN AND CORRELATIONS -
+**Check your data includes these key columns:**
+
+-   MSOA Code (unique identifier) - "dt_zn_c"
+
+-   pm2.5_mean
+
+-   MSOA Name
+
+Format the dataset as a Table `(Ctrl+T)` for easy filtering and formulas.
 
 ## Add Contextual Data (Optional)
+
+To enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.
+
+Using `VLOOKUP` to join data:
+
+`=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)`
+
+Using `XLOOKUP` (Excel 365):
+
+`=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")`
+
+![](/data/msoa_pm25_exceldemo_fig3.png)
+
+Tips for joining:
+
+-   Ensure LSOA codes are formatted consistently (text, no leading/trailing spaces)
+-   Use `TRIM()` to clean codes if needed: `= TRIM(A2)`
+-   Check for mismatches using conditional formatting or `COUNTIF` or `EXACT`
 
 ## Explore Patterns Using Excel Tools
 
 Filtering & Sorting
 
-Ranking
+**To filter:**
+
+-   Click the dropdown arrow in any column header
+
+-   Select specific values, or use "Number Filters" for conditions like "Greater than" or "Top 10"
+
+**To sort:**
+
+-   Click the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)
+
+-   For multi-level sorts: Data tab → Sort → Add Level
+
+**Try these explorations:**
+
+-   Filter using a threshold to show the most deprived areas.
+
+-   Sort by \`pm_2.5_mean\` to find highest/lowest MSOAs
+
+![](/data/msoa_pm25_exceldemo_fig2.png)
 
 Conditional Formatting
 
