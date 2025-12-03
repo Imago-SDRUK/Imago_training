@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="../assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -97,9 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -196,7 +193,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The imago dataproducts can be found <a href="https://imago.ac.uk/data">here</a>. Have a look!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="..\data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
+<p><img src="../data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
 <figcaption>Here is what the raw PM 2.5 (MSOA-level) looks like.</figcaption>
 </figure>
 </div>
@@ -206,16 +203,42 @@ ul.task-list li input[type="checkbox"] {
 <li><p>pm2.5_mean</p></li>
 <li><p>MSOA Name</p></li>
 </ul>
-<p>Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.</p>
-<p>JOIN AND CORRELATIONS -</p>
+<p>Format the dataset as a Table <code>(Ctrl+T)</code> for easy filtering and formulas.</p>
 </section>
 <section id="add-contextual-data-optional" class="level2">
 <h2 class="anchored" data-anchor-id="add-contextual-data-optional">Add Contextual Data (Optional)</h2>
+<p>To enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.</p>
+<p>Using <code>VLOOKUP</code> to join data:</p>
+<p><code>=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)</code></p>
+<p>Using <code>XLOOKUP</code> (Excel 365):</p>
+<p><code>=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")</code></p>
+<p><img src="../data/msoa_pm25_exceldemo_fig3.png" class="img-fluid"></p>
+<p>Tips for joining:</p>
+<ul>
+<li>Ensure LSOA codes are formatted consistently (text, no leading/trailing spaces)</li>
+<li>Use <code>TRIM()</code> to clean codes if needed: <code>= TRIM(A2)</code></li>
+<li>Check for mismatches using conditional formatting or <code>COUNTIF</code> or <code>EXACT</code></li>
+</ul>
 </section>
 <section id="explore-patterns-using-excel-tools" class="level2">
 <h2 class="anchored" data-anchor-id="explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</h2>
 <p>Filtering &amp; Sorting</p>
-<p>Ranking</p>
+<p><strong>To filter:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow in any column header</p></li>
+<li><p>Select specific values, or use “Number Filters” for conditions like “Greater than” or “Top 10”</p></li>
+</ul>
+<p><strong>To sort:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)</p></li>
+<li><p>For multi-level sorts: Data tab → Sort → Add Level</p></li>
+</ul>
+<p><strong>Try these explorations:</strong></p>
+<ul>
+<li><p>Filter using a threshold to show the most deprived areas.</p></li>
+<li><p>Sort by `pm_2.5_mean` to find highest/lowest MSOAs</p></li>
+</ul>
+<p><img src="../data/msoa_pm25_exceldemo_fig2.png" class="img-fluid"></p>
 <p>Conditional Formatting</p>
 </section>
 <section id="further-exporation" class="level2">
@@ -276,14 +299,13 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
