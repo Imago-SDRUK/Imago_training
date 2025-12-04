@@ -1,9 +1,9 @@
 project:
   type: book
+  output-dir: docs
 
 book:
   title: "Imago training"
-  
   author: "Imago team"
   date: today
   
@@ -20,11 +20,12 @@ book:
   
   chapters:
     - index.qmd
-    - docs/datasets.qmd
-    - docs/preparing.qmd
-    - docs/satellites_to_areas.qmd
-    - docs/policy.qmd
-    - docs/demo1.qmd
+    - datasets.qmd
+    - preparing.qmd
+    - satellites_to_areas.qmd
+    - policy.qmd
+    - demo1.qmd
+    - packages.qmd
 
 bibliography: references.bib
 

@@ -6,7 +6,7 @@ This page provides guidance on how to access and download the IMAGO data product
 
 All Imago datasets for this release can be accessed and downloaded from the following website:
 
-[https://imago.ac.uk/data](https://imago.ac.uk/data)
+<https://imago.ac.uk/data>
 
 The website hosts all available files along with supporting documentation.
 
@@ -16,7 +16,7 @@ The data products are provided in multiple formats to support different analytic
 
 -   `CSV (.csv)` – Tabular data suitable for use in most statistical and data analysis software.
 -   `GeoPackage (.gpkg)` – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
--  `Metadata files` – Documentation describing variables, measurement units, methodologies, and data sources.
+-   `Metadata files` – Documentation describing variables, measurement units, methodologies, and data sources.
 
 ## Included Data for This Release
 
@@ -28,7 +28,7 @@ The current IMAGO data release includes the following thematic datasets:
 
 **Flooding** – Flood risk and flood-related environmental measures.
 
-**Sun probability Framework** – A spatial metric capturing probability of sunlight exposure.
+**Sun Probability Framework** – A spatial metric capturing probability of sunlight exposure.
 
 ## Metadata Information
 
