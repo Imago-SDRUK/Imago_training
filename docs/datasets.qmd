@@ -1,21 +1,12 @@
 # Data sets {.unnumbered}
 
-```{=html}
-<!--
-Martina please put together a short page about how to download IMAGO data products - where the metadata is etc.
--->
-```
-
-To access Imago data sets....
-## Accessing IMAGO Data Products
-
 This page provides guidance on how to access and download the IMAGO data products for this training.
 
-Where to Access the Data
+## Accessing IMAGO Data Products
 
-All IMAGO datasets for this release can be accessed and downloaded from the following website:
+All Imago datasets for this release can be accessed and downloaded from the following website:
 
-https://imago.ac.uk/data
+<https://imago.ac.uk/data>
 
 The website hosts all available files along with supporting documentation.
 
@@ -23,21 +14,21 @@ The website hosts all available files along with supporting documentation.
 
 The data products are provided in multiple formats to support different analytical needs:
 
-- CSV (.csv) – Tabular data suitable for use in most statistical and data analysis software.
-- GeoPackage (.gpkg) – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
-- Metadata files – Documentation describing variables, measurement units, methodologies, and data sources.
+-   `CSV (.csv)` – Tabular data suitable for use in most statistical and data analysis software.
+-   `GeoPackage (.gpkg)` – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
+-   `Metadata files` – Documentation describing variables, measurement units, methodologies, and data sources.
 
 ## Included Data for This Release
 
 The current IMAGO data release includes the following thematic datasets:
 
-Temperature – Measures of temperature patterns across regions.
+**Temperature** – Measures of temperature patterns across regions.
 
-Pollution – Indicators of air quality and pollution exposure.
+**Pollution** – Indicators of air quality and pollution exposure.
 
-Flooding – Flood risk and flood-related environmental measures.
+**Flooding** – Flood risk and flood-related environmental measures.
 
-Sun probability measure – A spatial metric capturing probability of sunlight exposure.
+**Sun probability Framework** – A spatial metric capturing probability of sunlight exposure.
 
 ## Metadata Information
 
@@ -49,6 +40,6 @@ Data users are encouraged to consult the metadata before working with the datase
 
 ## Downloading the Data
 
-Simply visit the IMAGO data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.
+Simply visit the Imago data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.
 
-If you have questions about accessing or interpreting the data, please get in touch with us (imago@liverpool.ac.uk).
+If you have questions about accessing or interpreting the data, please get in touch with us (imago\@liverpool.ac.uk).
