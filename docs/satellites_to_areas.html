@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Imago team">
-<meta name="dcterms.date" content="2025-12-04">
 
-<title>Imago training</title>
+<title>From grids to areas – Imago training</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./datasets.html" rel="next">
+<link href="./policy.html" rel="next">
+<link href="./preparing.html" rel="prev">
 <link href="./assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./satellites_to_areas.html">From grids to areas</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
@@ -132,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./satellites_to_areas.html" class="sidebar-item-text sidebar-link">
+  <a href="./satellites_to_areas.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">From grids to areas</span></a>
   </div>
 </li>
@@ -148,12 +147,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Imago data product with R</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Key Geospatial and Statistical Packages</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -164,39 +157,30 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
+  <li><a href="#how-hard-is-it-to-process-satellite-data" id="toc-how-hard-is-it-to-process-satellite-data" class="nav-link active" data-scroll-target="#how-hard-is-it-to-process-satellite-data">How hard is it to process satellite data?</a></li>
+  <li><a href="#the-satellite-data-pipeline" id="toc-the-satellite-data-pipeline" class="nav-link" data-scroll-target="#the-satellite-data-pipeline">The Satellite Data Pipeline</a></li>
+  <li><a href="#challenges-in-raw-workflow" id="toc-challenges-in-raw-workflow" class="nav-link" data-scroll-target="#challenges-in-raw-workflow">Challenges in Raw Workflow</a></li>
+  <li><a href="#why-products-like-imago-simplify-the-process" id="toc-why-products-like-imago-simplify-the-process" class="nav-link" data-scroll-target="#why-products-like-imago-simplify-the-process">Why Products Like Imago Simplify the Process</a></li>
+  <li><a href="#icebreaker-questions" id="toc-icebreaker-questions" class="nav-link" data-scroll-target="#icebreaker-questions">Icebreaker questions:</a>
   <ul class="collapse">
-  <li><a href="#using-imago-data-products-for-social-research-policy" id="toc-using-imago-data-products-for-social-research-policy" class="nav-link" data-scroll-target="#using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</a></li>
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
+  <li><a href="#further-readings" id="toc-further-readings" class="nav-link" data-scroll-target="#further-readings">Further readings</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/satellites_to_areas.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Imago training</h1>
+<h1 class="title"><span id="sec-satellites-areas" class="quarto-section-identifier">From grids to areas</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Imago team </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">December 4, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -206,26 +190,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome</h1><p><img src="assets/Imago-logo.png" title="Imago training" class="quarto-cover-image nolightbox img-fluid"></p>
-<section id="using-imago-data-products-for-social-research-policy" class="level2">
-<h2 class="anchored" data-anchor-id="using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</h2>
-<p>Join us for a hands-on introduction to using <a href="https://imago.ac.uk/">Imago: Data Service for Imagery</a> data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.</p>
-<p>This session has been developed by the <a href="https://imago.ac.uk/about">Imago team</a>.</p>
-<p>Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.</p>
-<p>Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.</p>
-<p>The website is <strong>free to use</strong> and is licensed under the <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a>. A compilation of this web course is hosted as a GitHub repository that you can access:</p>
+<section id="how-hard-is-it-to-process-satellite-data" class="level1">
+<h1>How hard is it to process satellite data?</h1>
 <ul>
-<li>As an <a href="https://Imago-SDRUK.github.io/Imago_training/">html website</a>.</li>
-<li>As a <a href="https://github.com/Imago-SDRUK/Imago_training">GitHub repository</a>.</li>
+<li><p>Brief explanation of what raw satellite data looks like (spectral bands, huge files).</p></li>
+<li><p>Short illustration/demo: raw image → cleaned image → aggregated product.</p></li>
+<li><p>Emphasize that satellite data is not a ready-made map—significant processing steps are required.</p></li>
 </ul>
 </section>
-<section id="contact" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="contact">Contact</h2>
-<blockquote class="blockquote">
-<p>The Imago team - imago [at] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.</p>
-</blockquote>
+<section id="the-satellite-data-pipeline" class="level1">
+<h1>The Satellite Data Pipeline</h1>
+<ul>
+<li><p>Walk participants through the journey from orbit to neighbourhood-level metrics:</p></li>
+<li><p>Capturing raw imagery (Sentinel, Landsat)</p></li>
+<li><p>Atmospheric correction + cloud masking</p></li>
+<li><p>Temporal compositing to reduce noise</p></li>
+<li><p>Spatial aggregation to small geographic units such as LSOA/MSOA</p></li>
+</ul>
+<p>Optional quick example: the difference between a pixel-level value vs.&nbsp;an aggregated area-level mean.</p>
+</section>
+<section id="challenges-in-raw-workflow" class="level1">
+<h1>Challenges in Raw Workflow</h1>
+<ul>
+<li><p>Highlight why most users cannot (or should not) work directly with raw satellite data:</p></li>
+<li><p>Massive data volumes and file handling</p></li>
+<li><p>Need for compute resources (e.g., cloud platforms)</p></li>
+<li><p>Technical complexity of remote sensing algorithms</p></li>
+<li><p>Difficulties linking pixel-based data to meaningful social units</p></li>
+<li><p>Why pre-processed and validated data products save time and improve reliability</p></li>
+</ul>
+</section>
+<section id="why-products-like-imago-simplify-the-process" class="level1">
+<h1>Why Products Like Imago Simplify the Process</h1>
+<ul>
+<li><p>Pre-computed, ready-to-use LSOA-level statistics</p></li>
+<li><p>No need to handle large imagery or complex algorithms</p></li>
+<li><p>Clear benefit of small-area data: show a LSOA vs MSOA comparison map to illustrate how detail disappears at larger scales</p></li>
+<li><p>Introduce the three products available (for Newcastle / region): Pollution, Heat, SPF</p></li>
+</ul>
+<p>Explain how they align with deprivation and social vulnerability analyses</p>
+</section>
+<section id="icebreaker-questions" class="level1">
+<h1>Icebreaker questions:</h1>
+<ul>
+<li><p>What’s the biggest file you’ve ever worked with?</p></li>
+<li><p>What steps in the satellite data pipeline do you think matter most for accuracy?</p></li>
+<li><p>Where do you think errors or uncertainty might creep in?</p></li>
+</ul>
+<section id="further-readings" class="level2">
+<h2 class="anchored" data-anchor-id="further-readings">Further readings</h2>
+<ul>
+<li><a href="https://www.neonscience.org/resources/learning-hub/tutorials/raster-data-r">Raster Data in R</a></li>
+</ul>
 
 
 </section>
@@ -633,10 +649,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./preparing.html" class="pagination-link" aria-label="Setting up for the workshop">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Setting up for the workshop</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./datasets.html" class="pagination-link" aria-label="Data sets">
-        <span class="nav-page-text">Data sets</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./policy.html" class="pagination-link" aria-label="Data Insights with Excel">
+        <span class="nav-page-text">Data Insights with Excel</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -648,7 +667,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/satellites_to_areas.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

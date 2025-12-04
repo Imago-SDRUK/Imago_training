@@ -1,0 +1,59 @@
+# Geospatial and Statistical Packages {.unnumbered}
+
+| Purpose | Package | Key Functions |
+|--------------------|--------------------|--------------------------------|
+| **Vector data handling** (points, lines, polygons) | **geopandas** (Python) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` |
+|  | **sf** (R) | `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
+| **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) | `open()`, `read()`, `mask()`, `warp.reproject()` |
+|  | **terra** (R) | `rast()`, `vect()`, `crop()`, `mask()`, `extract()` |
+| **Multi-dimensional arrays** (NetCDF, climate data) | **xarray** (Python) | `open_dataset()`, `sel()`, `mean()` |
+|  | **terra** (R) | `rast()`, `app()`, `subset()` |
+| **Geospatial xarray operations** | **rioxarray** (Python) | `open_rasterio()`, `rio.reproject()`, `rio.clip()` |
+| **Vector-raster operations** | **xvec** (Python) | `zonal_stats()`, `extract_points()` |
+|  | **rasterstats** (Python) | `zonal_stats()` |
+|  | **terra** (R) | `extract()` |
+| **Fast raster extraction to polygons** (area-weighted) | **exactextract** (Python) | `exact_extract()` |
+|  | **exactextractr** (R) | `exact_extract()` |
+| **Static visualization and plotting** | **matplotlib** (Python) | `pyplot.plot()`, `pyplot.imshow()` |
+|  | **ggplot2** (R) | `ggplot()`, `geom_sf()`, `geom_raster()` - Best for customizable, beautiful maps |
+| **Interactive web maps** | **folium** (Python) | `Map()`, `Choropleth()` |
+|  | **tmap** (R) | `tm_shape()`, `tm_polygons()`, `tm_layout()` - Quick maps with interactive "view" mode |
+|  | **leaflet** (R) | `leaflet()`, `addTiles()`, `addPolygons()` |
+| **Statistical modeling and econometrics** | **statsmodels** (Python) | `OLS()`, `summary()` |
+|  | **linearmodels** (Python) | `PanelOLS()` |
+|  | **fixest** (R) | `feols()`, `etable()` |
+|  | **pyfixest** (Python)) | `feols()`, `etable()` |
+| **Google Earth Engine access** | **ee** (Python)\* | `ee.Initialize()`, `ee.ImageCollection()`, `ee.Image.reduceRegion()`- Python wrapper for GEE-api |
+|  | **rgeedim** (R)\* | Download data directly from GEE as GeoTiffs |
+|  | **rgee** (R)\* | R wrapper to run GEE commands |
+| **Animated visualizations** | **matplotlib.animation** (Python)\* | `FuncAnimation()`, `save()` - Create animated plots and save as gifs |
+|  | **plotly** (Python)\* | `px.scatter()`, `animation_frame=` - Interactive animated plots |
+|  | **gganimate** (R)\* | Turn ggplot2 graphs into gifs |
+| **3D visualizations** | **pyvista** (Python)\* | `plot()`, `add_mesh()` - 3D plotting and terrain visualization |
+|  | **plotly** (Python)\* | `graph_objects.Surface()`, `Scatter3d()` - Interactive 3D plots |
+|  | **rayshader** (R)\* | Create animated 3D graphs and maps |
+| **Geographic utilities** | **country_converter** (Python)\* | `convert()`, `continent()` - Convert country names/codes and assign regions |
+|  | **countrycode** (R)\* | Generate ISO codes, assign continents to countries |
+| **Parallel processing** | **dask** (Python)\* | `compute()`, `delayed()`, `array()` - Parallel computing with pandas/xarray |
+|  | **doparallel** (R)\* | Parallel processing for faster computation |
+
+::: callout-note
+Packages marked with \* will not be used in this workshop but are useful for advanced workflows.
+:::
+
+\<!-- ::: callout-important Important packages for raster data in R.
+
+-   `terra`: the best way of loading and processing raster data.
+-   `sf`: the go-to package for dealing with polygons, lines and spatial points.
+-   `exactextractor`: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the `exactextract` package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.
+-   `tmap`: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.
+-   `ggplot`: the best package for building beautiful maps. Allows for more customisation than `tmap`.
+
+There are also the following packages which we will not be using in this workshop:
+
+-   `rgeedim`: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.
+-   `rgee`: an R wrapper for Google Earth Engine, so you can run GEE commands in R
+-   `gganimate`: a package that allows you to turn your ggplot2 graphs into gifs.
+-   `rayshader`: create animated 3D graphs and maps in R.
+-   `countrycode`: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.
+-   `doparallel`: my go-to package for parallel processing. ::: --!\>
