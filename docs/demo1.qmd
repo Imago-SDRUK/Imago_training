@@ -1,0 +1,308 @@
+# Imago data product with R {#sec-demo1 .unnumbered}
+
+**Goal**: Explore Imago datasets programmatically and replicate analyses across products (Pollution, Heat, SPF).
+
+Approach: Instructor demonstrates using one product; participants repeat steps using other dataset combinations.
+
+# Approach:
+
+Instructor demonstrates using one product; participants repeat steps using other dataset combinations.
+
+This demo will explore pollution PM2.5 data and IMD 2025. 
+
+To have more fun. explore heat? lots of possibilities - and specific aspects of IMD? Domains of deprivation or other MSOA level data
+
+# Installing packages
+
+We will start by loading core packages for working with spatial data. See detailed description of [R](https://r.geocompx.org/spatial-class).
+
+```{r message=FALSE}
+# Load the 'sf' library, which stands for Simple Features, used for working with spatial data.
+library(sf)
+# Load the 'tidyverse' library, a collection of packages for data manipulation and visualization.
+library(tidyverse)
+# Load the 'tmap' library, which is used for creating thematic maps and visualizing spatial data.
+library(tmap)
+# The 'readr' library provides a fast and user-friendly way to read data from common formats like CSV.
+library(readr)
+# Converts Between GeoJSON and simple feature objects
+library(geojsonsf) 
+# Using data from OpenStreetMap (OSM)
+library(osmdata)
+# Static maps
+library(basemapR)
+
+library(ggplot2)
+library(viridis)
+
+library(dplyr)
+library(readr)
+
+library(readxl)
+
+library(readr)
+library(fs)
+```
+
+# Load MSOA boundary data and pollution data product
+
+MSOA boundary data can be downloaded from the [Imago data catalogue](https://imago.ac.uk/data)
+```{r}
+msoa_uk <- read_sf("../data/UK_MSOA_IZB_SDZ.shp")
+```
+
+Load MSOA boundary data and Imago product, also from the [Imago data catalogue](https://imago.ac.uk/data)
+```{r}
+# Load PM2.5 concentration data
+pm25 <- read.csv("../data/PM25_concentration_MSOA_2023.csv")
+```
+
+## Merge
+Merge and then plot variable pm2.5_mean with ggplot.
+
+```{r}
+msoa_pm25 <- msoa_uk %>%
+  left_join(pm25, by = c("dt_zn_c" = "dt_zn_c"))
+```
+
+## Basic summary statistics for pm2.5_mean
+
+```{r}
+summary(msoa_pm25$pm2.5_mean)
+```
+
+Useful for understanding tail behaviour and skewness.
+
+```{r}
+quantile(msoa_pm25$pm2.5_mean, probs = seq(0, 1, 0.1), na.rm = TRUE)
+```
+# Plot variable by local area boundary
+
+```{r}
+ggplot(msoa_pm25) +
+  geom_sf(aes(fill = pm2.5_mean), colour = NA) +
+  scale_fill_viridis_c(
+    option = "magma",
+    name = "PM2.5 (µg/m³)",
+    direction = 1,
+    breaks = scales::pretty_breaks(6)   # clean, human-friendly scale
+  ) +
+  labs(
+    title = "PM2.5 Mean Concentration by MSOA",
+    subtitle = "Higher values indicate poorer air quality",
+    caption = "Source: Imago & UK MSOA boundaries"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.subtitle = element_text(size = 10, colour = "#555555"),
+    legend.position = "right",
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.caption = element_text(hjust = 0.5)  # centre caption
+  )
+```
+
+# Merge with the Index of Multiple Deprivation
+
+The [English Indices of Deprivation 2025](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025) were recently published.
+
+```{r}
+# Temp file location
+tmp_file <- tempfile(fileext = ".xlsx")
+
+# 1. Download IMD 2025 file
+download.file(
+  url = "https://assets.publishing.service.gov.uk/media/691dece32c6b98ecdbc500d5/File_1_IoD2025_Index_of_Multiple_Deprivation.xlsx",
+  destfile = tmp_file,
+  mode = "wb"
+)
+
+# 2. Import IMD25 sheet
+imd <- read_excel(tmp_file, sheet = "IMD25")
+
+# 3. Delete the temporary file
+unlink(tmp_file)
+
+# Inspect column names to identify the join key
+names(imd)
+```
+
+## Aggregate up to MSOA
+
+To combine pollution data (held at MSOA level) with deprivation data (held at LSOA level), we use the Postcode → OA (2021) → LSOA → MSOA → Local Authority District (LAD) best-fit lookup published by the Office for National Statistics (ONS):
+
+ONS Postcode to OA (2021) to LSOA to MSOA to LAD (May 2025) [Best-Fit Lookup for the UK](https://geoportal.statistics.gov.uk/datasets/589ae01495bf4ddfaaa25b96476d53d7/about)
+
+This  provides consistent, authoritative geographic relationships between postcode units and statistical areas. It enables us to link LSOA-level IMD data to MSOA-level pollution estimates and then calculate MSOA-level average deprivation scores.
+
+```{r}
+# Create temporary file paths 
+zip_file <- tempfile(fileext = ".zip")
+unzipped_dir <- tempfile()
+
+# Download ZIP
+download.file(
+  url = "https://www.arcgis.com/sharing/rest/content/items/7fc55d71a09d4dcfa1fd6473138aacc3/data",
+  destfile = zip_file,
+  mode = "wb"
+)
+
+# Unzip
+unzip(zip_file, exdir = unzipped_dir)
+
+# Delete the ZIP immediately after extraction
+unlink(zip_file)
+
+# Identify and load the lookup CSV
+lookup_path <- list.files(
+  unzipped_dir,
+  pattern = "\\.csv$",
+  recursive = TRUE,
+  full.names = TRUE
+)
+
+LSOA21_MSOA21 <- read_csv(lookup_path)
+
+# Keep only necessary columns
+LSOA21_MSOA21 <- LSOA21_MSOA21 %>%
+  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm)
+
+# Join to IMD 
+lsoa_msoa_imd <- LSOA21_MSOA21 %>%
+  left_join(imd, by = c("lsoa21cd" = "LSOA code (2021)"))
+```
+
+## Join IMD (LSOA-level)
+
+Keep only the relevant columns from the LSOA lookup & IMD dataset.
+Rename the long IMD column names to shorter, convenient names: `imd_rank` and `imd_decile`.
+
+```{r}
+lsoa_msoa_imd_clean <- lsoa_msoa_imd %>%
+  select(
+    lsoa21cd,
+    msoa21cd,
+    ladcd,
+    lsoa21nm,
+    msoa21nm,
+    ladnm,
+    `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,
+    `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`
+  ) %>%
+  rename(
+    imd_rank = `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,
+    imd_decile = `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`
+  )
+```
+
+As IMD is only for England, check number of MSOAs that are covered.
+
+```{r}
+mean(!is.na(lsoa_msoa_imd_clean$imd_rank)) * 100
+```
+
+## This gives the mean PM2.5 per MSOA, averaging across all LSOAs inside each MSOA.
+
+```{r}
+msoa_imd_agg <- lsoa_msoa_imd_clean %>%
+  group_by(msoa21cd, msoa21nm, ladcd, ladnm) %>%
+  summarise(
+    imd_rank_msoa = mean(imd_rank, na.rm = TRUE)
+  ) %>%
+  ungroup()
+```
+
+```{r}
+msoa_imd_agg <- msoa_imd_agg %>%
+  mutate(msoa21cd = trimws(as.character(msoa21cd)))
+
+msoa_pm25 <- msoa_pm25 %>%
+  mutate(msoa21cd = trimws(as.character(MSOA21C)))
+
+msoa_final <- msoa_imd_agg %>%
+  left_join(msoa_pm25 %>% select(msoa21cd, pm2.5_mean), by = "msoa21cd")
+```
+
+# Create a scatterplot: exposure vs. deprivation decile
+
+```{r, message=FALSE}
+model <- lm(imd_rank_msoa ~ pm2.5_mean, data = msoa_final)
+
+eq <- paste0(
+  "IMD Rank = ", round(coef(model)[1], 2),
+  " + ", round(coef(model)[2], 3), " × PM2.5\n",
+  "R² = ", round(summary(model)$r.squared, 3)
+)
+
+ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
+  
+  geom_jitter(alpha = 0.25, width = 0.1, size = 1.2, colour = "firebrick") +
+  
+  geom_smooth(
+    method = "lm",
+    se = TRUE,
+    colour = "black",
+    linewidth = 0.9,
+    fill = "grey80"
+  ) +
+  
+  annotate(
+    "label",
+    x = quantile(msoa_final$pm2.5_mean, 0.98, na.rm = TRUE),
+    y = quantile(msoa_final$imd_rank_msoa, 0.05, na.rm = TRUE),
+    label = eq,
+    hjust = 1,
+    vjust = 0,
+    size = 3.5,
+    label.size = 0.2,
+    fill = "white",
+    alpha = 0.8
+  ) +
+  
+  labs(
+    title = "Relationship Between PM2.5 Exposure and IMD Deprivation Rank",
+    subtitle = "Higher ranks indicate lower deprivation (1 = most deprived)",
+    x = "PM2.5 Mean Concentration (µg/m³)",
+    y = "IMD Rank"
+  ) +
+  
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    plot.subtitle = element_text(size = 11, margin = margin(b = 10)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "grey85")
+  )
+```
+
+# Calculate correlations and simple inequality metrics
+```{r}
+# Basic Pearson correlation
+cor_test <- cor.test(msoa_final$pm2.5_mean, msoa_final$imd_rank_msoa)
+cor_test
+```
+
+```{r}
+# Create IMD rank quintiles
+msoa_final <- msoa_final %>%
+  mutate(imd_quintile = ntile(imd_rank_msoa, 5))  # 1 = most deprived, 5 = least deprived
+
+# Summarise PM2.5 by IMD quintile
+ineq_table <- msoa_final %>%
+  group_by(imd_quintile) %>%
+  summarise(
+    mean_pm25 = mean(pm2.5_mean, na.rm = TRUE),
+    median_pm25 = median(pm2.5_mean, na.rm = TRUE),
+    n = n()
+  )
+
+ineq_table
+```
+
+# Identify highest-exposure deciles / hotspots
+
+# Generate a bivariate map 
+
+# Create an interactive map (Python: folium / R: leaflet)
+
