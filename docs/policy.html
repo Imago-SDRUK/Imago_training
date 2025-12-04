@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Imago team">
-<meta name="dcterms.date" content="2025-12-04">
 
-<title>Imago training</title>
+<title>Data Insights with Excel – Imago training</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./datasets.html" rel="next">
+<link href="./demo1.html" rel="next">
+<link href="./satellites_to_areas.html" rel="prev">
 <link href="./assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./policy.html">Data Insights with Excel</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +113,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
@@ -127,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./preparing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Setting up for the workshop</span></a>
+ <span class="menu-text">Setting up</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -138,14 +137,14 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./policy.html" class="sidebar-item-text sidebar-link">
+  <a href="./policy.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Data Insights with Excel</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./demo1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Imago data product with R</span></a>
+ <span class="menu-text">Explore Imago datasets with R/Python</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -164,39 +163,26 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
-  <ul class="collapse">
-  <li><a href="#using-imago-data-products-for-social-research-policy" id="toc-using-imago-data-products-for-social-research-policy" class="nav-link" data-scroll-target="#using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</a></li>
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
-  </ul></li>
+  <li><a href="#load-the-imago-product-csvexcel-file" id="toc-load-the-imago-product-csvexcel-file" class="nav-link active" data-scroll-target="#load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</a></li>
+  <li><a href="#add-contextual-data-optional" id="toc-add-contextual-data-optional" class="nav-link" data-scroll-target="#add-contextual-data-optional">Add Contextual Data (Optional)</a></li>
+  <li><a href="#explore-patterns-using-excel-tools" id="toc-explore-patterns-using-excel-tools" class="nav-link" data-scroll-target="#explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</a></li>
+  <li><a href="#further-exporation" id="toc-further-exporation" class="nav-link" data-scroll-target="#further-exporation">Further exporation</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Imago training</h1>
+<h1 class="title"><span id="sec-excel" class="quarto-section-identifier">Data Insights with Excel</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Imago team </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">December 4, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -206,29 +192,65 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome</h1><p><img src="assets/Imago-logo.png" title="Imago training" class="quarto-cover-image nolightbox img-fluid"></p>
-<section id="using-imago-data-products-for-social-research-policy" class="level2">
-<h2 class="anchored" data-anchor-id="using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</h2>
-<p>Join us for a hands-on introduction to using <a href="https://imago.ac.uk/">Imago: Data Service for Imagery</a> data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.</p>
-<p>This session has been developed by the <a href="https://imago.ac.uk/about">Imago team</a>.</p>
-<p>Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.</p>
-<p>Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.</p>
-<p>The website is <strong>free to use</strong> and is licensed under the <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a>. A compilation of this web course is hosted as a GitHub repository that you can access:</p>
+<p><strong>Goal</strong>: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.</p>
+<section id="load-the-imago-product-csvexcel-file" class="level2">
+<h2 class="anchored" data-anchor-id="load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</h2>
+<p>Open the product file (e.g., Heat, Pollution, SPF at LSOA level).</p>
+<p>The imago dataproducts can be found <a href="https://imago.ac.uk/data">here</a>. Have a look!</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
+<figcaption>Here is what the raw PM 2.5 (MSOA-level) looks like.</figcaption>
+</figure>
+</div>
+<p><strong>Check your data includes these key columns:</strong></p>
 <ul>
-<li>As an <a href="https://Imago-SDRUK.github.io/Imago_training/">html website</a>.</li>
-<li>As a <a href="https://github.com/Imago-SDRUK/Imago_training">GitHub repository</a>.</li>
+<li><p>MSOA Code (unique identifier) - “dt_zn_c”</p></li>
+<li><p>pm2.5_mean</p></li>
+<li><p>MSOA Name</p></li>
+</ul>
+<p>Format the dataset as a Table <code>(Ctrl+T)</code> for easy filtering and formulas.</p>
+</section>
+<section id="add-contextual-data-optional" class="level2">
+<h2 class="anchored" data-anchor-id="add-contextual-data-optional">Add Contextual Data (Optional)</h2>
+<p>To enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.</p>
+<p>Using <code>VLOOKUP</code> to join data:</p>
+<p><code>=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)</code></p>
+<p>Using <code>XLOOKUP</code> (Excel 365):</p>
+<p><code>=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")</code></p>
+<p><img src="./data/msoa_pm25_exceldemo_fig3.png" class="img-fluid"></p>
+<p>Tips for joining:</p>
+<ul>
+<li>Ensure LSOA codes are formatted consistently (text, no leading/trailing spaces)</li>
+<li>Use <code>TRIM()</code> to clean codes if needed: <code>= TRIM(A2)</code></li>
+<li>Check for mismatches using conditional formatting or <code>COUNTIF</code> or <code>EXACT</code></li>
 </ul>
 </section>
-<section id="contact" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="contact">Contact</h2>
-<blockquote class="blockquote">
-<p>The Imago team - imago [at] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.</p>
-</blockquote>
-
-
+<section id="explore-patterns-using-excel-tools" class="level2">
+<h2 class="anchored" data-anchor-id="explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</h2>
+<p>Filtering &amp; Sorting</p>
+<p><strong>To filter:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow in any column header</p></li>
+<li><p>Select specific values, or use “Number Filters” for conditions like “Greater than” or “Top 10”</p></li>
+</ul>
+<p><strong>To sort:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)</p></li>
+<li><p>For multi-level sorts: Data tab → Sort → Add Level</p></li>
+</ul>
+<p><strong>Try these explorations:</strong></p>
+<ul>
+<li><p>Filter using a threshold to show the most deprived areas.</p></li>
+<li><p>Sort by `pm_2.5_mean` to find highest/lowest MSOAs</p></li>
+</ul>
+<p><img src="./data/msoa_pm25_exceldemo_fig2.png" class="img-fluid"></p>
+<p>Conditional Formatting</p>
 </section>
+<section id="further-exporation" class="level2">
+<h2 class="anchored" data-anchor-id="further-exporation">Further exporation</h2>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -633,10 +655,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./satellites_to_areas.html" class="pagination-link" aria-label="From grids to areas">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">From grids to areas</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./datasets.html" class="pagination-link" aria-label="Data sets">
-        <span class="nav-page-text">Data sets</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./demo1.html" class="pagination-link" aria-label="Explore Imago datasets with R/Python">
+        <span class="nav-page-text">Explore Imago datasets with R/Python</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -648,7 +673,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>

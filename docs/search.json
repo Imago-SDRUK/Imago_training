@@ -1,0 +1,342 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Imago training",
+    "section": "",
+    "text": "Welcome",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#using-imago-data-products-for-social-research-policy",
+    "href": "index.html#using-imago-data-products-for-social-research-policy",
+    "title": "Imago training",
+    "section": "Using Imago Data Products for Social Research & Policy",
+    "text": "Using Imago Data Products for Social Research & Policy\nJoin us for a hands-on introduction to using Imago: Data Service for Imagery data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.\nThis session has been developed by the Imago team.\nThroughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.\nWhether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.\nThe website is free to use and is licensed under the Attribution-NonCommercial-NoDerivatives 4.0 International. A compilation of this web course is hosted as a GitHub repository that you can access:\n\nAs an html website.\nAs a GitHub repository.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#contact",
+    "href": "index.html#contact",
+    "title": "Imago training",
+    "section": "Contact",
+    "text": "Contact\n\nThe Imago team - imago [at] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "policy.html",
+    "href": "policy.html",
+    "title": "Data Insights with Excel",
+    "section": "",
+    "text": "Load the Imago Product (CSV/Excel File)\nGoal: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.\nOpen the product file (e.g., Heat, Pollution, SPF at LSOA level).\nThe imago dataproducts can be found here. Have a look!\nCheck your data includes these key columns:\nFormat the dataset as a Table (Ctrl+T) for easy filtering and formulas.",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "policy.html#load-the-imago-product-csvexcel-file",
+    "href": "policy.html#load-the-imago-product-csvexcel-file",
+    "title": "Data Insights with Excel",
+    "section": "",
+    "text": "Here is what the raw PM 2.5 (MSOA-level) looks like.\n\n\n\n\nMSOA Code (unique identifier) - “dt_zn_c”\npm2.5_mean\nMSOA Name",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "policy.html#add-contextual-data-optional",
+    "href": "policy.html#add-contextual-data-optional",
+    "title": "Data Insights with Excel",
+    "section": "Add Contextual Data (Optional)",
+    "text": "Add Contextual Data (Optional)\nTo enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.\nUsing VLOOKUP to join data:\n=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)\nUsing XLOOKUP (Excel 365):\n=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, \"Not found\")\n\nTips for joining:\n\nEnsure LSOA codes are formatted consistently (text, no leading/trailing spaces)\nUse TRIM() to clean codes if needed: = TRIM(A2)\nCheck for mismatches using conditional formatting or COUNTIF or EXACT",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "policy.html#explore-patterns-using-excel-tools",
+    "href": "policy.html#explore-patterns-using-excel-tools",
+    "title": "Data Insights with Excel",
+    "section": "Explore Patterns Using Excel Tools",
+    "text": "Explore Patterns Using Excel Tools\nFiltering & Sorting\nTo filter:\n\nClick the dropdown arrow in any column header\nSelect specific values, or use “Number Filters” for conditions like “Greater than” or “Top 10”\n\nTo sort:\n\nClick the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)\nFor multi-level sorts: Data tab → Sort → Add Level\n\nTry these explorations:\n\nFilter using a threshold to show the most deprived areas.\nSort by `pm_2.5_mean` to find highest/lowest MSOAs\n\n\nConditional Formatting",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "policy.html#further-exporation",
+    "href": "policy.html#further-exporation",
+    "title": "Data Insights with Excel",
+    "section": "Further exporation",
+    "text": "Further exporation",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "demo1.html",
+    "href": "demo1.html",
+    "title": "Explore datasets with R/Python",
+    "section": "",
+    "text": "Installing packages\nGoal: Explore Imago datasets programmatically and replicate analyses across products.\nTraining Approach: The instructor will first demonstrate the workflow using one example dataset. Participants will then repeat the steps with alternative dataset combinations to practice transferring the workflow across products.\nWe’ll start the demo with PM2.5 pollution data and IMD 2025. Once you’re comfortable with the workflow, feel free to try it out on other datasets—for example, heat indicators, flood risk, or particular IMD domains—to explore different kinds of questions.\nWe will start by loading core packages for working with spatial data. See detailed description of R.\n# Core data handling and plotting\nlibrary(tidyverse)   # Data manipulation + ggplot2\nlibrary(dplyr)       # (Loaded with tidyverse, listed here for clarity)\nlibrary(readr)       # Fast reading of CSVs\nlibrary(readxl)      # Reading Excel files\n\n# Spatial data and mapping\nlibrary(sf)          # Simple Features: work with spatial data\nlibrary(tmap)        # Thematic mapping\nlibrary(geojsonsf)   # Convert between GeoJSON and sf objects\nlibrary(osmdata)     # Access OpenStreetMap data\nlibrary(basemapR)    # Static basemaps for mapping\n\n# Plot styling and layout\nlibrary(viridis)     # Colorblind-friendly palettes\nlibrary(cowplot)     # Combining and arranging plots\n\n# File system utilities\nlibrary(fs)          # File and directory helpers",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#merge",
+    "href": "demo1.html#merge",
+    "title": "Explore datasets with R/Python",
+    "section": "Merge",
+    "text": "Merge\nMerge and then plot variable pm2.5_mean with ggplot.\n\nRPython\n\n\n\nmsoa_pm25 &lt;- msoa_uk %&gt;%\n  left_join(pm25, by = c(\"dt_zn_c\" = \"dt_zn_c\"))",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#basic-summary-statistics-for-pm2.5_mean",
+    "href": "demo1.html#basic-summary-statistics-for-pm2.5_mean",
+    "title": "Explore datasets with R/Python",
+    "section": "Basic summary statistics for pm2.5_mean",
+    "text": "Basic summary statistics for pm2.5_mean\n\nRPython\n\n\n\nsummary(msoa_pm25$pm2.5_mean)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's \n  4.891   7.388   8.010   7.973   8.602  10.543       6 \n\n\n\n\n\n\n\n\nUseful for understanding tail behaviour and skewness.\n\nquantile(msoa_pm25$pm2.5_mean, probs = seq(0, 1, 0.1), na.rm = TRUE)\n\n       0%       10%       20%       30%       40%       50%       60%       70% \n 4.891121  6.862401  7.242492  7.513803  7.758437  8.009963  8.242344  8.488465 \n      80%       90%      100% \n 8.724281  9.064899 10.543109",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#aggregate-up-to-msoa",
+    "href": "demo1.html#aggregate-up-to-msoa",
+    "title": "Explore datasets with R/Python",
+    "section": "Aggregate up to MSOA",
+    "text": "Aggregate up to MSOA\nTo combine pollution data (held at MSOA level) with deprivation data (held at LSOA level), we use the Postcode → OA (2021) → LSOA → MSOA → Local Authority District (LAD) best-fit lookup published by the Office for National Statistics (ONS):\nONS Postcode to OA (2021) to LSOA to MSOA to LAD (May 2025) Best-Fit Lookup for the UK\nThis provides consistent, authoritative geographic relationships between postcode units and statistical areas. It enables us to link LSOA-level IMD data to MSOA-level pollution estimates and then calculate MSOA-level average deprivation scores.\n\n# Create temporary file paths \nzip_file &lt;- tempfile(fileext = \".zip\")\nunzipped_dir &lt;- tempfile()\n\n# Download ZIP\ndownload.file(\n  url = \"https://www.arcgis.com/sharing/rest/content/items/7fc55d71a09d4dcfa1fd6473138aacc3/data\",\n  destfile = zip_file,\n  mode = \"wb\"\n)\n\n# Unzip\nunzip(zip_file, exdir = unzipped_dir)\n\n# Delete the ZIP immediately after extraction\nunlink(zip_file)\n\n# Identify and load the lookup CSV\nlookup_path &lt;- list.files(\n  unzipped_dir,\n  pattern = \"\\\\.csv$\",\n  recursive = TRUE,\n  full.names = TRUE\n)\n\nLSOA21_MSOA21 &lt;- read_csv(lookup_path)\n\n# Keep only necessary columns\nLSOA21_MSOA21 &lt;- LSOA21_MSOA21 %&gt;%\n  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm)\n\n# Join to IMD \nlsoa_msoa_imd &lt;- LSOA21_MSOA21 %&gt;%\n  left_join(imd, by = c(\"lsoa21cd\" = \"LSOA code (2021)\"))",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#join-imd-lsoa-level",
+    "href": "demo1.html#join-imd-lsoa-level",
+    "title": "Explore datasets with R/Python",
+    "section": "Join IMD (LSOA-level)",
+    "text": "Join IMD (LSOA-level)\nKeep only the relevant columns from the LSOA lookup & IMD dataset. Rename the long IMD column names to shorter, convenient names: imd_rank and imd_decile.\n\nlsoa_msoa_imd_clean &lt;- lsoa_msoa_imd %&gt;%\n  select(\n    lsoa21cd,\n    msoa21cd,\n    ladcd,\n    lsoa21nm,\n    msoa21nm,\n    ladnm,\n    `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,\n    `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`\n  ) %&gt;%\n  rename(\n    imd_rank = `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,\n    imd_decile = `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`\n  )\n\nAs IMD is only for England, check number of MSOAs that are covered.\n\n# Compute the percentage of non-missing IMD ranks\nmean(!is.na(lsoa_msoa_imd_clean$imd_rank)) * 100\n\n[1] 83.24475",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#aggregate-imd-to-msoa",
+    "href": "demo1.html#aggregate-imd-to-msoa",
+    "title": "Explore datasets with R/Python",
+    "section": "Aggregate IMD to MSOA",
+    "text": "Aggregate IMD to MSOA\nHere we compute the mean IMD rank for each MSOA by averaging across all LSOAs within that MSOA. The result is a dataset at MSOA level for deprivation.\n\nmsoa_imd_agg &lt;- lsoa_msoa_imd_clean %&gt;%\n  group_by(msoa21cd, msoa21nm, ladcd, ladnm) %&gt;%\n  summarise(\n    imd_rank_msoa = mean(imd_rank, na.rm = TRUE)\n  ) %&gt;%\n  ungroup()\n\nTrim whitespace and ensure both datasets use character format for MSOA codes to avoid mismatches during the join.\n\nmsoa_imd_agg &lt;- msoa_imd_agg %&gt;%\n  mutate(msoa21cd = trimws(as.character(msoa21cd)))\n\nmsoa_pm25 &lt;- msoa_pm25 %&gt;%\n  mutate(msoa21cd = trimws(as.character(MSOA21C)))\n\nJoin the aggregated IMD data with the MSOA-level PM2.5 dataset by MSOA code. The final dataset contains:\n\nMSOA identifiers and names\nLAD identifiers and names\nPM2.5 mean\nAggregated IMD rank\n\n\nmsoa_final &lt;- msoa_imd_agg %&gt;%\n  left_join(msoa_pm25 %&gt;% select(msoa21cd, pm2.5_mean), by = \"msoa21cd\")",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#pearson-correlation",
+    "href": "demo1.html#pearson-correlation",
+    "title": "Explore datasets with R/Python",
+    "section": "Pearson correlation",
+    "text": "Pearson correlation\n\n# Basic Pearson correlation\ncor_test &lt;- cor.test(msoa_final$pm2.5_mean, msoa_final$imd_rank_msoa)\ncor_test\n\n\n    Pearson's product-moment correlation\n\ndata:  msoa_final$pm2.5_mean and msoa_final$imd_rank_msoa\nt = -23.176, df = 6854, p-value &lt; 2.2e-16\nalternative hypothesis: true correlation is not equal to 0\n95 percent confidence interval:\n -0.2913852 -0.2474807\nsample estimates:\n      cor \n-0.269573",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#create-imd-rank-quintiles",
+    "href": "demo1.html#create-imd-rank-quintiles",
+    "title": "Explore datasets with R/Python",
+    "section": "Create IMD rank quintiles",
+    "text": "Create IMD rank quintiles\nFirst, we remove MSOAs with missing IMD rank or PM2.5 to avoid NA values flowing through the analysis. The quintiles are created (1 = most deprived MSOAs, 5 = least deprived).\n\nmsoa_final_clean &lt;- msoa_final %&gt;%\n  drop_na(imd_rank_msoa, pm2.5_mean) %&gt;%        # ensure complete cases\n  mutate(\n    # Divide MSOAs into 5 equal-sized groups based on deprivation rank\n    # ntile() assigns 1 = most deprived, 5 = least deprived\n    imd_quintile = ntile(imd_rank_msoa, 5)\n  )\n\nmsoa_final_clean &lt;- st_as_sf(msoa_final_clean)\n\nSummarise PM2.5 exposure by IMD quintile\n\nineq_table &lt;- msoa_final_clean %&gt;%\n  group_by(imd_quintile) %&gt;%\n  summarise(\n    mean_pm25   = mean(pm2.5_mean, na.rm = TRUE),\n    median_pm25 = median(pm2.5_mean, na.rm = TRUE),\n    n           = n()\n  )\n\nineq_table\n\nSimple feature collection with 5 features and 4 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 82668.52 ymin: 5352.6 xmax: 655653.8 ymax: 657539.4\nProjected CRS: OSGB36 / British National Grid\n# A tibble: 5 × 5\n  imd_quintile mean_pm25 median_pm25     n                              geometry\n         &lt;int&gt;     &lt;dbl&gt;       &lt;dbl&gt; &lt;int&gt;                    &lt;MULTIPOLYGON [m]&gt;\n1            1      8.57        8.62  1372 (((147453 30860, 147506 30854.46, 14…\n2            2      8.46        8.53  1371 (((168789.2 12907.28, 168755.9 12935…\n3            3      8.26        8.28  1371 (((167462 29255.33, 167522 29364.51,…\n4            4      8.11        8.13  1371 (((83999.7 5358.6, 83889.79 5352.6, …\n5            5      8.09        8.08  1371 (((179801.1 33056.8, 179807.7 33026.…\n\n\nThe table summarises mean and median PM2.5 concentrations for MSOAs grouped into IMD quintiles. There is a clear inequality gradient. As deprivation increases, PM2.5 levels also increase.\nPM2.5 declines steadily from:\n\n8.57 µg/m³ in the most deprived quintile\n8.09 µg/m³ in the least deprived quintile\n\nThis is a 0.48 µg/m³ difference, which is meaningful at population scale. Every step from Quintile 1 → 5 shows lower PM2.5. This implies that the association is consistent, not driven by a single outlier group.\nThe absolute differences (~0.5 µg/m³) may appear small numerically but:\n\nAre large relative to annual PM2.5 variation in the UK\nRepresent a 6% higher concentration in deprived areas\nContribute to measurable increases in mortality and morbidity\n\nThe environmental inequality is evident.",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#identify-msoas-with-highest-pm2.5-and-most-deprived",
+    "href": "demo1.html#identify-msoas-with-highest-pm2.5-and-most-deprived",
+    "title": "Explore datasets with R/Python",
+    "section": "Identify MSOAs with highest pm2.5 and most deprived",
+    "text": "Identify MSOAs with highest pm2.5 and most deprived\n\nmsoa_hotspots &lt;- msoa_final_clean %&gt;%\n  mutate(\n    pm25_decile = ntile(pm2.5_mean, 10),             # 10 = highest exposure\n    imd_decile_rank = ntile(-imd_rank_msoa, 10)      # 10 = most deprived\n  ) %&gt;%\n  filter(pm25_decile == 10 & imd_decile_rank == 10)  # high pollution + high deprivation\n\nmsoa_hotspots &lt;- st_as_sf(msoa_hotspots)",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#scatter-plot-with-quadrants-best-to-show-inequality-trend",
+    "href": "demo1.html#scatter-plot-with-quadrants-best-to-show-inequality-trend",
+    "title": "Explore datasets with R/Python",
+    "section": "Scatter plot with quadrants (best to show inequality trend)",
+    "text": "Scatter plot with quadrants (best to show inequality trend)\nPlot PM2.5 vs IMD rank and highlight hotspots. Hotspots appear in the top-right quadrant: high pollution + high deprivation.\n\nggplot(msoa_final_clean, aes(x = imd_rank_msoa, y = pm2.5_mean)) +\n  geom_point(alpha = 0.3) +\n  geom_point(data = msoa_hotspots, colour = \"red\", size = 2) +\n  labs(\n    title = \"Pollution vs Deprivation (MSOA-level)\",\n    x = \"IMD rank (lower = more deprived)\",\n    y = \"PM2.5 concentration\"\n  ) +\n  theme_minimal()",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#which-local-authorities-are-the-most-deprived-have-highest-pollution-concentrations",
+    "href": "demo1.html#which-local-authorities-are-the-most-deprived-have-highest-pollution-concentrations",
+    "title": "Explore datasets with R/Python",
+    "section": "Which Local Authorities are the most deprived & have highest pollution concentrations?",
+    "text": "Which Local Authorities are the most deprived & have highest pollution concentrations?\n\nmsoa_hotspots %&gt;%\n  st_drop_geometry() %&gt;%\n  count(ladnm, sort = TRUE)\n\n# A tibble: 26 × 2\n   ladnm             n\n   &lt;chr&gt;         &lt;int&gt;\n 1 Birmingham        8\n 2 Brent             8\n 3 Haringey          7\n 4 Manchester        7\n 5 Hackney           6\n 6 Newham            5\n 7 Thanet            5\n 8 Middlesbrough     4\n 9 Tendring          4\n10 Tower Hamlets     4\n# ℹ 16 more rows",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "demo1.html#highlight-hotspots-on-a-map",
+    "href": "demo1.html#highlight-hotspots-on-a-map",
+    "title": "Explore datasets with R/Python",
+    "section": "Highlight hotspots on a map",
+    "text": "Highlight hotspots on a map\nWe can highlight hotspots on top of a greyscale map. Immediately shows where the worst areas are.\n\nmsoa_bi_hotspots &lt;- msoa_final_clean %&gt;%\n  mutate(\n    pm25_class = ntile(pm2.5_mean, 3),\n    imd_class  = ntile(-imd_rank_msoa, 3),\n    bi_class   = paste0(pm25_class, \"-\", imd_class)\n  ) %&gt;%\n  filter(bi_class == \"3-3\")\n\n\nggplot() +\n  \n  # Base map in light grey\n  geom_sf(\n    data = msoa_final_clean,\n    fill = \"grey50\",\n    colour = \"grey80\",\n    size = 0.1\n  ) +\n  \n  # Hotspots overlay (3–3 class)\n  geom_sf(\n    data = msoa_bi_hotspots,\n    fill = \"red\",\n    colour = \"darkred\",\n    size = 0.25,\n    alpha = 0.9\n  ) +\n  \n  labs(\n    title = \"High Pollution × High Deprivation Hotspots\",\n   subtitle = \"MSOA Level\",\n    caption = \"Sources: PM2.5 Modelled Estimates, IMD 2025\"\n  ) +\n  \n  theme_minimal() +\n  theme(\n    plot.title = element_text(face = \"bold\", size = 10),\n    legend.position = \"none\",\n    panel.background = element_rect(fill = \"grey95\"),\n    plot.caption = element_text(size = 8)\n  )\n\n\n\n\n\n\n\n\n• Areas with hottest colours on the background (high PM2.5) show spatial pollution patterns. • MSOAs in red are where high pollution overlaps with high deprivation, i.e. the environmental inequality hotspots. • Because hotspots sit on top of a greyscale basemap, they stand out instantly.\n\nProportion chart (best for summary reporting)\nShow what % of most deprived MSOAs fall in the highest PM2.5 decile vs least deprived.\nThis is more interpretable than raw counts.\nExample:\n\n#prop_table &lt;- msoa_final_clean %&gt;%\n#  group_by(imd_decile_rank) %&gt;%\n#  summarise(\n#    pct_high_pm = mean(pm25_decile == 10) * 100\n#  )\n\nspatial clustering analysis",
+    "crumbs": [
+      "Explore datasets with R/Python"
+    ]
+  },
+  {
+    "objectID": "datasets.html",
+    "href": "datasets.html",
+    "title": "Data sets",
+    "section": "",
+    "text": "Accessing IMAGO Data Products\nThis page provides guidance on how to access and download the IMAGO data products for this training.\nAll Imago datasets for this release can be accessed and downloaded from the following website:\nhttps://imago.ac.uk/data\nThe website hosts all available files along with supporting documentation.",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "datasets.html#available-data-formats",
+    "href": "datasets.html#available-data-formats",
+    "title": "Data sets",
+    "section": "Available Data Formats",
+    "text": "Available Data Formats\nThe data products are provided in multiple formats to support different analytical needs:\n\nCSV (.csv) – Tabular data suitable for use in most statistical and data analysis software.\nGeoPackage (.gpkg) – A spatial data format compatible with GIS software such as QGIS and ArcGIS.\nMetadata files – Documentation describing variables, measurement units, methodologies, and data sources.",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "datasets.html#included-data-for-this-release",
+    "href": "datasets.html#included-data-for-this-release",
+    "title": "Data sets",
+    "section": "Included Data for This Release",
+    "text": "Included Data for This Release\nThe current IMAGO data release includes the following thematic datasets:\nTemperature – Measures of temperature patterns across regions.\nPollution – Indicators of air quality and pollution exposure.\nFlooding – Flood risk and flood-related environmental measures.\nSun Probability Framework – A spatial metric capturing probability of sunlight exposure.",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "datasets.html#metadata-information",
+    "href": "datasets.html#metadata-information",
+    "title": "Data sets",
+    "section": "Metadata Information",
+    "text": "Metadata Information\nMetadata is provided alongside each dataset and includes rich information on variable descriptions, definitions, spatial and temporal coverage, data provenance and methodology.",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "datasets.html#file-structure-and-format-details",
+    "href": "datasets.html#file-structure-and-format-details",
+    "title": "Data sets",
+    "section": "File structure and format details",
+    "text": "File structure and format details\nData users are encouraged to consult the metadata before working with the datasets, as it provides essential context for interpretation and analysis.",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "datasets.html#downloading-the-data",
+    "href": "datasets.html#downloading-the-data",
+    "title": "Data sets",
+    "section": "Downloading the Data",
+    "text": "Downloading the Data\nSimply visit the Imago data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.\nIf you have questions about accessing or interpreting the data, please get in touch with us (imago@liverpool.ac.uk).",
+    "crumbs": [
+      "Data sets"
+    ]
+  },
+  {
+    "objectID": "preparing.html",
+    "href": "preparing.html",
+    "title": "Setting up",
+    "section": "",
+    "text": "Google Colab",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#google-colab",
+    "href": "preparing.html#google-colab",
+    "title": "Setting up",
+    "section": "",
+    "text": "What You’ll Need\n\n\n\n\nA Google account (free)\nA modern web browser",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#getting-started-with-google-colaboratory",
+    "href": "preparing.html#getting-started-with-google-colaboratory",
+    "title": "Setting up",
+    "section": "Getting Started with Google Colaboratory",
+    "text": "Getting Started with Google Colaboratory\nGoogle Colaboratory (or “Colab” for short) is a free cloud-based service that provides hosted Jupyter Notebooks1 directly in your browser. No installation or setup is required—you can start coding immediately.\n\nWhy are we using Colab?\nWe use Colab in this course to ensure everyone has a consistent development environment. This approach helps us avoid common problems like:\n\nEnvironment setup issues on different operating systems (Windows, Mac, Linux)\nPackage dependency conflicts between different Python versions\nHardware limitations on personal computers\nTo avoid troubleshooting installation problems\n\nWhile Colab is free to use, paid subscriptions (Colab Pro and Pro+) provide access to more powerful GPUs, higher RAM, and longer runtime limits. For this workshop, the free tier is sufficient.",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#starting-a-session",
+    "href": "preparing.html#starting-a-session",
+    "title": "Setting up",
+    "section": "Starting a session",
+    "text": "Starting a session\nTo begin working in Colab, you’ll need to start a runtime—this is the virtual machine that will execute your code.\n\nCreating and Connecting to a Runtime\n\nNavigate to Google Colaboratory.\nClick File &gt; New Notebook or open an existing notebook\nColab will automatically allocate a runtime when you open a notebook\nLook for the connection status in the upper right corner:\n\nDisconnected: No runtime is active\nConnecting…: Runtime is being allocated\nConnected: You’re ready to run code (shows RAM and disk usage)\n\n\n\n\nChoosing Your Runtime Type (Python or R?)\nSince we’ll be working with both R and Python in this workshop, you may need to change the runtime type:\n\nClick Runtime &gt; Change runtime type in the menu\nSelect your preferred language:\n\nPython 3 (default)\nR (for R sessions)\n\nChoose a hardware accelerator if needed (None, GPU, or TPU)\nClick Save\n\n\n\n\n\n\n\nNote\n\n\n\nChanging the runtime type will restart your session, so do this before running any code. You can only use one language per notebook.\n\n\nOnce connected, you can start writing and executing code!",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#file-organization",
+    "href": "preparing.html#file-organization",
+    "title": "Setting up",
+    "section": "File organization",
+    "text": "File organization\n\nRecipe 1: Mounting Your Google Drive\nTo access files from your Google Drive within Colab, you need to “mount” it first.\nFor Python:\nfrom google.colab import drive\ndrive.mount('/content/drive')\nFor R:\nlibrary(googledrive)\ndrive_auth() \nYou’ll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.\n\n\n\n\n\n\nTip\n\n\n\nAfter mounting, your Drive files will be accessible at /content/drive/MyDrive/ in the session.\n\n\n\n\nRecipe 2: Accessing the Workshop Data Folder\n\nWe’ve prepared a shared Google Drive folder with all the necessary datasets for this workshop.\nStep 1: Add the shared folder to your Drive\n\nOpen the shared folder link: Workshop Data Folder \nRight-click the folder and select “Add shortcut to Drive”\nChoose where to place it (we recommend your root “My Drive”)\n\nStep 2: Set your working directory\nAfter mounting your Drive, change to the workshop data directory so you can use relative paths.\nPython:\nimport os\nos.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed\n\n# Now you can use relative paths\nimport pandas as pd\ndf = pd.read_csv('data/dataset.csv')\nR:\nsetwd('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed\n\n# Now you can use relative paths\nlibrary(readr)\ndf &lt;- read_csv('data/dataset.csv')\n\n\nDownloading Data from imago\nImago hosts the datasets we’ll use. Here’s how to download them directly to your Drive.\nUsing Python:\nimport requests\nimport os\n\n# Mount drive first (see Recipe 1)\n# Make a directory to save your outputs\noutput_dir = '/content/drive/MyDrive/workshop_data/'\nos.makedirs(output_dir, exist_ok=True)\n\n# Download file\nurl = 'https://imago.example.com/dataset.csv'  # Replace with actual URL\nfilename = url.split('/')[-1]\noutput_path = os.path.join(output_dir, filename)\n\nresponse = requests.get(url)\nwith open(output_path, 'wb') as f:\n    f.write(response.content)\n    \nprint(f\"Downloaded to: {output_path}\")\nUsing R:\nlibrary(googledrive)\n\n# Set up output directory\noutput_dir &lt;- \"workshop_data/\"\ndir.create(output_dir, showWarnings = FALSE)\n\n# Download file\nurl &lt;- \"https://imago.example.com/dataset.csv\"  # Replace with actual URL\nfilename &lt;- basename(url)\noutput_path &lt;- file.path(output_dir, filename)\n\ndownload.file(url, destfile = output_path, mode = \"wb\")\nprint(paste(\"Downloaded to:\", output_path))\n\n\nQuick Data Check\nAfter downloading, verify your data loaded correctly:\nPython:\nimport pandas as pd\ndf = pd.read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')\nprint(df.head())\nprint(df.info())\nR:\nlibrary(readr)\ndf &lt;- read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')\nhead(df)\nstr(df)",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#installing-and-loading-packages",
+    "href": "preparing.html#installing-and-loading-packages",
+    "title": "Setting up",
+    "section": "Installing and loading Packages",
+    "text": "Installing and loading Packages\nBefore you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.\n\n\nInstalling packages\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")\n\n\n\n\n\n\nInstallation in Colab\n\n\n\nIn Google Colab: - Python packages use %pip (magic command) to ensure installation in the correct environment - R packages use the standard install.packages() function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook\n\n\n\n\nLoading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
+    "crumbs": [
+      "Setting up"
+    ]
+  },
+  {
+    "objectID": "preparing.html#key-geospatial-and-statistical-packages",
+    "href": "preparing.html#key-geospatial-and-statistical-packages",
+    "title": "Setting up for the workshop",
+    "section": "Key Geospatial and Statistical Packages",
+    "text": "Key Geospatial and Statistical Packages\n\n\n\n\n\n\n\n\nPurpose\nPackage\nKey Functions\n\n\n\n\nVector data handling (points, lines, polygons)\ngeopandas (Python)\nread_file(), sjoin(), to_crs(), dissolve()\n\n\n\nsf (R)\nst_read(), st_join(), st_transform(), st_union(), st_as_sf()\n\n\nRaster data handling (reading/writing gridded data)\nrasterio (Python)\nopen(), read(), mask(), warp.reproject()\n\n\n\nterra (R)\nrast(), vect(), crop(), mask(), extract()\n\n\nMulti-dimensional arrays (NetCDF, climate data)\nxarray (Python)\nopen_dataset(), sel(), mean()\n\n\n\nterra (R)\nrast(), app(), subset()\n\n\nGeospatial xarray operations\nrioxarray (Python)\nopen_rasterio(), rio.reproject(), rio.clip()\n\n\nVector-raster operations\nxvec (Python)\nzonal_stats(), extract_points()\n\n\n\nrasterstats (Python)\nzonal_stats()\n\n\n\nterra (R)\nextract()\n\n\nFast raster extraction to polygons (area-weighted)\nexactextract (Python)\nexact_extract()\n\n\n\nexactextractr (R)\nexact_extract()\n\n\nStatic visualization and plotting\nmatplotlib (Python)\npyplot.plot(), pyplot.imshow()\n\n\n\nggplot2 (R)\nggplot(), geom_sf(), geom_raster() - Best for customizable, beautiful maps\n\n\nInteractive web maps\nfolium (Python)\nMap(), Choropleth()\n\n\n\ntmap (R)\ntm_shape(), tm_polygons(), tm_layout() - Quick maps with interactive “view” mode\n\n\n\nleaflet (R)\nleaflet(), addTiles(), addPolygons()\n\n\nStatistical modeling and econometrics\nstatsmodels (Python)\nOLS(), summary()\n\n\n\nlinearmodels (Python)\nPanelOLS()\n\n\n\nfixest (R)\nfeols(), etable()\n\n\n\npyfixest (Python))\nfeols(), etable()\n\n\nGoogle Earth Engine access\nee (Python)*\nee.Initialize(), ee.ImageCollection(), ee.Image.reduceRegion()- Python wrapper for GEE-api\n\n\n\nrgeedim (R)*\nDownload data directly from GEE as GeoTiffs\n\n\n\nrgee (R)*\nR wrapper to run GEE commands\n\n\nAnimated visualizations\nmatplotlib.animation (Python)*\nFuncAnimation(), save() - Create animated plots and save as gifs\n\n\n\nplotly (Python)*\npx.scatter(), animation_frame= - Interactive animated plots\n\n\n\ngganimate (R)*\nTurn ggplot2 graphs into gifs\n\n\n3D visualizations\npyvista (Python)*\nplot(), add_mesh() - 3D plotting and terrain visualization\n\n\n\nplotly (Python)*\ngraph_objects.Surface(), Scatter3d() - Interactive 3D plots\n\n\n\nrayshader (R)*\nCreate animated 3D graphs and maps\n\n\nGeographic utilities\ncountry_converter (Python)*\nconvert(), continent() - Convert country names/codes and assign regions\n\n\n\ncountrycode (R)*\nGenerate ISO codes, assign continents to countries\n\n\nParallel processing\ndask (Python)*\ncompute(), delayed(), array() - Parallel computing with pandas/xarray\n\n\n\ndoparallel (R)*\nParallel processing for faster computation\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nPackages marked with * will not be used in this workshop but are useful for advanced workflows.\n\n\n&lt;!– ::: callout-important Important packages for raster data in R.\n\nterra: the best way of loading and processing raster data.\nsf: the go-to package for dealing with polygons, lines and spatial points.\nexactextractor: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the exactextract package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.\ntmap: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.\nggplot: the best package for building beautiful maps. Allows for more customisation than tmap.\n\nThere are also the following packages which we will not be using in this workshop:\n\nrgeedim: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.\nrgee: an R wrapper for Google Earth Engine, so you can run GEE commands in R\ngganimate: a package that allows you to turn your ggplot2 graphs into gifs.\nrayshader: create animated 3D graphs and maps in R.\ncountrycode: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.\ndoparallel: my go-to package for parallel processing. ::: –!&gt;",
+    "crumbs": [
+      "Setting up for the workshop"
+    ]
+  },
+  {
+    "objectID": "preparing.html#footnotes",
+    "href": "preparing.html#footnotes",
+    "title": "Setting up",
+    "section": "",
+    "text": "A Jupyter Notebook is an interactive development environment (IDE) that combines live code, visualizations, and explanatory text in a single document. It allows you to write and execute code in cells, making it ideal for data analysis, machine learning, and educational purposes.↩︎",
+    "crumbs": [
+      "Setting up"
+    ]
+  }
+]
