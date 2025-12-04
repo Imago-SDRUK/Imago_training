@@ -1,28 +1,5 @@
 # Imago data product with R {#sec-demo1 .unnumbered}
 
-<<<<<<< Updated upstream
-**Goal**: Explore Imago datasets programmatically and replicate analyses across products (Pollution, Heat, SPF).
-
-Approach: Instructor demonstrates using one product; participants repeat steps using other dataset combinations.
-
-# Load LSOA boundary data + chosen Imago product
-
-# Clean and inspect: basic summary statistics
-
-# Merge with IMD (deprivation)
-
-# Create a scatterplot: exposure vs. deprivation decile
-
-# Calculate correlations and simple inequality metrics
-
-# Identify highest-exposure deciles / hotspots
-
-# Produce a small output table or lightweight report
-
-# Generate a static map (Python: geopandas / R: sf + ggplot)
-
-# Create an interactive map (Python: folium / R: leaflet)
-=======
 # Approach:
 
 Instructor demonstrates using one product; participants repeat steps using other dataset combinations.
@@ -278,4 +255,3 @@ ineq_table
 # Create an interactive map (Python: folium / R: leaflet)
 
 
->>>>>>> Stashed changes
