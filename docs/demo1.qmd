@@ -8,7 +8,7 @@ Approach: Instructor demonstrates using one product; participants repeat steps u
 
 Instructor demonstrates using one product; participants repeat steps using other dataset combinations.
 
-This demo will explore pollution PM2.5 data and IMD 2025. 
+This demo will explore pollution PM2.5 data and IMD 2025.
 
 To have more fun. explore heat? lots of possibilities - and specific aspects of IMD? Domains of deprivation or other MSOA level data
 
@@ -277,6 +277,7 @@ ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
 ```
 
 # Calculate correlations and simple inequality metrics
+
 ```{r}
 # Basic Pearson correlation
 cor_test <- cor.test(msoa_final$pm2.5_mean, msoa_final$imd_rank_msoa)
@@ -302,7 +303,7 @@ ineq_table
 
 # Identify highest-exposure deciles / hotspots
 
-# Generate a bivariate map 
+# Generate a bivariate map
 
 # Create an interactive map (Python: folium / R: leaflet)
 
