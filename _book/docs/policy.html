@@ -162,8 +162,8 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#load-the-imago-product-csvexcel-file" id="toc-load-the-imago-product-csvexcel-file" class="nav-link active" data-scroll-target="#load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</a></li>
   <li><a href="#add-contextual-data-optional" id="toc-add-contextual-data-optional" class="nav-link" data-scroll-target="#add-contextual-data-optional">Add Contextual Data (Optional)</a></li>
-  <li><a href="#explore-patterns-using-excel-tools" id="toc-explore-patterns-using-excel-tools" class="nav-link" data-scroll-target="#explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</a></li>
-  <li><a href="#further-exporation" id="toc-further-exporation" class="nav-link" data-scroll-target="#further-exporation">Further exporation</a></li>
+  <li><a href="#explore-patterns" id="toc-explore-patterns" class="nav-link" data-scroll-target="#explore-patterns">Explore Patterns</a></li>
+  <li><a href="#creating-summary-stats" id="toc-creating-summary-stats" class="nav-link" data-scroll-target="#creating-summary-stats">Creating summary stats</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/docs/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -206,20 +206,120 @@ ul.task-list li input[type="checkbox"] {
 <li><p>pm2.5_mean</p></li>
 <li><p>MSOA Name</p></li>
 </ul>
-<p>Format the dataset as a Table (Ctrl+T) for easy filtering and formulas.</p>
-<p>JOIN AND CORRELATIONS -</p>
+<p>Format the dataset as a Table <code>(Ctrl+T)</code> for easy filtering and formulas.</p>
 </section>
 <section id="add-contextual-data-optional" class="level2">
 <h2 class="anchored" data-anchor-id="add-contextual-data-optional">Add Contextual Data (Optional)</h2>
+<p>Imago datasets are available at commonly used levels of aggregation such as MSOA and LSOA. Matching data in Excel can be as simple as copy-pasting your contextual data alongside Imago data—if you’re working with the full dataset. For partial matches or more complex joins, use <code>VLOOKUP</code> or <code>XLOOKUP</code>.</p>
+<p><strong>Using VLOOKUP:</strong></p>
+<p><code>=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)</code></p>
+<p><strong>Using XLOOKUP (Excel 365):</strong></p>
+<p><code>=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")</code></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig3.png" class="img-fluid figure-img"></p>
+<figcaption>Matched data combined with MSOA-level IMD indicators</figcaption>
+</figure>
+</div>
+<p>In this example, the contextual data is stored in a separate table (<code>Table 2</code>).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tips for joining
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Ensure MSOA/LSOA codes are formatted consistently as text, with no leading or trailing spaces.</li>
+<li>Use <code>=TRIM()</code> to clean codes if needed.</li>
+<li>Check for mismatches using conditional formatting, <code>COUNTIF</code>, or <code>EXACT</code>.</li>
+</ul>
+</div>
+</div>
 </section>
-<section id="explore-patterns-using-excel-tools" class="level2">
-<h2 class="anchored" data-anchor-id="explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</h2>
+<section id="explore-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="explore-patterns">Explore Patterns</h2>
 <p>Filtering &amp; Sorting</p>
-<p>Ranking</p>
-<p>Conditional Formatting</p>
+<p><strong>To filter:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow in any column header</p></li>
+<li><p>Select specific values, or use “Number Filters” for conditions like “Greater than” or “Top 10”</p></li>
+</ul>
+<p><strong>To sort:</strong></p>
+<ul>
+<li><p>Click the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)</p></li>
+<li><p>For multi-level sorts: Data tab → Sort → Add Level</p></li>
+</ul>
+<p><strong>Try these:</strong></p>
+<ul>
+<li><p>Filter using a threshold to show the most deprived areas.</p></li>
+<li><p>Sort by <code>pm_2.5_mean</code> to find highest/lowest MSOAs</p></li>
+</ul>
+<p><strong>Ranking:</strong> Add a rank column to identify top and bottom performers:</p>
+<p><code>=RANK([@[pm2.5_mean]], [pm2.5_mean], 0)</code></p>
+<ul>
+<li>Use 0 for descending rank (highest value = rank 1)</li>
+<li>Use 1 for ascending rank (lowest value = rank 1)</li>
+</ul>
+<p>Percentile ranking:</p>
+<p><code>=(PERCENTRANK.INC([pm2.5_mean], [@[pm2.5_mean]]))*100</code></p>
+<p>This shows where each MSOA falls within the distribution (0 to 1 scale).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig4.png" class="img-fluid figure-img"></p>
+<figcaption>Sorting by rank and percentile</figcaption>
+</figure>
+</div>
+<p><strong>Conditional Formatting:</strong></p>
+<p>Visualise patterns directly in your spreadsheet:</p>
+<ol type="1">
+<li>Select the <code>pm2.5_mean</code> column</li>
+<li>Home tab → Conditional Formatting → Color Scales</li>
+<li>Choose a gradient (e.g., Red-Yellow-Green)</li>
+</ol>
 </section>
-<section id="further-exporation" class="level2">
-<h2 class="anchored" data-anchor-id="further-exporation">Further exporation</h2>
+<section id="creating-summary-stats" class="level2">
+<h2 class="anchored" data-anchor-id="creating-summary-stats">Creating summary stats</h2>
+<p><strong>Using PivotTables:</strong></p>
+<p>We can calculate the deciles for the <code>acute_morbidity_indicator</code> using:</p>
+<p><code>=CEILING(PERCENTRANK.INC([acute_morbidity_indicator], [@[acute_morbidity_indicator]]) * 10, 1)</code></p>
+<p>Then, we can see the average PM2.5 for each such decile using a pivot table:</p>
+<ol type="1">
+<li>Select your data table</li>
+<li>Insert tab → PivotTable</li>
+<li>Drag fields to build your summary:</li>
+</ol>
+<p>Rows: Morbidity indicator deciles Values: <code>pm2.5_mean</code> (set to Average)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig5.png" class="img-fluid figure-img"></p>
+<figcaption>Simple pivot table</figcaption>
+</figure>
+</div>
+<p>Generally, it looks like pollution due to pm 2.5 particles and acute morbidity have a positive correlation.</p>
+<p>A simple correlation (<code>= CORREL(C:C,D:D)</code>) shows the correlation between the two is 0.23.</p>
+<p><strong>Using Charts</strong></p>
+<p>Scatter Plot: PM2.5 vs Acute Morbidity</p>
+<ol type="1">
+<li>Select Acute Morbidity and PM2.5 columns</li>
+<li>Insert → Scatter Chart</li>
+<li>Add a trendline: Click chart → Chart Design → Add Chart Element → Trendline → Linear (Or use Quick Layout in the Chart Design tab)</li>
+</ol>
+<p>Histogram: Distribution</p>
+<ol type="1">
+<li>Select Metric Value column</li>
+<li>Insert → Charts → Histogram</li>
+</ol>
+<p>Adjust bin widths by right-clicking the axis.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig6.png" class="img-fluid figure-img"></p>
+<figcaption>Visualising average PM 2.5</figcaption>
+</figure>
+</div>
 
 
 </section>

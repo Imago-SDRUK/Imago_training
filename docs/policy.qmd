@@ -22,25 +22,29 @@ Format the dataset as a Table `(Ctrl+T)` for easy filtering and formulas.
 
 ## Add Contextual Data (Optional)
 
-To enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.
+Imago datasets are available at commonly used levels of aggregation such as MSOA and LSOA. Matching data in Excel can be as simple as copy-pasting your contextual data alongside Imago data—if you're working with the full dataset. For partial matches or more complex joins, use `VLOOKUP` or `XLOOKUP`.
 
-Using `VLOOKUP` to join data:
+**Using VLOOKUP:**
 
 `=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)`
 
-Using `XLOOKUP` (Excel 365):
+**Using XLOOKUP (Excel 365):**
 
 `=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")`
 
-![](/data/msoa_pm25_exceldemo_fig3.png)
+![Matched data combined with MSOA-level IMD indicators](/data/msoa_pm25_exceldemo_fig3.png)
 
-Tips for joining:
+In this example, the contextual data is stored in a separate table (`Table 2`).
 
--   Ensure LSOA codes are formatted consistently (text, no leading/trailing spaces)
--   Use `TRIM()` to clean codes if needed: `= TRIM(A2)`
--   Check for mismatches using conditional formatting or `COUNTIF` or `EXACT`
+::: {.callout-tip}
+## Tips for joining
 
-## Explore Patterns Using Excel Tools
+- Ensure MSOA/LSOA codes are formatted consistently as text, with no leading or trailing spaces.
+- Use `=TRIM()` to clean codes if needed.
+- Check for mismatches using conditional formatting, `COUNTIF`, or `EXACT`.
+:::
+
+## Explore Patterns
 
 Filtering & Sorting
 
@@ -56,14 +60,73 @@ Filtering & Sorting
 
 -   For multi-level sorts: Data tab → Sort → Add Level
 
-**Try these explorations:**
+**Try these:**
 
 -   Filter using a threshold to show the most deprived areas.
 
--   Sort by \`pm_2.5_mean\` to find highest/lowest MSOAs
+-   Sort by `pm_2.5_mean` to find highest/lowest MSOAs
 
-![](/data/msoa_pm25_exceldemo_fig2.png)
+**Ranking:**
+Add a rank column to identify top and bottom performers:
 
-Conditional Formatting
+`=RANK([@[pm2.5_mean]], [pm2.5_mean], 0)`
 
-## Further exporation
+- Use 0 for descending rank (highest value = rank 1)
+- Use 1 for ascending rank (lowest value = rank 1)
+
+Percentile ranking:
+
+`=(PERCENTRANK.INC([pm2.5_mean], [@[pm2.5_mean]]))*100`
+
+This shows where each MSOA falls within the distribution (0 to 1 scale).
+
+![Sorting by rank and percentile](/data/msoa_pm25_exceldemo_fig4.png)
+
+**Conditional Formatting:**
+
+Visualise patterns directly in your spreadsheet:
+
+1. Select the `pm2.5_mean` column
+2. Home tab → Conditional Formatting → Color Scales
+3. Choose a gradient (e.g., Red-Yellow-Green)
+
+
+## Creating summary stats
+
+**Using PivotTables:**
+
+We can calculate the deciles for the `acute_morbidity_indicator` using:
+
+`=CEILING(PERCENTRANK.INC([acute_morbidity_indicator], [@[acute_morbidity_indicator]]) * 10, 1)`
+
+Then, we can see the average PM2.5 for each such decile using a pivot table: 
+
+1. Select your data table
+2. Insert tab → PivotTable
+3. Drag fields to build your summary:
+
+Rows: Morbidity indicator deciles 
+Values: `pm2.5_mean` (set to Average)
+
+![Simple pivot table](/data/msoa_pm25_exceldemo_fig5.png)
+
+Generally, it looks like pollution due to pm 2.5 particles and acute morbidity have a positive correlation. 
+
+A simple correlation (`= CORREL(C:C,D:D)`) shows the correlation between the two is 0.23.
+
+**Using Charts**
+
+Scatter Plot: PM2.5 vs Acute Morbidity
+
+1. Select Acute Morbidity  and PM2.5 columns
+2. Insert → Scatter Chart
+3. Add a trendline: Click chart → Chart Design → Add Chart Element → Trendline → Linear (Or use Quick Layout in the Chart Design tab)
+
+
+Histogram: Distribution
+
+1. Select Metric Value column
+2. Insert → Charts → Histogram
+
+![Visualising average PM 2.5](/data/msoa_pm25_exceldemo_fig6.png)
+
