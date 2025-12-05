@@ -62,20 +62,22 @@ Once connected, you can start writing and executing code!
 ### Recipe 1: Mounting Your Google Drive
 
 To access files from your Google Drive within Colab, you need to "mount" it first.
+::: {.panel-tabset group="language"}
+### R
 
-**For Python:**
-
-``` python
-from google.colab import drive
-drive.mount('/content/drive')
-```
-
-**For R:**
-
-``` r
+```{r}
 library(googledrive)
 drive_auth() 
 ```
+
+### Python
+
+```{python}
+from google.colab import drive
+drive.mount('/content/drive')
+```
+:::
+
 
 You'll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.
 
@@ -98,10 +100,10 @@ We've prepared a shared Google Drive folder with all the necessary datasets for 
 **Step 2: Set your working directory**
 
 After mounting your Drive, change to the workshop data directory so you can use relative paths.
-
+::: {.panel-tabset group="language"}
 **Python:**
 
-``` python
+``` {python}
 import os
 os.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
 
@@ -110,15 +112,15 @@ import pandas as pd
 df = pd.read_csv('data/dataset.csv')
 ```
 
-**R:**
 
-``` r
+``` {r}
 setwd('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
 
 # Now you can use relative paths
 library(readr)
 df <- read_csv('data/dataset.csv')
 ```
+:::
 
 ### Downloading Data from imago
 
@@ -261,4 +263,3 @@ library(ggplot2)
 # Alternative way to load packages
 require(dplyr)
 ```
-

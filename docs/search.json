@@ -54,7 +54,7 @@
     "href": "policy.html#add-contextual-data-optional",
     "title": "Data Insights with Excel",
     "section": "Add Contextual Data (Optional)",
-    "text": "Add Contextual Data (Optional)\nTo enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.\nUsing VLOOKUP to join data:\n=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)\nUsing XLOOKUP (Excel 365):\n=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, \"Not found\")\n\nTips for joining:\n\nEnsure LSOA codes are formatted consistently (text, no leading/trailing spaces)\nUse TRIM() to clean codes if needed: = TRIM(A2)\nCheck for mismatches using conditional formatting or COUNTIF or EXACT",
+    "text": "Add Contextual Data (Optional)\nImago datasets are available at commonly used levels of aggregation such as MSOA and LSOA. Matching data in Excel can be as simple as copy-pasting your contextual data alongside Imago data—if you’re working with the full dataset. For partial matches or more complex joins, use VLOOKUP or XLOOKUP.\nUsing VLOOKUP:\n=VLOOKUP([@[dt_zn_c]], ContextData!A:B, 2, FALSE)\nUsing XLOOKUP (Excel 365):\n=XLOOKUP([@[dt_zn_c]], ContextData!A:A, ContextData!B:B, \"Not found\")\n\n\n\nMatched data combined with MSOA-level IMD indicators\n\n\nIn this example, the contextual data is stored in a separate table (Table 2).\n\n\n\n\n\n\nTipTips for joining\n\n\n\n\nEnsure MSOA/LSOA codes are formatted consistently as text, with no leading or trailing spaces.\nUse =TRIM() to clean codes if needed.\nCheck for mismatches using conditional formatting, COUNTIF, or EXACT.",
     "crumbs": [
       "Data Insights with Excel"
     ]
@@ -274,7 +274,7 @@
     "href": "preparing.html#google-colab",
     "title": "Setting up",
     "section": "",
-    "text": "What You’ll Need\n\n\n\n\nA Google account (free)\nA modern web browser",
+    "text": "ImportantWhat You’ll Need\n\n\n\n\nA Google account (free)\nA modern web browser",
     "crumbs": [
       "Setting up"
     ]
@@ -314,7 +314,7 @@
     "href": "preparing.html#installing-and-loading-packages",
     "title": "Setting up",
     "section": "Installing and loading Packages",
-    "text": "Installing and loading Packages\nBefore you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.\n\n\nInstalling packages\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")\n\n\n\n\n\n\nInstallation in Colab\n\n\n\nIn Google Colab: - Python packages use %pip (magic command) to ensure installation in the correct environment - R packages use the standard install.packages() function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook\n\n\n\n\nLoading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
+    "text": "Installing and loading Packages\nBefore you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.\n\n\nInstalling packages\nPython:\n# Using conda (preferred for local installations)\n# Run in terminal/command line:\nconda install geopandas rasterio xarray -c conda-forge\n\n# Using pip (in Colab or Jupyter notebooks)\n%pip install geopandas rasterio xarray pyfixest\n\n# Install specific version\n%pip install geopandas==0.14.0\nR:\n# Install from CRAN\ninstall.packages(\"sf\")\ninstall.packages(c(\"terra\", \"exactextractr\", \"ggplot2\"))\n\n# Install from GitHub (development versions)\nremotes::install_github(\"r-spatial/sf\")\n\n# Install specific version\nremotes::install_version(\"sf\", version = \"1.0-14\")\n\n\n\n\n\n\nNoteInstallation in Colab\n\n\n\nIn Google Colab: - Python packages use %pip (magic command) to ensure installation in the correct environment - R packages use the standard install.packages() function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you’ll typically need to install them at the start of your notebook\n\n\n\n\nLoading Packages\nPython:\n# Import packages\nimport geopandas as gpd\nimport rasterio\nimport pandas as pd\n\n# You can also import specific functions\nfrom pyfixest.estimation import feols\nR:\n# Load packages\nlibrary(sf)\nlibrary(terra)\nlibrary(exactextractr)\nlibrary(ggplot2)\n\n# Alternative way to load packages\nrequire(dplyr)",
     "crumbs": [
       "Setting up"
     ]
@@ -337,6 +337,56 @@
     "text": "A Jupyter Notebook is an interactive development environment (IDE) that combines live code, visualizations, and explanatory text in a single document. It allows you to write and execute code in cells, making it ideal for data analysis, machine learning, and educational purposes.↩︎",
     "crumbs": [
       "Setting up"
+    ]
+  },
+  {
+    "objectID": "policy.html#explore-patterns",
+    "href": "policy.html#explore-patterns",
+    "title": "Data Insights with Excel",
+    "section": "Explore Patterns",
+    "text": "Explore Patterns\nFiltering & Sorting\nTo filter:\n\nClick the dropdown arrow in any column header\nSelect specific values, or use “Number Filters” for conditions like “Greater than” or “Top 10”\n\nTo sort:\n\nClick the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)\nFor multi-level sorts: Data tab → Sort → Add Level\n\nTry these:\n\nFilter using a threshold to show the most deprived areas.\nSort by pm_2.5_mean to find highest/lowest MSOAs\n\nRanking: Add a rank column to identify top and bottom performers:\n=RANK([@[pm2.5_mean]], [pm2.5_mean], 0)\n\nUse 0 for descending rank (highest value = rank 1)\nUse 1 for ascending rank (lowest value = rank 1)\n\nPercentile ranking:\n=(PERCENTRANK.INC([pm2.5_mean], [@[pm2.5_mean]]))*100\nThis shows where each MSOA falls within the distribution (0 to 1 scale).\n\n\n\nSorting by rank and percentile\n\n\nConditional Formatting:\nVisualise patterns directly in your spreadsheet:\n\nSelect the pm2.5_mean column\nHome tab → Conditional Formatting → Color Scales\nChoose a gradient (e.g., Red-Yellow-Green)",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "policy.html#creating-summary-stats",
+    "href": "policy.html#creating-summary-stats",
+    "title": "Data Insights with Excel",
+    "section": "Creating summary stats",
+    "text": "Creating summary stats\nUsing PivotTables:\nWe can calculate the deciles for the acute_morbidity_indicator using:\n=CEILING(PERCENTRANK.INC([acute_morbidity_indicator], [@[acute_morbidity_indicator]]) * 10, 1)\nThen, we can see the average PM2.5 for each such decile using a pivot table:\n\nSelect your data table\nInsert tab → PivotTable\nDrag fields to build your summary:\n\nRows: Morbidity indicator deciles Values: pm2.5_mean (set to Average)\n\n\n\nSimple pivot table\n\n\nGenerally, it looks like pollution due to pm 2.5 particles and acute morbidity have a positive correlation.\nA simple correlation (= CORREL(C:C,D:D)) shows the correlation between the two is 0.23.\nUsing Charts\nScatter Plot: PM2.5 vs Acute Morbidity\n\nSelect Acute Morbidity and PM2.5 columns\nInsert → Scatter Chart\nAdd a trendline: Click chart → Chart Design → Add Chart Element → Trendline → Linear (Or use Quick Layout in the Chart Design tab)\n\nHistogram: Distribution\n\nSelect Metric Value column\nInsert → Charts → Histogram\n\n&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD:docs/policy.qmd  ======= ## Further exporation &gt;&gt;&gt;&gt;&gt;&gt;&gt; 73cbacc29fa164fc83d6d44dc06cbe7e812e85d2:policy.qmd",
+    "crumbs": [
+      "Data Insights with Excel"
+    ]
+  },
+  {
+    "objectID": "packages.html",
+    "href": "packages.html",
+    "title": "Geospatial and Statistical Packages",
+    "section": "",
+    "text": "Purpose\nPackage\nKey Functions\n\n\n\n\nVector data handling (points, lines, polygons)\ngeopandas (Python)\nread_file(), sjoin(), to_crs(), dissolve()\n\n\n\nsf (R)\nst_read(), st_join(), st_transform(), st_union(), st_as_sf()\n\n\nRaster data handling (reading/writing gridded data)\nrasterio (Python)\nopen(), read(), mask(), warp.reproject()\n\n\n\nterra (R)\nrast(), vect(), crop(), mask(), extract()\n\n\nMulti-dimensional arrays (NetCDF, climate data)\nxarray (Python)\nopen_dataset(), sel(), mean()\n\n\n\nterra (R)\nrast(), app(), subset()\n\n\nGeospatial xarray operations\nrioxarray (Python)\nopen_rasterio(), rio.reproject(), rio.clip()\n\n\nVector-raster operations\nxvec (Python)\nzonal_stats(), extract_points()\n\n\n\nrasterstats (Python)\nzonal_stats()\n\n\n\nterra (R)\nextract()\n\n\nFast raster extraction to polygons (area-weighted)\nexactextract (Python)\nexact_extract()\n\n\n\nexactextractr (R)\nexact_extract()\n\n\nStatic visualization and plotting\nmatplotlib (Python)\npyplot.plot(), pyplot.imshow()\n\n\n\nggplot2 (R)\nggplot(), geom_sf(), geom_raster() - Best for customizable, beautiful maps\n\n\nInteractive web maps\nfolium (Python)\nMap(), Choropleth()\n\n\n\ntmap (R)\ntm_shape(), tm_polygons(), tm_layout() - Quick maps with interactive “view” mode\n\n\n\nleaflet (R)\nleaflet(), addTiles(), addPolygons()\n\n\nStatistical modeling and econometrics\nstatsmodels (Python)\nOLS(), summary()\n\n\n\nlinearmodels (Python)\nPanelOLS()\n\n\n\nfixest (R)\nfeols(), etable()\n\n\n\npyfixest (Python))\nfeols(), etable()\n\n\nGoogle Earth Engine access\nee (Python)*\nee.Initialize(), ee.ImageCollection(), ee.Image.reduceRegion()- Python wrapper for GEE-api\n\n\n\nrgeedim (R)*\nDownload data directly from GEE as GeoTiffs\n\n\n\nrgee (R)*\nR wrapper to run GEE commands\n\n\nAnimated visualizations\nmatplotlib.animation (Python)*\nFuncAnimation(), save() - Create animated plots and save as gifs\n\n\n\nplotly (Python)*\npx.scatter(), animation_frame= - Interactive animated plots\n\n\n\ngganimate (R)*\nTurn ggplot2 graphs into gifs\n\n\n3D visualizations\npyvista (Python)*\nplot(), add_mesh() - 3D plotting and terrain visualization\n\n\n\nplotly (Python)*\ngraph_objects.Surface(), Scatter3d() - Interactive 3D plots\n\n\n\nrayshader (R)*\nCreate animated 3D graphs and maps\n\n\nGeographic utilities\ncountry_converter (Python)*\nconvert(), continent() - Convert country names/codes and assign regions\n\n\n\ncountrycode (R)*\nGenerate ISO codes, assign continents to countries\n\n\nParallel processing\ndask (Python)*\ncompute(), delayed(), array() - Parallel computing with pandas/xarray\n\n\n\ndoparallel (R)*\nParallel processing for faster computation\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nPackages marked with * will not be used in this workshop but are useful for advanced workflows.\n\n\n&lt;!– ::: callout-important Important packages for raster data in R.\n\nterra: the best way of loading and processing raster data.\nsf: the go-to package for dealing with polygons, lines and spatial points.\nexactextractor: the quickest, easiest and most accurate way to calculate zonal statistics. It’s an R wrapper for the exactextract package (written in C++). It’s more accurate than ArcGIS, QGIS, and Python’s rasterstats package in calculating zonal stats.\ntmap: quick and easy, and its “view” mode allows you to create interactive maps that are built on leaflet.\nggplot: the best package for building beautiful maps. Allows for more customisation than tmap.\n\nThere are also the following packages which we will not be using in this workshop:\n\nrgeedim: provides the easiest way to download data directly from Google Earth Engine as GeoTiffs.\nrgee: an R wrapper for Google Earth Engine, so you can run GEE commands in R\ngganimate: a package that allows you to turn your ggplot2 graphs into gifs.\nrayshader: create animated 3D graphs and maps in R.\ncountrycode: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.\ndoparallel: my go-to package for parallel processing. ::: –!&gt;",
+    "crumbs": [
+      "Geospatial and Statistical Packages"
+    ]
+  },
+  {
+    "objectID": "satellites_to_areas.html",
+    "href": "satellites_to_areas.html",
+    "title": "From grids to areas",
+    "section": "",
+    "text": "How hard is it to process satellite data?",
+    "crumbs": [
+      "From grids to areas"
+    ]
+  },
+  {
+    "objectID": "satellites_to_areas.html#further-readings",
+    "href": "satellites_to_areas.html#further-readings",
+    "title": "From grids to areas",
+    "section": "Further readings",
+    "text": "Further readings\n\nRaster Data in R",
+    "crumbs": [
+      "From grids to areas"
     ]
   }
 ]

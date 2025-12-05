@@ -124,4 +124,7 @@ Histogram: Distribution
 1.  Select Metric Value column
 2.  Insert → Charts → Histogram
 
-\<\<\<\<\<\<\< HEAD:docs/policy.qmd ![Visualising average PM 2.5](/data/msoa_pm25_exceldemo_fig6.png) ======= \## Further exporation \>\>\>\>\>\>\> 73cbacc29fa164fc83d6d44dc06cbe7e812e85d2:policy.qmd
+![Visualising average PM 2.5](/data/msoa_pm25_exceldemo_fig6.png) 
+
+## Further explorations 
+

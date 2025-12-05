@@ -275,10 +275,10 @@ Next, we’ll look at how to quantify the relationship between PM2.5 exposure an
 
 The code below:
 
-- Fits the model,
-- Extracts the regression equation and R² value, and
-- Visualises the relationship using a scatterplot with a fitted trend line and an annotated equation.
-	
+-   Fits the model,
+-   Extracts the regression equation and R² value, and
+-   Visualises the relationship using a scatterplot with a fitted trend line and an annotated equation.
+
 ```{r, message=FALSE, warning=FALSE}
 model <- lm(imd_rank_msoa ~ pm2.5_mean, data = msoa_final)
 
@@ -428,13 +428,12 @@ msoa_hotspots %>%
 
 # Bivariate choropleth map
 
-Created bivariate categories. 
-Now map them: 
+Created bivariate categories. Now map them:
 
-- low PM2.5 + low deprivation 
-- low PM2.5 + high deprivation 
-- high PM2.5 + low deprivation 
-- high PM2.5 + high deprivation (hotspots)
+-   low PM2.5 + low deprivation
+-   low PM2.5 + high deprivation
+-   high PM2.5 + low deprivation
+-   high PM2.5 + high deprivation (hotspots)
 
 # Generate a bivariate map
 
@@ -525,7 +524,6 @@ msoa_bi_hotspots <- msoa_final_clean %>%
   filter(bi_class == "3-3")
 ```
 
-
 ```{r}
 ggplot() +
   
@@ -560,9 +558,7 @@ ggplot() +
   )
 ```
 
-• Areas with hottest colours on the background (high PM2.5) show spatial pollution patterns. 
-• MSOAs in red are where high pollution overlaps with high deprivation, i.e. the environmental inequality hotspots. 
-• Because hotspots sit on top of a greyscale basemap, they stand out instantly.
+• Areas with hottest colours on the background (high PM2.5) show spatial pollution patterns. • MSOAs in red are where high pollution overlaps with high deprivation, i.e. the environmental inequality hotspots. • Because hotspots sit on top of a greyscale basemap, they stand out instantly.
 
 # Interactive map
 
