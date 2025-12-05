@@ -2,14 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Imago team">
-<meta name="dcterms.date" content="2025-12-04">
 
-<title>Imago training</title>
+<title>Data sets – Imago training</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./datasets.html" rel="next">
+<link href="./preparing.html" rel="next">
+<link href="./index.html" rel="prev">
 <link href="./assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -84,7 +83,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Welcome</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./datasets.html">Data sets</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -97,7 +96,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -114,13 +115,13 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Welcome</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./datasets.html" class="sidebar-item-text sidebar-link">
+  <a href="./datasets.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Data sets</span></a>
   </div>
 </li>
@@ -148,12 +149,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">Imago data product with R</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./packages.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Key Geospatial and Statistical Packages</span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -164,39 +159,28 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#welcome" id="toc-welcome" class="nav-link active" data-scroll-target="#welcome">Welcome</a>
-  <ul class="collapse">
-  <li><a href="#using-imago-data-products-for-social-research-policy" id="toc-using-imago-data-products-for-social-research-policy" class="nav-link" data-scroll-target="#using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</a></li>
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
-  </ul></li>
+  <li><a href="#accessing-imago-data-products" id="toc-accessing-imago-data-products" class="nav-link active" data-scroll-target="#accessing-imago-data-products">Accessing IMAGO Data Products</a></li>
+  <li><a href="#available-data-formats" id="toc-available-data-formats" class="nav-link" data-scroll-target="#available-data-formats">Available Data Formats</a></li>
+  <li><a href="#included-data-for-this-release" id="toc-included-data-for-this-release" class="nav-link" data-scroll-target="#included-data-for-this-release">Included Data for This Release</a></li>
+  <li><a href="#metadata-information" id="toc-metadata-information" class="nav-link" data-scroll-target="#metadata-information">Metadata Information</a></li>
+  <li><a href="#file-structure-and-format-details" id="toc-file-structure-and-format-details" class="nav-link" data-scroll-target="#file-structure-and-format-details">File structure and format details</a></li>
+  <li><a href="#downloading-the-data" id="toc-downloading-the-data" class="nav-link" data-scroll-target="#downloading-the-data">Downloading the Data</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/datasets.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Imago training</h1>
+<h1 class="title">Data sets</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Imago team </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">December 4, 2025</p>
-    </div>
-  </div>
   
     
   </div>
@@ -206,29 +190,44 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-
-<section id="welcome" class="level1 unnumbered">
-<h1 class="unnumbered">Welcome</h1><p><img src="assets/Imago-logo.png" title="Imago training" class="quarto-cover-image nolightbox img-fluid"></p>
-<section id="using-imago-data-products-for-social-research-policy" class="level2">
-<h2 class="anchored" data-anchor-id="using-imago-data-products-for-social-research-policy">Using Imago Data Products for Social Research &amp; Policy</h2>
-<p>Join us for a hands-on introduction to using <a href="https://imago.ac.uk/">Imago: Data Service for Imagery</a> data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.</p>
-<p>This session has been developed by the <a href="https://imago.ac.uk/about">Imago team</a>.</p>
-<p>Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.</p>
-<p>Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.</p>
-<p>The website is <strong>free to use</strong> and is licensed under the <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">Attribution-NonCommercial-NoDerivatives 4.0 International</a>. A compilation of this web course is hosted as a GitHub repository that you can access:</p>
+<p>This page provides guidance on how to access and download the IMAGO data products for this training.</p>
+<section id="accessing-imago-data-products" class="level2">
+<h2 class="anchored" data-anchor-id="accessing-imago-data-products">Accessing IMAGO Data Products</h2>
+<p>All Imago datasets for this release can be accessed and downloaded from the following website:</p>
+<p><a href="https://imago.ac.uk/data" class="uri">https://imago.ac.uk/data</a></p>
+<p>The website hosts all available files along with supporting documentation.</p>
+</section>
+<section id="available-data-formats" class="level2">
+<h2 class="anchored" data-anchor-id="available-data-formats">Available Data Formats</h2>
+<p>The data products are provided in multiple formats to support different analytical needs:</p>
 <ul>
-<li>As an <a href="https://Imago-SDRUK.github.io/Imago_training/">html website</a>.</li>
-<li>As a <a href="https://github.com/Imago-SDRUK/Imago_training">GitHub repository</a>.</li>
+<li><code>CSV (.csv)</code> – Tabular data suitable for use in most statistical and data analysis software.</li>
+<li><code>GeoPackage (.gpkg)</code> – A spatial data format compatible with GIS software such as QGIS and ArcGIS.</li>
+<li><code>Metadata files</code> – Documentation describing variables, measurement units, methodologies, and data sources.</li>
 </ul>
 </section>
-<section id="contact" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="contact">Contact</h2>
-<blockquote class="blockquote">
-<p>The Imago team - imago [at] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.</p>
-</blockquote>
-
-
+<section id="included-data-for-this-release" class="level2">
+<h2 class="anchored" data-anchor-id="included-data-for-this-release">Included Data for This Release</h2>
+<p>The current IMAGO data release includes the following thematic datasets:</p>
+<p><strong>Temperature</strong> – Measures of temperature patterns across regions.</p>
+<p><strong>Pollution</strong> – Indicators of air quality and pollution exposure.</p>
+<p><strong>Flooding</strong> – Flood risk and flood-related environmental measures.</p>
+<p><strong>Sun Probability Framework</strong> – A spatial metric capturing probability of sunlight exposure.</p>
 </section>
+<section id="metadata-information" class="level2">
+<h2 class="anchored" data-anchor-id="metadata-information">Metadata Information</h2>
+<p>Metadata is provided alongside each dataset and includes rich information on variable descriptions, definitions, spatial and temporal coverage, data provenance and methodology.</p>
+</section>
+<section id="file-structure-and-format-details" class="level2">
+<h2 class="anchored" data-anchor-id="file-structure-and-format-details">File structure and format details</h2>
+<p>Data users are encouraged to consult the metadata before working with the datasets, as it provides essential context for interpretation and analysis.</p>
+</section>
+<section id="downloading-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-data">Downloading the Data</h2>
+<p>Simply visit the Imago data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.</p>
+<p>If you have questions about accessing or interpreting the data, please get in touch with us (imago@liverpool.ac.uk).</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -283,13 +282,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -633,10 +633,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./index.html" class="pagination-link" aria-label="Welcome">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./datasets.html" class="pagination-link" aria-label="Data sets">
-        <span class="nav-page-text">Data sets</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./preparing.html" class="pagination-link" aria-label="Setting up for the workshop">
+        <span class="nav-page-text">Setting up for the workshop</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -648,7 +651,7 @@ ul.task-list li input[type="checkbox"] {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/datasets.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This book was built with <a href="https://quarto.org/">Quarto</a>.</p>
 </div>
