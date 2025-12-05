@@ -563,7 +563,6 @@ ggplot() +
 # Interactive map
 
 ```{r}
-#| eval: false
 library(tmap)
 
 # Make sure tmap is in interactive mode
