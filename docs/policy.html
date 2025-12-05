@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -23,26 +23,27 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./demo1.html" rel="next">
-<link href="./satellites_to_areas.html" rel="prev">
-<link href="./assets/Imago-logo.png" rel="icon" type="image/png">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../docs/demo1.html" rel="next">
+<link href="../docs/satellites_to_areas.html" rel="prev">
+<link href="../assets/Imago-logo.png" rel="icon" type="image/png">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -96,7 +97,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -165,8 +168,8 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#load-the-imago-product-csvexcel-file" id="toc-load-the-imago-product-csvexcel-file" class="nav-link active" data-scroll-target="#load-the-imago-product-csvexcel-file">Load the Imago Product (CSV/Excel File)</a></li>
   <li><a href="#add-contextual-data-optional" id="toc-add-contextual-data-optional" class="nav-link" data-scroll-target="#add-contextual-data-optional">Add Contextual Data (Optional)</a></li>
-  <li><a href="#explore-patterns-using-excel-tools" id="toc-explore-patterns-using-excel-tools" class="nav-link" data-scroll-target="#explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</a></li>
-  <li><a href="#further-exporation" id="toc-further-exporation" class="nav-link" data-scroll-target="#further-exporation">Further exporation</a></li>
+  <li><a href="#explore-patterns" id="toc-explore-patterns" class="nav-link" data-scroll-target="#explore-patterns">Explore Patterns</a></li>
+  <li><a href="#creating-summary-stats" id="toc-creating-summary-stats" class="nav-link" data-scroll-target="#creating-summary-stats">Creating summary stats</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/policy.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -199,7 +202,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The imago dataproducts can be found <a href="https://imago.ac.uk/data">here</a>. Have a look!</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="./data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
+<p><img src="..\data/msoa_pm25_exceldemo_fig1.png" class="img-fluid figure-img"></p>
 <figcaption>Here is what the raw PM 2.5 (MSOA-level) looks like.</figcaption>
 </figure>
 </div>
@@ -213,21 +216,38 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="add-contextual-data-optional" class="level2">
 <h2 class="anchored" data-anchor-id="add-contextual-data-optional">Add Contextual Data (Optional)</h2>
-<p>To enrich your analysis, you may want to join additional datasets such as population figures, urban/rural classification, or health indicators.</p>
-<p>Using <code>VLOOKUP</code> to join data:</p>
-<p><code>=VLOOKUP([@[LSOA Code]], ContextData!A:B, 2, FALSE)</code></p>
-<p>Using <code>XLOOKUP</code> (Excel 365):</p>
-<p><code>=XLOOKUP([@[LSOA Code]], ContextData!A:A, ContextData!B:B, "Not found")</code></p>
-<p><img src="./data/msoa_pm25_exceldemo_fig3.png" class="img-fluid"></p>
-<p>Tips for joining:</p>
+<p>Imago datasets are available at commonly used levels of aggregation such as MSOA and LSOA. Matching data in Excel can be as simple as copy-pasting your contextual data alongside Imago data—if you’re working with the full dataset. For partial matches or more complex joins, use <code>VLOOKUP</code> or <code>XLOOKUP</code>.</p>
+<p><strong>Using VLOOKUP:</strong></p>
+<p><code>=VLOOKUP([@[dt_zn_c]], ContextData!A:B, 2, FALSE)</code></p>
+<p><strong>Using XLOOKUP (Excel 365):</strong></p>
+<p><code>=XLOOKUP([@[dt_zn_c]], ContextData!A:A, ContextData!B:B, "Not found")</code></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig3.png" class="img-fluid figure-img"></p>
+<figcaption>Matched data combined with MSOA-level IMD indicators</figcaption>
+</figure>
+</div>
+<p>In this example, the contextual data is stored in a separate table (<code>Table 2</code>).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tips for joining
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <ul>
-<li>Ensure LSOA codes are formatted consistently (text, no leading/trailing spaces)</li>
-<li>Use <code>TRIM()</code> to clean codes if needed: <code>= TRIM(A2)</code></li>
-<li>Check for mismatches using conditional formatting or <code>COUNTIF</code> or <code>EXACT</code></li>
+<li>Ensure MSOA/LSOA codes are formatted consistently as text, with no leading or trailing spaces.</li>
+<li>Use <code>=TRIM()</code> to clean codes if needed.</li>
+<li>Check for mismatches using conditional formatting, <code>COUNTIF</code>, or <code>EXACT</code>.</li>
 </ul>
+</div>
+</div>
 </section>
-<section id="explore-patterns-using-excel-tools" class="level2">
-<h2 class="anchored" data-anchor-id="explore-patterns-using-excel-tools">Explore Patterns Using Excel Tools</h2>
+<section id="explore-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="explore-patterns">Explore Patterns</h2>
 <p>Filtering &amp; Sorting</p>
 <p><strong>To filter:</strong></p>
 <ul>
@@ -239,16 +259,72 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Click the dropdown arrow → Sort A to Z (ascending) or Z to A (descending)</p></li>
 <li><p>For multi-level sorts: Data tab → Sort → Add Level</p></li>
 </ul>
-<p><strong>Try these explorations:</strong></p>
+<p><strong>Try these:</strong></p>
 <ul>
 <li><p>Filter using a threshold to show the most deprived areas.</p></li>
-<li><p>Sort by `pm_2.5_mean` to find highest/lowest MSOAs</p></li>
+<li><p>Sort by <code>pm_2.5_mean</code> to find highest/lowest MSOAs</p></li>
 </ul>
-<p><img src="./data/msoa_pm25_exceldemo_fig2.png" class="img-fluid"></p>
-<p>Conditional Formatting</p>
+<p><strong>Ranking:</strong> Add a rank column to identify top and bottom performers:</p>
+<p><code>=RANK([@[pm2.5_mean]], [pm2.5_mean], 0)</code></p>
+<ul>
+<li>Use 0 for descending rank (highest value = rank 1)</li>
+<li>Use 1 for ascending rank (lowest value = rank 1)</li>
+</ul>
+<p>Percentile ranking:</p>
+<p><code>=(PERCENTRANK.INC([pm2.5_mean], [@[pm2.5_mean]]))*100</code></p>
+<p>This shows where each MSOA falls within the distribution (0 to 1 scale).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig4.png" class="img-fluid figure-img"></p>
+<figcaption>Sorting by rank and percentile</figcaption>
+</figure>
+</div>
+<p><strong>Conditional Formatting:</strong></p>
+<p>Visualise patterns directly in your spreadsheet:</p>
+<ol type="1">
+<li>Select the <code>pm2.5_mean</code> column</li>
+<li>Home tab → Conditional Formatting → Color Scales</li>
+<li>Choose a gradient (e.g., Red-Yellow-Green)</li>
+</ol>
 </section>
-<section id="further-exporation" class="level2">
-<h2 class="anchored" data-anchor-id="further-exporation">Further exporation</h2>
+<section id="creating-summary-stats" class="level2">
+<h2 class="anchored" data-anchor-id="creating-summary-stats">Creating summary stats</h2>
+<p><strong>Using PivotTables:</strong></p>
+<p>We can calculate the deciles for the <code>acute_morbidity_indicator</code> using:</p>
+<p><code>=CEILING(PERCENTRANK.INC([acute_morbidity_indicator], [@[acute_morbidity_indicator]]) * 10, 1)</code></p>
+<p>Then, we can see the average PM2.5 for each such decile using a pivot table:</p>
+<ol type="1">
+<li>Select your data table</li>
+<li>Insert tab → PivotTable</li>
+<li>Drag fields to build your summary:</li>
+</ol>
+<p>Rows: Morbidity indicator deciles Values: <code>pm2.5_mean</code> (set to Average)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig5.png" class="img-fluid figure-img"></p>
+<figcaption>Simple pivot table</figcaption>
+</figure>
+</div>
+<p>Generally, it looks like pollution due to pm 2.5 particles and acute morbidity have a positive correlation.</p>
+<p>A simple correlation (<code>= CORREL(C:C,D:D)</code>) shows the correlation between the two is 0.23.</p>
+<p><strong>Using Charts</strong></p>
+<p>Scatter Plot: PM2.5 vs Acute Morbidity</p>
+<ol type="1">
+<li>Select Acute Morbidity and PM2.5 columns</li>
+<li>Insert → Scatter Chart</li>
+<li>Add a trendline: Click chart → Chart Design → Add Chart Element → Trendline → Linear (Or use Quick Layout in the Chart Design tab)</li>
+</ol>
+<p>Histogram: Distribution</p>
+<ol type="1">
+<li>Select Metric Value column</li>
+<li>Insert → Charts → Histogram</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="..\data/msoa_pm25_exceldemo_fig6.png" class="img-fluid figure-img"></p>
+<figcaption>Visualising average PM 2.5</figcaption>
+</figure>
+</div>
 
 
 </section>
@@ -305,13 +381,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
