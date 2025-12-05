@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,14 +35,15 @@ ul.task-list li input[type="checkbox"] {
 <link href="../assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -96,7 +97,9 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
     <div class="sidebar-title mb-0 py-0">
       <a href="../">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -192,25 +195,25 @@ ul.task-list li input[type="checkbox"] {
 <section id="accessing-imago-data-products" class="level2">
 <h2 class="anchored" data-anchor-id="accessing-imago-data-products">Accessing IMAGO Data Products</h2>
 <p>All Imago datasets for this release can be accessed and downloaded from the following website:</p>
-<p>https://imago.ac.uk/data</p>
+<p><a href="https://imago.ac.uk/data" class="uri">https://imago.ac.uk/data</a></p>
 <p>The website hosts all available files along with supporting documentation.</p>
 </section>
 <section id="available-data-formats" class="level2">
 <h2 class="anchored" data-anchor-id="available-data-formats">Available Data Formats</h2>
 <p>The data products are provided in multiple formats to support different analytical needs:</p>
 <ul>
-<li>CSV (.csv) – Tabular data suitable for use in most statistical and data analysis software.</li>
-<li>GeoPackage (.gpkg) – A spatial data format compatible with GIS software such as QGIS and ArcGIS.</li>
-<li>Metadata files – Documentation describing variables, measurement units, methodologies, and data sources.</li>
+<li><code>CSV (.csv)</code> – Tabular data suitable for use in most statistical and data analysis software.</li>
+<li><code>GeoPackage (.gpkg)</code> – A spatial data format compatible with GIS software such as QGIS and ArcGIS.</li>
+<li><code>Metadata files</code> – Documentation describing variables, measurement units, methodologies, and data sources.</li>
 </ul>
 </section>
 <section id="included-data-for-this-release" class="level2">
 <h2 class="anchored" data-anchor-id="included-data-for-this-release">Included Data for This Release</h2>
 <p>The current IMAGO data release includes the following thematic datasets:</p>
-<p>Temperature – Measures of temperature patterns across regions.</p>
-<p>Pollution – Indicators of air quality and pollution exposure.</p>
-<p>Flooding – Flood risk and flood-related environmental measures.</p>
-<p>Sun probability measure – A spatial metric capturing probability of sunlight exposure.</p>
+<p><strong>Temperature</strong> – Measures of temperature patterns across regions.</p>
+<p><strong>Pollution</strong> – Indicators of air quality and pollution exposure.</p>
+<p><strong>Flooding</strong> – Flood risk and flood-related environmental measures.</p>
+<p><strong>Sun probability Framework</strong> – A spatial metric capturing probability of sunlight exposure.</p>
 </section>
 <section id="metadata-information" class="level2">
 <h2 class="anchored" data-anchor-id="metadata-information">Metadata Information</h2>
@@ -222,7 +225,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="downloading-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="downloading-the-data">Downloading the Data</h2>
-<p>Simply visit the IMAGO data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.</p>
+<p>Simply visit the Imago data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.</p>
 <p>If you have questions about accessing or interpreting the data, please get in touch with us (imago@liverpool.ac.uk).</p>
 
 
@@ -280,13 +283,14 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
