@@ -124,7 +124,18 @@ Histogram: Distribution
 1.  Select Metric Value column
 2.  Insert → Charts → Histogram
 
-![Visualising average PM 2.5](/data/msoa_pm25_exceldemo_fig6.png) 
+![Visualising average PM 2.5](/data/msoa_pm25_exceldemo_fig6.png)
 
-## Further explorations 
+## Further explorations
 
+Consider exploring more! The MSOA-level file contains a number of additional variables worth investigating:
+
+-   **Compare multiple pollutants**: How does PM2.5 correlate with other pollution indicators? Are certain areas consistently high across multiple metrics?
+
+-   **Cross-reference with deprivation**: Join other IMD variables and examine whether pollution burden falls disproportionately on more deprived communities.
+
+-   **Regional comparisons**: Filter by local authority or region to see how various areas compare to national patterns.
+
+-   **Create a simple dashboard**: Combine a PivotTable, a scatter plot, and conditional formatting on a single sheet to build an at-a-glance summary.
+
+-   **Identify outliers**: Use percentile rankings to flag MSOAs that fall outside expected ranges—these may warrant further investigation.

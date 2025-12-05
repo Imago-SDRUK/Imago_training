@@ -41,7 +41,7 @@ library(reticulate)
 MSOA boundary data can be downloaded from the [Imago data catalogue](https://imago.ac.uk/data)
 
 ::: {.panel-tabset group="language"}
-### R
+### 
 
 ```{r}
 msoa_uk <- read_sf("./data/UK_MSOA_IZB_SDZ.shp")
@@ -563,6 +563,7 @@ ggplot() +
 # Interactive map
 
 ```{r}
+#| eval: false
 library(tmap)
 
 # Make sure tmap is in interactive mode
