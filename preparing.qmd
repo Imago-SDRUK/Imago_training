@@ -61,23 +61,26 @@ To access files from your Google Drive within Colab, you need to "mount" it firs
 
 ::: {.panel-tabset group="language"}
 ## R
+
 Google Drive mounting is only available in Colab's Python runtime. To use R with Drive access:
 
-1. Start with a **Python runtime** and mount your drive:
+1.  Start with a **Python runtime** and mount your drive:
+
 ```{python}
 #| eval: false
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 
-2. Switch to the **R runtime** (Runtime → Change runtime type → R). The drive mount persists.
-3. Now you can access your files using the mounted path:
+2.  Switch to the **R runtime** (Runtime → Change runtime type → R). The drive mount persists.
+3.  Now you can access your files using the mounted path:
 
 ```{r}
 #| eval: false
 setwd('/content/drive/MyDrive/WorkshopData/')
 df <- read.csv('imd_msoa.csv')
 ```
+
 ## Python
 
 ```{python}
@@ -97,8 +100,8 @@ After mounting, your Drive files will be accessible at `/content/drive/MyDrive/`
 
 We've prepared a shared Google Drive folder with some starter colab notebooks for this workshop.
 
-- [Python notebook](https://colab.research.google.com/drive/1iXXQeRedroYMCKqueB-ZHtdEf3t9pIle?usp=sharing)
-- [R notebook](https://colab.research.google.com/drive/1YX0L1V0-9FE68RyVocLaPwpyKr-xPn7t?usp=sharing)
+-   [Python notebook](https://colab.research.google.com/drive/1iXXQeRedroYMCKqueB-ZHtdEf3t9pIle?usp=sharing)
+-   [R notebook](https://colab.research.google.com/drive/1YX0L1V0-9FE68RyVocLaPwpyKr-xPn7t?usp=sharing)
 
 **Step 1: Add the shared folder to your Drive**
 
@@ -284,4 +287,3 @@ import pandas as pd
 from pyfixest.estimation import feols
 ```
 :::
-
