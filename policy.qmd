@@ -1,6 +1,6 @@
 # Data Insights with Excel {#sec-excel .unnumbered}
 
-**Goal**: Use Excel to explore Imago LSOA-level data, identify spatial/statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.
+**Goal**: Use Excel to explore Imago MSOA-level data, identify statistical patterns, and prepare simple tables or charts that highlight hotspots or relationships with deprivation. This session focuses on sorting, filtering, ranking, grouping, and visualising patterns.
 
 ## Load the Imago Product (CSV/Excel File)
 
