@@ -26,6 +26,7 @@ book:
     - preparing.qmd
     - demo1.qmd
     - packages.qmd
+    
 
 bibliography: references.bib
 

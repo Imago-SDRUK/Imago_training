@@ -1,7 +1,9 @@
-# Geospatial and Statistical Packages {.unnumbered}
+# Geo-spatial and Statistical Packages {.unnumbered}
+
+A comparison of some key `R` and `Python` packages.
 
 | Purpose | Package | Key Functions |
-|----|----|----|
+|--------------------|--------------------|--------------------------------|
 | **Vector data handling** (points, lines, polygons) | **geopandas** (Python) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` |
 |  | **sf** (R) | `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
 | **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) | `open()`, `read()`, `mask()`, `warp.reproject()` |
