@@ -3,47 +3,29 @@
 A comparison of some key `R` and `Python` packages.
 
 | Purpose | Package | Key Functions |
-|--------------------|--------------------|--------------------------------|
-| **Vector data handling** (points, lines, polygons) | **geopandas** (Python) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` |
-|  | **sf** (R) | `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
-| **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) | `open()`, `read()`, `mask()`, `warp.reproject()` |
-|  | **terra** (R) | `rast()`, `vect()`, `crop()`, `mask()`, `extract()` |
-| **Multi-dimensional arrays** (NetCDF, climate data) | **xarray** (Python) | `open_dataset()`, `sel()`, `mean()` |
-|  | **terra** (R) | `rast()`, `app()`, `subset()` |
+|--------|---------|----------------|
+| **Vector data handling** (points, lines, polygons) | **geopandas** (Python) <br> **sf** (R) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` <br> `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
+| **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) <br> **terra** (R) | `open()`, `read()`, `mask()`, `warp.reproject()` <br> `rast()`, `vect()`, `crop()`, `mask()`, `extract()` |
+| **Multi-dimensional arrays** (NetCDF, climate data) | **xarray** (Python) <br> **terra** (R) | `open_dataset()`, `sel()`, `mean()` <br> `rast()`, `app()`, `subset()` |
 | **Geospatial xarray operations** | **rioxarray** (Python) | `open_rasterio()`, `rio.reproject()`, `rio.clip()` |
-| **Vector-raster operations** | **xvec** (Python) | `zonal_stats()`, `extract_points()` |
-|  | **rasterstats** (Python) | `zonal_stats()` |
-|  | **terra** (R) | `extract()` |
-| **Fast raster extraction to polygons** (area-weighted) | **exactextract** (Python) | `exact_extract()` |
-|  | **exactextractr** (R) | `exact_extract()` |
-| **Static visualization and plotting** | **matplotlib** (Python) | `pyplot.plot()`, `pyplot.imshow()` |
-|  | **ggplot2** (R) | `ggplot()`, `geom_sf()`, `geom_raster()` - Best for customizable, beautiful maps |
-| **Interactive web maps** | **folium** (Python) | `Map()`, `Choropleth()` |
-|  | **tmap** (R) | `tm_shape()`, `tm_polygons()`, `tm_layout()` - Quick maps with interactive "view" mode |
-|  | **leaflet** (R) | `leaflet()`, `addTiles()`, `addPolygons()` |
-| **Statistical modeling and econometrics** | **statsmodels** (Python) | `OLS()`, `summary()` |
-|  | **linearmodels** (Python) | `PanelOLS()` |
-|  | **fixest** (R) | `feols()`, `etable()` |
-|  | **pyfixest** (Python)) | `feols()`, `etable()` |
-| **Google Earth Engine access** | **ee** (Python)\* | `ee.Initialize()`, `ee.ImageCollection()`, `ee.Image.reduceRegion()`- Python wrapper for GEE-api |
-|  | **rgeedim** (R)\* | Download data directly from GEE as GeoTiffs |
-|  | **rgee** (R)\* | R wrapper to run GEE commands |
-| **Animated visualizations** | **matplotlib.animation** (Python)\* | `FuncAnimation()`, `save()` - Create animated plots and save as gifs |
-|  | **plotly** (Python)\* | `px.scatter()`, `animation_frame=` - Interactive animated plots |
-|  | **gganimate** (R)\* | Turn ggplot2 graphs into gifs |
-| **3D visualizations** | **pyvista** (Python)\* | `plot()`, `add_mesh()` - 3D plotting and terrain visualization |
-|  | **plotly** (Python)\* | `graph_objects.Surface()`, `Scatter3d()` - Interactive 3D plots |
-|  | **rayshader** (R)\* | Create animated 3D graphs and maps |
-| **Geographic utilities** | **country_converter** (Python)\* | `convert()`, `continent()` - Convert country names/codes and assign regions |
-|  | **countrycode** (R)\* | Generate ISO codes, assign continents to countries |
-| **Parallel processing** | **dask** (Python)\* | `compute()`, `delayed()`, `array()` - Parallel computing with pandas/xarray |
-|  | **doparallel** (R)\* | Parallel processing for faster computation |
+| **Vector-raster operations** | **xvec** (Python) <br> **rasterstats** (Python) <br> **terra** (R) | `zonal_stats()`, `extract_points()` <br> `zonal_stats()` <br> `extract()` |
+| **Fast raster extraction to polygons** (area-weighted) | **exactextract** (Python) <br> **exactextractr** (R) | `exact_extract()` <br> `exact_extract()` |
+| **Static visualization and plotting** | **matplotlib** (Python) <br> **ggplot2** (R) | `pyplot.plot()`, `pyplot.imshow()` <br> `ggplot()`, `geom_sf()`, `geom_raster()` |
+| **Interactive web maps** | **folium** (Python) <br> **tmap** (R) <br> **leaflet** (R) | `Map()`, `Choropleth()` <br> `tm_shape()`, `tm_polygons()`, `tm_layout()` <br> `leaflet()`, `addTiles()`, `addPolygons()` |
+| **Statistical modeling and econometrics** | **statsmodels** (Python) <br> **linearmodels** (Python) <br> **fixest** (R) <br> **pyfixest** (Python) | `OLS()`, `summary()` <br> `PanelOLS()` <br> `feols()`, `etable()` <br> `feols()`, `etable()` |
+| **Google Earth Engine access** | **ee** (Python)\* <br> **rgeedim** (R)\* <br> **rgee** (R)\* | `ee.Initialize()`, `ee.ImageCollection()`, `ee.Image.reduceRegion()` <br> Download GEE as GeoTIFFs <br> R wrapper for GEE |
+| **Animated visualizations** | **matplotlib.animation** (Python)\* <br> **plotly** (Python)\* <br> **gganimate** (R)\* | `FuncAnimation()`, `save()` <br> `px.scatter()`, `animation_frame=` <br> Create GIFs from ggplot2 |
+| **3D visualizations** | **pyvista** (Python)\* <br> **plotly** (Python)\* <br> **rayshader** (R)\* | `plot()`, `add_mesh()` <br> `Surface()`, `Scatter3d()` <br> 3D maps and renderings |
+| **Geographic utilities** | **country_converter** (Python)\* <br> **countrycode** (R)\* | `convert()`, `continent()` <br> Convert country names/codes |
+| **Parallel processing** | **dask** (Python)\* <br> **doparallel** (R)\* | `compute()`, `delayed()`, `array()` <br> Parallel processing for R |
 
 ::: callout-note
-Packages marked with \* will not be used in this workshop but are useful for advanced workflows.
+Some of these Packages marked will not be used in this workshop but are useful for advanced workflows.
 :::
 
-\<!-- ::: callout-important Important packages for raster data in R.
+::: callout-important 
+
+Important packages for raster data in R.
 
 -   `terra`: the best way of loading and processing raster data.
 -   `sf`: the go-to package for dealing with polygons, lines and spatial points.
@@ -58,4 +40,6 @@ There are also the following packages which we will not be using in this worksho
 -   `gganimate`: a package that allows you to turn your ggplot2 graphs into gifs.
 -   `rayshader`: create animated 3D graphs and maps in R.
 -   `countrycode`: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.
--   `doparallel`: my go-to package for parallel processing. ::: --!\>
+-   `doparallel`: my go-to package for parallel processing. 
+
+::: 
