@@ -6,7 +6,7 @@ This page provides guidance on how to access and download the IMAGO data product
 
 All Imago datasets for this release can be accessed and downloaded from the following website:
 
-<https://imago.ac.uk/data>
+<https://data.imago.ac.uk/>
 
 The website hosts all available files along with supporting documentation.
 
