@@ -32,7 +32,7 @@ Imago datasets are available at commonly used levels of aggregation such as MSOA
 
 ![Matched data combined with MSOA-level Health IMD indicators](/data/msoa_temp_exceldemo_fig2.png)
 
-In this example, the contextual data is stored in a separate table (`Table 2`). This dataset is an MSOA-level compilation of the LSOA-level IMD indicator components and ranks, available [here](https://drive.google.com/file/d/1kaabq2uqS_yasZl2uD6mlZ2SkiYv6VuE/view?usp=drive_link). It was derived using the processes described in [Explore datasets with R/Python](demo1.qmd).
+In this example, the contextual data is stored in a separate table (`Table 2`). This dataset is an MSOA-level compilation of the LSOA-level IMD indicator components and ranks, available [here](https://docs.google.com/spreadsheets/d/1At65pys4xia9BBKeDbNLFkiVQ1Ta-xso/edit?usp=drive_link&ouid=112072621229517004821&rtpof=true&sd=true "IMD Domains (MSOA-Level)"). It was derived using the processes described in [Explore datasets with R/Python](demo1.qmd).
 
 ::: callout-tip
 ## Tips for joining
@@ -91,9 +91,9 @@ Visualise patterns directly in your spreadsheet:
 
 **Using PivotTables:**
 
-We can calculate the deciles for the `imd_rank_msoa` using:
+We can calculate the deciles for the `health_imd` using:
 
-`=CEILING(PERCENTRANK.INC([imd_rank_msoa], [@[imd_rank_msoa]]) * 10, 1)`
+`=CEILING(PERCENTRANK.INC([health_imd], [@[health_imd]]) * 10, 1)`
 
 Then, we can see the Winter Minimum Temperature for each such decile using a pivot table:
 
@@ -101,13 +101,13 @@ Then, we can see the Winter Minimum Temperature for each such decile using a piv
 2.  Insert tab → PivotTable
 3.  Drag fields to build your summary:
 
-Rows: IMD Rank Decile \| Values: `winter_min_tmp` (set to Average)
+Rows: Health IMD Decile \| Values: `winter_min_tmp` (set to Average)
 
 ![Simple pivot table](/data/msoa_temp_exceldemo_fig4.png)
 
 Generally, it looks like the IMD rank and lowest winter temperature have a negative correlation. (Why?)
 
-A simple correlation (`=CORREL(Table1[winter_min_tmp],Table1[imd_rank_msoa])`) shows the correlation between the two is 0.23.
+A simple correlation (`=CORREL(Table1[winter_min_tmp],Table1[health_imd])`) shows the correlation between the two is 0.23.
 
 **Using Charts**
 
