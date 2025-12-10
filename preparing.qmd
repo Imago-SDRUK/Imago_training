@@ -254,7 +254,12 @@ remotes::install_version("sf", version = "1.0-14")
 ::: callout-note
 ## Installation in Colab
 
-In Google Colab: - Python packages use `%pip` (magic command) to ensure installation in the correct environment - R packages use the standard `install.packages()` function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you'll typically need to install them at the start of your notebook
+In Google Colab: 
+
+- Python packages use `%pip` (magic command) to ensure installation in the correct environment 
+- R packages use the standard `install.packages()` function 
+- Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab 
+- For geospatial packages, you'll typically need to install them at the start of your notebook
 :::
 
 ### Loading Packages
@@ -286,4 +291,4 @@ import pandas as pd
 # You can also import specific functions
 from pyfixest.estimation import feols
 ```
-:::
+
