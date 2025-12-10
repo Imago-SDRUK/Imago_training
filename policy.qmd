@@ -28,9 +28,9 @@ Imago datasets are available at commonly used levels of aggregation such as MSOA
 
 **Using XLOOKUP (Excel 365):**
 
-`=XLOOKUP([@[data_zone_code]], Table2[msoa21cd],Table2[imd_rank_msoa], "Not found")`
+`=XLOOKUP([@[data_zone_code]],Table2[msoa21cd],Table2[Health Deprivation and Disability Rank (where 1 is most deprived)], "Not found")`
 
-![Matched data combined with MSOA-level IMD indicators](/data/msoa_temp_exceldemo_fig2.png)
+![Matched data combined with MSOA-level Health IMD indicators](/data/msoa_temp_exceldemo_fig2.png)
 
 In this example, the contextual data is stored in a separate table (`Table 2`). This dataset is an MSOA-level compilation of the LSOA-level IMD indicator components and ranks, available [here](https://drive.google.com/file/d/1kaabq2uqS_yasZl2uD6mlZ2SkiYv6VuE/view?usp=drive_link). It was derived using the processes described in [Explore datasets with R/Python](demo1.qmd).
 
@@ -101,7 +101,7 @@ Then, we can see the Winter Minimum Temperature for each such decile using a piv
 2.  Insert tab → PivotTable
 3.  Drag fields to build your summary:
 
-Rows: IMD Rank Decile | Values: `winter_min_tmp` (set to Average)
+Rows: IMD Rank Decile \| Values: `winter_min_tmp` (set to Average)
 
 ![Simple pivot table](/data/msoa_temp_exceldemo_fig4.png)
 
