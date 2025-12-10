@@ -4,11 +4,16 @@
 
 **Training Approach**: The instructor will first demonstrate the workflow using one example dataset. Participants will then repeat the steps with alternative dataset combinations to practice transferring the workflow across products.
 
-We’ll start the demo with PM2.5 pollution data and IMD 2025. Once you’re comfortable with the workflow, feel free to try it out on other datasets—for example, heat indicators, flood risk, or particular IMD domains—to explore different kinds of questions.
+We’ll start the demo with `Summer Maximum Temperature` and `Health Deprivation 2025`.
 
-# Installing packages
+Once you are comfortable with the workflow, feel free to try it out on other datasets—for example, other temperature indicators, flood risk, the sun probability framework or particular IMD domains—to explore different kinds of questions.
 
-We will start by loading core packages for working with spatial data. See detailed description of [R](https://r.geocompx.org/spatial-class).
+## Installing packages
+
+We will start by loading core packages for working with spatial data. See detailed description of [R](https://r.geocompx.org/) and [Python](https://py.geocompx.org/)
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r message=FALSE}
 # Core data handling and plotting
@@ -36,21 +41,51 @@ library(fs)          # File and directory helpers
 library(reticulate)
 ```
 
-# Load MSOA boundary data and pollution data product
+### Python
+
+```{python}
+# Standard library
+import os            # File paths, environment
+import tempfile      # Temporary files
+import zipfile       # Extracting ZIP archives
+
+# Data & geospatial
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+
+# Plotting
+import matplotlib.pyplot as plt
+from matplotlib import cm
+import seaborn as sns
+
+# Statistics
+import statsmodels.api as sm
+from scipy import stats
+from scipy.stats import pearsonr
+
+# Networking
+import requests
+```
+:::
+
+## MSOA boundaries and temperature data product
+
+**Input data**
 
 MSOA boundary data can be downloaded from the [Imago data catalogue](https://imago.ac.uk/data)
 
 ::: {.panel-tabset group="language"}
-### 
+### R
 
 ```{r}
-msoa_uk <- read_sf("./data/UK_MSOA_IZB_SDZ.shp")
+msoa_uk <- read_sf("./data/UK_MSOA_IZB_SDZ.gpkg")
 ```
 
 ### Python
 
 ```{python}
-
+msoa_uk = gpd.read_file("./data/UK_MSOA_IZB_SDZ.gpkg")
 ```
 :::
 
@@ -60,113 +95,265 @@ Load MSOA boundary data and Imago product, also from the [Imago data catalogue](
 ### R
 
 ```{r}
-# Load PM2.5 concentration data
-pm25 <- read.csv("./data/PM25_concentration_MSOA_2023.csv")
+temp <- read.csv("./data/temperature_indicators_MSOA_2023.csv")
 ```
 
 ### Python
 
 ```{python}
+temp = pd.read_csv("./data/temperature_indicators_MSOA_2023.csv")
 ```
 :::
 
-## Merge
+**Merge**
 
-Merge and then plot variable pm2.5_mean with ggplot.
+Merge and then plot variable `Summer Maximum Temperature`.
 
 ::: {.panel-tabset group="language"}
 ### R
 
 ```{r}
-msoa_pm25 <- msoa_uk %>%
-  left_join(pm25, by = c("dt_zn_c" = "dt_zn_c"))
+msoa_temp <- msoa_uk %>%
+  left_join(temp, by = c("data_zone_code" = "data_zone_code"))
 ```
 
 ### Python
 
 ```{python}
+msoa_temp = msoa_uk.merge(temp, on="data_zone_code", how="left")
 ```
 :::
 
-## Basic summary statistics for pm2.5_mean
+**Basic summary statistics**
+
+Let's start with summary statistics.
 
 ::: {.panel-tabset group="language"}
 ### R
 
 ```{r}
-summary(msoa_pm25$pm2.5_mean)
+summary(temp$summer_max_tmp)
 ```
 
 ### Python
+
+```{python}
+temp["summer_max_tmp"].describe()
+```
 :::
 
 Useful for understanding tail behaviour and skewness.
 
+::: {.panel-tabset group="language"}
+### R
+
 ```{r}
-quantile(msoa_pm25$pm2.5_mean, probs = seq(0, 1, 0.1), na.rm = TRUE)
+quantile(msoa_temp$summer_max_tmp, probs = seq(0, 1, 0.1), na.rm = TRUE)
 ```
 
-# Plot variable by local area boundary
+### Python
 
-Here we visualise pollution concentration with `ggplot`.
+```{python}
+quantiles = msoa_temp["summer_max_tmp"].quantile(np.arange(0, 1.1, 0.1))
+quantiles
+```
+:::
+
+**Exploring the Distribution of Winter Minimum Temperature**
+
+A histogram is a useful way to examine the shape of the distribution, including skewness and the presence of extreme values.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
-ggplot(msoa_pm25) +
-  geom_sf(aes(fill = pm2.5_mean), colour = NA) +
-  scale_fill_viridis_c(
-    option = "magma",
-    name = "PM2.5 (µg/m³)",
-    direction = 1,
-    breaks = scales::pretty_breaks(6)   # clean, human-friendly scale
-  ) +
+ggplot(msoa_temp, aes(x = summer_max_tmp)) +
+  geom_histogram(bins = 30, color = "white", fill = "darkred") +
   labs(
-    title = "PM2.5 Mean Concentration by MSOA",
-    subtitle = "Higher values indicate poorer air quality",
-    caption = "Source: Imago & UK MSOA boundaries"
+    title = "Histogram of Summer Maximum Temperature",
+    x = "Summer Maximum Temperature",
+    y = "Count"
   ) +
   theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 13, hjust = 0.5),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
+```
+
+### Python
+
+```{python}
+fig, ax = plt.subplots()
+
+ax.hist(
+    msoa_temp["summer_max_tmp"],
+    bins=30,
+    edgecolor="white",
+    color="darkred"
+)
+
+# Labels and title
+ax.set_title("Histogram of Summer Maximum Temperature", fontsize=16, fontweight="bold", loc="center")
+ax.set_xlabel("Summer Maximum Temperature", fontsize=12, fontweight="bold")
+ax.set_ylabel("Count", fontsize=12, fontweight="bold")
+
+# Minimal-style adjustments
+ax.grid(axis="y", linestyle="--", alpha=0.4)
+ax.grid(axis="x", visible=False)
+ax.set_facecolor("white")
+fig.set_facecolor("white")
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+## Mapping by local area
+
+Mapping temperature across MSOAs allows us to see spatial variation and identify hotter areas during summer. Here, we visualise summer maximum temperatures in degrees Celsius.
+
+::: {.panel-tabset group="language"}
+### R
+
+Here we visualise summer maximum temperature with `ggplot`.
+
+```{r}
+ggplot(msoa_temp) +
+  geom_sf(aes(fill = summer_max_tmp), colour = NA) +
+  scale_fill_distiller(
+    palette = "RdBu",
+    name = "Summer Max Temp (°C)",
+    direction = -1,
+    breaks = scales::pretty_breaks(6)
+  ) +
+  labs(
+    title = "Summer Maximum Temperature by MSOA",
+    caption = "Source: Imago & UK MSOA boundaries"
+  ) +
+  theme_minimal(base_size = 10) +
   theme(
     plot.title = element_text(face = "bold"),
     plot.subtitle = element_text(size = 10, colour = "#555555"),
     legend.position = "right",
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    plot.caption = element_text(hjust = 0.5)  # centre caption
+    axis.title = element_blank(),
+    axis.text  = element_blank(),
+    axis.ticks = element_blank(),
+    plot.caption = element_text(hjust = 0.5)
   )
 ```
 
-# Merge with the Index of Multiple Deprivation
+### Python
+
+```{python}
+# Create figure and axis
+fig, ax = plt.subplots(figsize=(10, 8))
+
+# Colormap 
+viridis = plt.get_cmap('coolwarm')
+
+# Plot MSOA polygons coloured by winter minimum temperature
+msoa_temp.plot(
+    column="summer_max_tmp",
+    cmap=viridis,
+    linewidth=0,
+    legend=True,
+    legend_kwds={
+        "shrink": 0.5,        # shrink colorbar
+        "aspect": 20,         # controls thickness
+        "pad": 0.02,          # spacing from plot
+        "label": "Summer Max Temp (°C)",
+    },
+    ax=ax
+)
+
+# Title and labels
+ax.set_title(
+    "Summer Max Temperature by MSOA",
+    fontsize=12,
+    fontweight="bold"
+)
+ax.set_axis_off()
+
+# Make legend text smaller after creation
+cb = ax.get_figure().axes[-1]   # colorbar axis is always last
+cb.tick_params(labelsize=8)     # smaller tick labels
+cb.set_ylabel("Winter Min Temp (°C)", fontsize=9)
+
+plt.figtext(
+    0.5, 0.02,
+    "Source: Imago & UK MSOA boundaries",
+    ha="center",
+    fontsize=9
+)
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+## Merge with the Index of Multiple Deprivation
 
 The [English Indices of Deprivation 2025](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025) were recently published.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 # Temp file location
 tmp_file <- tempfile(fileext = ".xlsx")
 
-# 1. Download IMD 2025 file
+# Download IMD 2025 file
 download.file(
-  url = "https://assets.publishing.service.gov.uk/media/691dece32c6b98ecdbc500d5/File_1_IoD2025_Index_of_Multiple_Deprivation.xlsx",
+  url = "https://assets.publishing.service.gov.uk/media/691decfae39a085bda43efcd/File_2_IoD2025_Domains_of_Deprivation.xlsx",
   destfile = tmp_file,
   mode = "wb"
 )
 
-# 2. Import IMD25 sheet
-imd <- read_excel(tmp_file, sheet = "IMD25")
+# Import IMD25 sheet
+imd <- read_excel(tmp_file, sheet = "IoD2025 Domains")
 
-# 3. Delete the temporary file
+# Delete the temporary file
 unlink(tmp_file)
 
 # Inspect column names to identify the join key
 names(imd)
 ```
 
+### Python
+
+```{python}
+# Create a temporary file with .xlsx extension
+tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx").name
+
+# Download
+url = "https://assets.publishing.service.gov.uk/media/691decfae39a085bda43efcd/File_2_IoD2025_Domains_of_Deprivation.xlsx"
+r = requests.get(url)
+with open(tmp_file, "wb") as f:
+    f.write(r.content)
+
+# Read Excel sheet & Clean up temp file
+imd = pd.read_excel(tmp_file, sheet_name="IoD2025 Domains")
+os.remove(tmp_file)
+
+# Now imd exists
+print(imd.columns.tolist())
+```
+:::
+
 ## Aggregate up to MSOA
 
-To combine pollution data (held at MSOA level) with deprivation data (held at LSOA level), we use the Postcode → OA (2021) → LSOA → MSOA → Local Authority District (LAD) best-fit lookup published by the Office for National Statistics (ONS):
+To combine temperature data (held at MSOA level) with deprivation data (held at LSOA level), we use the Postcode → OA (2021) → LSOA → MSOA → Local Authority District (LAD) best-fit lookup published by the Office for National Statistics (ONS):
 
 ONS Postcode to OA (2021) to LSOA to MSOA to LAD (May 2025) [Best-Fit Lookup for the UK](https://geoportal.statistics.gov.uk/datasets/589ae01495bf4ddfaaa25b96476d53d7/about)
 
-This provides consistent, authoritative geographic relationships between postcode units and statistical areas. It enables us to link LSOA-level IMD data to MSOA-level pollution estimates and then calculate MSOA-level average deprivation scores.
+This provides consistent, authoritative geographic relationships between postcode units and statistical areas. It enables us to link LSOA-level IMD data to MSOA-level heat estimates and then calculate MSOA-level average deprivation scores.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r, message=FALSE}
 # Create temporary file paths 
@@ -205,9 +392,64 @@ lsoa_msoa_imd <- LSOA21_MSOA21 %>%
   left_join(imd, by = c("lsoa21cd" = "LSOA code (2021)"))
 ```
 
-## Join IMD (LSOA-level)
+### Python
 
-Keep only the relevant columns from the LSOA lookup & IMD dataset. Rename the long IMD column names to shorter, convenient names: `imd_rank` and `imd_decile`.
+```{python, warning=FALSE}
+# Create temporary paths
+zip_file = tempfile.NamedTemporaryFile(delete=False, suffix=".zip").name
+unzipped_dir = tempfile.mkdtemp()
+
+# Download ZIP
+url = "https://www.arcgis.com/sharing/rest/content/items/7fc55d71a09d4dcfa1fd6473138aacc3/data"
+r = requests.get(url)
+
+with open(zip_file, "wb") as f:
+    f.write(r.content)
+
+# Unzip
+with zipfile.ZipFile(zip_file, "r") as z:
+    z.extractall(unzipped_dir)
+
+# Delete ZIP immediately
+os.remove(zip_file)
+
+# Locate lookup CSV
+lookup_path = None
+for root, dirs, files in os.walk(unzipped_dir):
+    for file in files:
+        if file.lower().endswith(".csv"):
+            lookup_path = os.path.join(root, file)
+            break
+    if lookup_path:
+        break
+
+if lookup_path is None:
+    raise FileNotFoundError("No CSV found in the downloaded ZIP.")
+
+# Load lookup table
+LSOA21_MSOA21 = pd.read_csv(lookup_path)
+
+# Keep only necessary columns
+LSOA21_MSOA21 = LSOA21_MSOA21[
+    ["lsoa21cd", "msoa21cd", "ladcd", "lsoa21nm", "msoa21nm", "ladnm"]
+]
+
+# Join to IMD
+lsoa_msoa_imd = LSOA21_MSOA21.merge(
+    imd,
+    how="left",
+    left_on="lsoa21cd",
+    right_on="LSOA code (2021)"
+)
+```
+:::
+
+## Join IMD
+
+Keep only the relevant columns from the LSOA lookup & IMD dataset. Rename the long IMD column names to shorter, convenient names: `health_rank` and `health_decile`.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 lsoa_msoa_imd_clean <- lsoa_msoa_imd %>%
@@ -218,60 +460,159 @@ lsoa_msoa_imd_clean <- lsoa_msoa_imd %>%
     lsoa21nm,
     msoa21nm,
     ladnm,
-    `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,
-    `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`
+    `Health Deprivation and Disability Rank (where 1 is most deprived)`,
+    `Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)`
   ) %>%
   rename(
-    imd_rank = `Index of Multiple Deprivation (IMD) Rank (where 1 is most deprived)`,
-    imd_decile = `Index of Multiple Deprivation (IMD) Decile (where 1 is most deprived 10% of LSOA`
+    health_rank = `Health Deprivation and Disability Rank (where 1 is most deprived)`,
+    health_decile = `Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)`
   )
 ```
 
+### Python
+
+```{python}
+# Select the required columns
+lsoa_msoa_imd_clean = lsoa_msoa_imd[
+    [
+        "lsoa21cd",
+        "msoa21cd",
+        "ladcd",
+        "lsoa21nm",
+        "msoa21nm",
+        "ladnm",
+        "Health Deprivation and Disability Rank (where 1 is most deprived)",
+        "Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)"
+    ]
+].rename(
+    columns={
+        "Health Deprivation and Disability Rank (where 1 is most deprived)": "health_rank",
+        "Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)": "health_decile"
+    }
+)
+
+```
+:::
+
 As IMD is only for England, check number of MSOAs that are covered.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 # Compute the percentage of non-missing IMD ranks
-mean(!is.na(lsoa_msoa_imd_clean$imd_rank)) * 100
+mean(!is.na(lsoa_msoa_imd_clean$health_rank)) * 100
 ```
+
+### Python
+
+```{python}
+# Compute the percentage of non-missing IMD ranks
+pct_non_missing = lsoa_msoa_imd_clean['health_rank'].notna().mean() * 100
+
+print(pct_non_missing)
+```
+:::
 
 ## Aggregate IMD to MSOA
 
 Here we compute the mean IMD rank for each MSOA by averaging across all LSOAs within that MSOA. The result is a dataset at MSOA level for deprivation.
 
+::: {.panel-tabset group="language"}
+### R
+
 ```{r, message=FALSE}
 msoa_imd_agg <- lsoa_msoa_imd_clean %>%
   group_by(msoa21cd, msoa21nm, ladcd, ladnm) %>%
   summarise(
-    imd_rank_msoa = mean(imd_rank, na.rm = TRUE)
+    health_rank_msoa = mean(health_rank, na.rm = TRUE)
   ) %>%
   ungroup()
 ```
 
+### Python
+
+```{python}
+msoa_imd_agg = (
+    lsoa_msoa_imd_clean
+    .groupby(["msoa21cd", "msoa21nm", "ladcd", "ladnm"], as_index=False)
+    .agg(health_rank_msoa=("health_rank", "mean"))  # mean ignores NaN by default
+)
+```
+:::
+
 Trim whitespace and ensure both datasets use character format for MSOA codes to avoid mismatches during the join.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 msoa_imd_agg <- msoa_imd_agg %>%
   mutate(msoa21cd = trimws(as.character(msoa21cd)))
 
-msoa_pm25 <- msoa_pm25 %>%
+msoa_temp <- msoa_temp %>%
   mutate(msoa21cd = trimws(as.character(MSOA21C)))
 ```
 
-Join the aggregated IMD data with the MSOA-level PM2.5 dataset by MSOA code. The final dataset contains:
+### Python
+
+```{python}
+# Strip whitespace and ensure string type for MSOA codes
+
+msoa_imd_agg['msoa21cd'] = msoa_imd_agg['msoa21cd'].astype(str).str.strip()
+msoa_temp['msoa21cd'] = msoa_temp['MSOA21C'].astype(str).str.strip()
+```
+:::
+
+Join the aggregated IMD data with the MSOA-level heat dataset by MSOA code. The final dataset contains:
 
 -   MSOA identifiers and names
 -   LAD identifiers and names
--   PM2.5 mean
--   Aggregated IMD rank
+-   `Summer Maximum Temperature`
+-   Aggregated `Health rank`
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 msoa_final <- msoa_imd_agg %>%
-  left_join(msoa_pm25 %>% select(msoa21cd, pm2.5_mean), by = "msoa21cd")
+  left_join(msoa_temp %>% select(msoa21cd, summer_max_tmp), by = "msoa21cd")
 ```
 
-# Create a scatterplot: exposure vs. deprivation decile
+### Python
 
-Next, we’ll look at how to quantify the relationship between PM2.5 exposure and deprivation. We fit a simple linear regression model using IMD rank as the outcome and average PM2.5 as the predictor.
+```{python}
+temp_cols = ["msoa21cd", "summer_max_tmp"]
+
+# Left join on 'msoa21cd'
+msoa_final = msoa_imd_agg.merge(
+    msoa_temp[temp_cols],
+    how="left",
+    on="msoa21cd"
+)
+```
+:::
+
+# Create a scatterplot: exposure to cold vs. deprivation decile
+
+Next, we explore the relationship between *summar maximum temperature* and health deprivation. We can visualize this using a scatterplot and then quantify it with a simple linear regression model, where the health rank is the outcome and summar maximum temperature is the predictor.
+
+::: callout-note
+In reality, multiple factors influence deprivation, so this is a simplified illustration. Additional variables would likely play a role in a more complete analysis.
+
+If we want to examine the specific relationship between hot temperature and health deprivation in a causal way, we would also need to account for confounding factors that could influence both temperature exposure and health These might include:
+
+•   **Socioeconomic and demographic factors**: income, employment, education levels, age distribution, and ethnicity.
+
+•   **Housing characteristics**: building quality, insulation, heating systems, tenure (owned vs rented), and urban density.
+
+•   **Environmental features**: altitude, proximity to water, green space, and urban heat island effects.
+
+•   **Health and vulnerability indicators**: prevalence of chronic illnesses, respiratory conditions, or other factors affecting resilience to cold.
+
+•   **Infrastructure and access**: availability of public transport, energy affordability, and access to healthcare or social services.
+
+:::
 
 The code below:
 
@@ -279,16 +620,19 @@ The code below:
 -   Extracts the regression equation and R² value, and
 -   Visualises the relationship using a scatterplot with a fitted trend line and an annotated equation.
 
+::: {.panel-tabset group="language"}
+### R
+
 ```{r, message=FALSE, warning=FALSE}
-model <- lm(imd_rank_msoa ~ pm2.5_mean, data = msoa_final)
+model <- lm(health_rank_msoa ~ summer_max_tmp, data = msoa_final)
 
 eq <- paste0(
   "IMD Rank = ", round(coef(model)[1], 2),
-  " + ", round(coef(model)[2], 3), " × PM2.5\n",
-  "R² = ", round(summary(model)$r.squared, 3)
+  " + ", round(coef(model)[2], 3), " × (°C)",
+  " R² = ", round(summary(model)$r.squared, 3)
 )
 
-ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
+ggplot(msoa_final, aes(x = summer_max_tmp, y = health_rank_msoa)) +
   
   geom_jitter(alpha = 0.25, width = 0.1, size = 1.2, colour = "firebrick") +
   
@@ -302,8 +646,8 @@ ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
   
   annotate(
     "label",
-    x = quantile(msoa_final$pm2.5_mean, 0.98, na.rm = TRUE),
-    y = quantile(msoa_final$imd_rank_msoa, 0.05, na.rm = TRUE),
+    x = quantile(msoa_final$summer_max_tmp, 0.98, na.rm = TRUE),
+    y = quantile(msoa_final$health_rank_msoa, 0.05, na.rm = TRUE),
     label = eq,
     hjust = 1,
     vjust = 0,
@@ -313,14 +657,19 @@ ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
     alpha = 0.8
   ) +
   
-  labs(
-    title = "Relationship Between PM2.5 Exposure and IMD Deprivation Rank",
-    subtitle = "Higher ranks indicate lower deprivation (1 = most deprived)",
-    x = "PM2.5 Mean Concentration (µg/m³)",
-    y = "IMD Rank"
+  expand_limits(
+    x = range(msoa_final$summer_max_tmp, na.rm = TRUE),
+    y = range(msoa_final$health_rank_msoa, na.rm = TRUE)
   ) +
   
-  theme_minimal(base_size = 13) +
+  labs(
+    title = "Relationship Between Summer Max Temp. and Health",
+    subtitle = "Higher ranks indicate lower deprivation (1 = most deprived)",
+    x = "Summer Max Temp (°C)",
+    y = "Health Deprivation"
+  ) +
+  
+  theme_minimal(base_size = 10) +
   theme(
     plot.title = element_text(face = "bold", size = 12),
     plot.subtitle = element_text(size = 11, margin = margin(b = 10)),
@@ -329,102 +678,172 @@ ggplot(msoa_final, aes(x = pm2.5_mean, y = imd_rank_msoa)) +
   )
 ```
 
-# Calculate correlations and simple inequality metrics
+### Python
 
-## Pearson correlation
+```{python}
+fig, ax = plt.subplots(figsize=(10, 8), facecolor='#4a4a49')
+ax.set_facecolor('#4a4a49')
+ 
+x = msoa_final["summer_max_tmp"]
+y = msoa_final["health_rank_msoa"]
+ 
+# Scatter
+ax.scatter(x, y, alpha=0.4, s=10, color='#a4bee0', edgecolor='none')
+ 
+# Regression line
+slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+x_line = np.linspace(x.min(), x.max(), 100)
+y_line = slope * x_line + intercept
+ax.plot(x_line, y_line, color='white', linewidth=2, label=f'y = {slope:.2f}x + {intercept:.2f}, R² = {r_value**2:.3f}')
+ 
+# Legend
+ax.legend(facecolor='#4a4a49', edgecolor='white', labelcolor='white', fontsize=12)
+ 
+# Style
+ax.set_xlabel('Summer Max Temp (°C)', color='white', fontsize=12)
+ax.set_ylabel('Health Rank', color='white', fontsize=12)
+ax.set_title('Health Rank vs. Summer Max Temperature', color='white', fontsize=14)
+ax.tick_params(colors='white', labelsize=12)
+ax.grid(True, color='white', alpha=0.3, linestyle='-', linewidth=0.5)
+for spine in ax.spines.values():
+    spine.set_color('white')
+ 
+plt.tight_layout()
+plt.show()
+
+```
+
+:::
+
+## Calculate correlations and simple inequality metrics
+
+**Pearson correlation**
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 # Basic Pearson correlation
-cor_test <- cor.test(msoa_final$pm2.5_mean, msoa_final$imd_rank_msoa)
+cor_test <- cor.test(msoa_final$summer_max_tmp, msoa_final$health_rank_msoa)
 cor_test
 ```
 
-## Create IMD rank quintiles
+### Python
+```{python}
+# Drop missing values for the two columns
+x = msoa_final['summer_max_tmp']
+y = msoa_final['health_rank_msoa']
+mask = x.notna() & y.notna()
 
-First, we remove MSOAs with missing IMD rank or PM2.5 to avoid NA values flowing through the analysis. The quintiles are created (1 = most deprived MSOAs, 5 = least deprived).
+# Compute Pearson correlation
+corr_coef, p_value = pearsonr(x[mask], y[mask])
 
+print(f"Pearson correlation: {corr_coef:.3f}")
+print(f"P-value: {p_value:.3g}")
+```
+:::
+
+## Exploring IMD rank quintiles
+
+First, we remove MSOAs with missing IMD rank or winter minimum temperature values to avoid NA values flowing through the analysis. The quintiles are created (1 = most deprived MSOAs, 5 = least deprived).
+
+::: {.panel-tabset group="language"}
+### R
 ```{r}
 msoa_final_clean <- msoa_final %>%
-  drop_na(imd_rank_msoa, pm2.5_mean) %>%        # ensure complete cases
+  drop_na(health_rank_msoa, summer_max_tmp) %>%        # ensure complete cases
   mutate(
     # Divide MSOAs into 5 equal-sized groups based on deprivation rank
     # ntile() assigns 1 = most deprived, 5 = least deprived
-    imd_quintile = ntile(imd_rank_msoa, 5)
+    health_quintile = ntile(health_rank_msoa, 5)
   )
 
 msoa_final_clean <- st_as_sf(msoa_final_clean)
 ```
+### Python
 
-Summarise PM2.5 exposure by IMD quintile
+```{python}
+# Drop rows with missing values
+msoa_final_clean = msoa_final.dropna(subset=["health_rank_msoa", "summer_max_tmp"]).copy()
 
-```{r}
-ineq_table <- msoa_final_clean %>%
-  group_by(imd_quintile) %>%
-  summarise(
-    mean_pm25   = mean(pm2.5_mean, na.rm = TRUE),
-    median_pm25 = median(pm2.5_mean, na.rm = TRUE),
-    n           = n()
-  )
-
-ineq_table
+# Create quintiles (1 = most deprived, 5 = least deprived)
+msoa_final_clean["health_quintile"] = pd.qcut(
+    msoa_final_clean["health_rank_msoa"],
+    q=5,
+    labels=[1, 2, 3, 4, 5]
+).astype(int)
 ```
 
-The table summarises mean and median PM2.5 concentrations for MSOAs grouped into IMD quintiles. There is a clear inequality gradient. As deprivation increases, PM2.5 levels also increase.
+:::
 
-PM2.5 declines steadily from:
 
--   8.57 µg/m³ in the most deprived quintile
 
--   8.09 µg/m³ in the least deprived quintile
+## Identify MSOAs with highest temp and most deprived
 
-This is a 0.48 µg/m³ difference, which is meaningful at population scale. Every step from Quintile 1 → 5 shows lower PM2.5. This implies that the association is consistent, not driven by a single outlier group.
-
-The absolute differences (\~0.5 µg/m³) may appear small numerically but:
-
--   Are large relative to annual PM2.5 variation in the UK
-
--   Represent a 6% higher concentration in deprived areas
-
--   Contribute to measurable increases in mortality and morbidity
-
-The environmental inequality is evident.
-
-## Identify MSOAs with highest pm2.5 and most deprived
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 msoa_hotspots <- msoa_final_clean %>%
   mutate(
-    pm25_decile = ntile(pm2.5_mean, 10),             # 10 = highest exposure
-    imd_decile_rank = ntile(-imd_rank_msoa, 10)      # 10 = most deprived
+    summertemp_decile = ntile(-summer_max_tmp, 5),             # 10 = coldest
+    health_decile = ntile(-health_rank_msoa, 5)      # 10 = most deprived
   ) %>%
-  filter(pm25_decile == 10 & imd_decile_rank == 10)  # high pollution + high deprivation
+  filter(summertemp_decile == 5 & health_decile == 5)  # coldest + high deprivation
 
 msoa_hotspots <- st_as_sf(msoa_hotspots)
 ```
 
+### Python
+
+```{python}
+
+```
+
+:::
+
 ## Scatter plot with quadrants (best to show inequality trend)
 
-Plot PM2.5 vs IMD rank and highlight hotspots. Hotspots appear in the top-right quadrant: high pollution + high deprivation.
+Plot Minimum Temperature vs. IMD rank and highlight hotspots. Hotspots appear in the bottom-left quadrant: low temperature (coldest days) + high deprivation.
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
-ggplot(msoa_final_clean, aes(x = imd_rank_msoa, y = pm2.5_mean)) +
+ggplot(msoa_final_clean, aes(x =summer_max_tmp, y = health_rank_msoa)) +
   geom_point(alpha = 0.3) +
   geom_point(data = msoa_hotspots, colour = "red", size = 2) +
   labs(
-    title = "Pollution vs Deprivation (MSOA-level)",
-    x = "IMD rank (lower = more deprived)",
-    y = "PM2.5 concentration"
+    title = "Deprivation (MSOA-level) vs. Winter temp.",
+    x = "Summer (°C)",
+    y = "IMD rank (lower = more deprived)"
   ) +
   theme_minimal()
 ```
 
-## Which Local Authorities are the most deprived & have highest pollution concentrations?
+### Python
+```{python}
+```
+:::
+
+## Which Local Authorities are the most deprived & have lowest winter temperature?
+
+::: {.panel-tabset group="language"}
+### R
 
 ```{r}
 msoa_hotspots %>%
   st_drop_geometry() %>%
   count(ladnm, sort = TRUE)
 ```
+
+### Python
+```{python}
+
+```
+
+
+:::
 
 # Bivariate choropleth map
 
@@ -437,13 +856,17 @@ Created bivariate categories. Now map them:
 
 # Generate a bivariate map
 
+::: {.panel-tabset group="language"}
+### R
+
 ```{r}
 msoa_bi <- msoa_final_clean %>%
   mutate(
-    pm25_class = ntile(pm2.5_mean, 3),        # 1 = low exposure, 3 = high
-    imd_class  = ntile(-imd_rank_msoa, 3),    # -rank so 1 = least deprived → 3 = most deprived
-    bi_class   = paste0(pm25_class, "-", imd_class)
+    summer_class = ntile(summer_max_tmp, 3),        # 1 = low exposure, 3 = high
+    health_class  = ntile(-health_rank_msoa, 3),    # -rank so 1 = least deprived → 3 = most deprived
+    bi_class   = paste0(summer_class, "-", health_class)
   )
+
 ```
 
 ```{r}
@@ -458,6 +881,20 @@ msoa_bi <- msoa_final_clean %>%
   "2-3" = "#a50f15",
   "3-3" = "#67000d"
 )
+
+bi_palette <- c(
+  "1-1" = "#D9EBF5", # low heat, low deprivation (very light blue)
+  "2-1" = "#E8E0D5", # medium heat, low deprivation (warm beige)
+  "3-1" = "#F5B895", # high heat, low deprivation (warm orange-peach)
+  
+  "1-2" = "#ACD4E8", # low heat, medium deprivation (light blue)
+  "2-2" = "#D5D5D5",
+  "3-2" = "#E67676",
+  
+  "1-3" = "#6A9ABD", # low heat, high deprivation (medium-light blue)
+  "2-3" = "#C99191", # medium heat, high deprivation (lighter rose)
+  "3-3" = "#C83737"  # high heat, high deprivation (dark red)
+)
 ```
 
 ```{r}
@@ -465,9 +902,9 @@ p_map <- ggplot(msoa_bi) +
   geom_sf(aes(fill = bi_class), colour = NA) +
   scale_fill_manual(values = biv_palette) +
   labs(
-    title = "Bivariate Map of PM2.5 Exposure and Deprivation",
+    title = "Bivariate Map: Summer Temp and Health Deprivation",
     fill = "Bivariate class",
-    subtitle = "PM2.5 (x-axis) × IMD Rank (y-axis)"
+    subtitle = "Summer Max Temp (x-axis) × Health Rank (y-axis)"
   ) +
   theme_minimal() +
   theme(
@@ -479,15 +916,15 @@ p_map <- ggplot(msoa_bi) +
 ```{r}
 # Build legend grid (3x3)
 legend_df <- expand_grid(
-  pm25_class = 1:3,
-  imd_class = 1:3
+  summer_class = 1:3,
+  health_class = 1:3
 ) %>%
   mutate(
-    bi_class = paste0(pm25_class, "-", imd_class),
+    bi_class = paste0(summer_class, "-", health_class),
     fill = biv_palette[bi_class]
   )
 
-p_legend <- ggplot(legend_df, aes(x = pm25_class, y = imd_class, fill = fill)) +
+p_legend <- ggplot(legend_df, aes(x = summer_class, y = health_class, fill = fill)) +
   geom_tile() +
   scale_fill_identity() +
   coord_equal() +
@@ -510,16 +947,23 @@ final_map <- ggdraw() +
 final_map
 ```
 
+### Python
+:::
+
+
 ## Highlight hotspots on a map
 
 We can highlight hotspots on top of a greyscale map. Immediately shows where the worst areas are.
 
+::: {.panel-tabset group="language"}
+### R
+
 ```{r}
 msoa_bi_hotspots <- msoa_final_clean %>%
   mutate(
-    pm25_class = ntile(pm2.5_mean, 3),
-    imd_class  = ntile(-imd_rank_msoa, 3),
-    bi_class   = paste0(pm25_class, "-", imd_class)
+    summertemp_class = ntile(summer_max_tmp, 5),
+    health_class  = ntile(-health_rank_msoa, 5),
+    bi_class   = paste0(summertemp_class, "-", health_class)
   ) %>%
   filter(bi_class == "3-3")
 ```
@@ -545,9 +989,9 @@ ggplot() +
   ) +
   
   labs(
-    title = "High Pollution × High Deprivation Hotspots",
+    title = "Summer Hot Spots × Health Deprivation Hotspots",
    subtitle = "MSOA Level",
-    caption = "Sources: PM2.5 Modelled Estimates, IMD 2025"
+    caption = "Sources: Temp estimates, IMD 2025"
   ) +
   
   theme_minimal() +
@@ -558,42 +1002,20 @@ ggplot() +
   )
 ```
 
-• Areas with hottest colours on the background (high PM2.5) show spatial pollution patterns. • MSOAs in red are where high pollution overlaps with high deprivation, i.e. the environmental inequality hotspots. • Because hotspots sit on top of a greyscale basemap, they stand out instantly.
+### Python
+:::
 
-# Interactive map
 
-```{r}
-#| eval: false
-library(tmap)
 
-# Make sure tmap is in interactive mode
-tmap_mode("view")
-
-# Interactive map
-tm_shape(msoa_final_clean) +
-  tm_polygons(
-    col = "grey80",       # Base map color
-    border.col = "grey60",
-    lwd = 0.5,
-    alpha = 0.5
-  ) +
-  tm_shape(msoa_bi_hotspots) +
-  tm_polygons(
-    col = "darkred",      # Hotspot color
-    border.col = "black",
-    lwd = 0.5,
-    alpha = 0.9,
-    popup.vars = c("MSOA name" = "msoa21nm")  # replace with your LSOA column
-  ) +
-  tm_layout(
-    title = "High Pollution × High Deprivation Hotspots",
-    title.size = 1.2,
-    legend.show = FALSE
-  )
-```
+=======
+• MSOAs in red are where coldest temperatures overlap with high deprivation, i.e. the environmental inequality hotspots. 
+• Because hotspots sit on top of a greyscale basemap, they stand out instantly.
+>>>>>>> Stashed changes
 
 # Other things
 
-Proportion chart (best for summary reporting)
+Of course there is a lot more to explore here:
+- for example urban vs rural about heat and deprivation would be a key factor to add to the analysys.
+- building tyoes/quality
+- Interesting to explore other aspects of heat + specific IMD measures such as education + housing in poor condition + mental health + antisocial behaviour
 
-spatial clustering analysis
