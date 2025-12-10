@@ -1,10 +1,10 @@
 # From grids to areas {#sec-satellites-areas .unnumbered}
 
-Imago is the Imagery Data Service for sustainability, prosperity and wellbeing. At Imago, our mission is to make (satellite) imagery more <span style="color:#5ecba7">useful, useable, and used</span>.
+Imago is the Imagery Data Service for sustainability, prosperity and wellbeing. At Imago, our mission is to make (satellite) imagery more [useful, useable, and used]{style="color:#5ecba7"}.
 
-<div style="text-align: center;">
-  <img src="./assets/corepillars.png" width="400">
-</div>
+::: {style="text-align: center;"}
+<img src="./assets/corepillars.png" width="400"/>
+:::
 
 ## Pixel by pixel, clouds by cloud
 
@@ -12,25 +12,25 @@ Satellite data *looks* like a map—but it definitely isn’t one yet.
 
 Before it becomes ready for analysis, it passes through a long chain of processing steps. What satellites actually beam down are raw, multi-band images: massive files full of noise, distortions, clouds, and values that don’t mean little until we transform them.
 
-<div style="text-align: center;">
-  <img src="./assets/stickgirl1.png" width="400">
-</div>
+::: {style="text-align: center;"}
+<img src="./assets/stickgirl1.png" width="400"/>
+:::
 
-<div style="text-align: center;">
-  <img src="./assets/stickgirl2.png" width="400">
-</div>
+::: {style="text-align: center;"}
+<img src="./assets/stickgirl2.png" width="400"/>
+:::
 
 ## Types of Satellite Data: A Quick Overview
 
 Satellite data is collected:
 
-- by **sensors** on the satellites that are sensitive to specific ranges of wavelengths of light (the fancy term for this is spectral bands)
+-   by **sensors** on the satellites that are sensitive to specific ranges of wavelengths of light (the fancy term for this is spectral bands)
 
-- at a **specific time** and from a **specific geographic area** (the fancy term for this is spatiotemporal)
+-   at a **specific time** and from a **specific geographic area** (the fancy term for this is spatiotemporal)
 
-- at a particular **resolution**, meaning that one pixel corresponds to some geographic area with units like “meters per pixel” (images have a total size that is often referred to as a scene size or frame)
+-   at a particular **resolution**, meaning that one pixel corresponds to some geographic area with units like “meters per pixel” (images have a total size that is often referred to as a scene size or frame)
 
-- with a particular **frequency** known as the refresh rate, revisit time, or repeat cycle (the rate at which all geographic areas the satellite observes are re-visited)
+-   with a particular **frequency** known as the refresh rate, revisit time, or repeat cycle (the rate at which all geographic areas the satellite observes are re-visited)
 
 Satellite data comes in several forms, each capturing the Earth differently and serving different analytical purposes. The two most commonly discussed types are:
 
@@ -39,30 +39,25 @@ Satellite data comes in several forms, each capturing the Earth differently and 
 Optical sensors record reflected sunlight across multiple wavelengths—visible, near-infrared, shortwave infrared, and beyond. When these sensors collect more than three wavelengths simultaneously, the data is called multispectral; when they capture dozens to hundreds of wavelengths, it becomes hyperspectral. These richer spectral profiles allow us to distinguish vegetation types, water quality, soil characteristics, burn severity, and more.
 
 Optical data is especially useful for:
-	•	Land-cover classification
-	•	Vegetation indices
-	•	Water detection and turbidity
-	•	General “photo-like” interpretation
 
-However, <span style="color:#f09553">optical data is limited by daylight and cloud cover</span>, which can block the sensor’s view.
+-   Land-cover classification
+-   Vegetation indices
+-   Water detection and turbidity
+-   General “photo-like” interpretation
 
+However, [optical data is limited by daylight and cloud cover]{style="color:#f09553"}, which can block the sensor’s view.
 
 **SAR (Synthetic Aperture Radar)**
 
 SAR sensors use microwave energy rather than sunlight, meaning they can operate through clouds, through smoke, and at night. Instead of capturing reflected light, SAR measures the interaction between microwave pulses and surface structure, generating detailed information on texture, moisture, and change.
 
-SAR is particularly valuable for:
-	•	Flood detection and inundation mapping
-	•	Soil moisture estimation
-	•	Ice and glacier movement
-	•	Forest structure and deforestation monitoring
-	•	Urban infrastructure mapping
+SAR is particularly valuable for: • Flood detection and inundation mapping • Soil moisture estimation • Ice and glacier movement • Forest structure and deforestation monitoring • Urban infrastructure mapping
 
-SAR data is extremely powerful but also more <span style="color:#f09553">complex to process and interpret due to noise, speckle, and geometric distortions</span>.
+SAR data is extremely powerful but also more [complex to process and interpret due to noise, speckle, and geometric distortions]{style="color:#f09553"}.
 
 ## From Orbit to Neighborhood-Level Insights: How Satellite Data Becomes Useful
 
-Turning satellite imagery into meaningful metrics is a <span style="color:#5ecba7">multi-step journey</span>. What starts as raw data captured hundreds of kilometers above Earth eventually becomes the neighborhood-scale information we use in research, planning, and policy. The transformation looks roughly like this. Each step removes errors, aligns the data, and extracts meaningful information:
+Turning satellite imagery into meaningful metrics is a [multi-step journey]{style="color:#5ecba7"}. What starts as raw data captured hundreds of kilometers above Earth eventually becomes the neighborhood-scale information we use in research, planning, and policy. The transformation looks roughly like this. Each step removes errors, aligns the data, and extracts meaningful information:
 
 **1. Capturing Raw Imagery**
 
@@ -76,51 +71,50 @@ Before the data can be analyzed, it must be “cleaned.” Atmospheric correctio
 
 Because a single satellite pass might still contain noise, missing data, or residual clouds, multiple images across a time window are combined. Temporal composites—like monthly or seasonal stacks—select the clearest or most representative pixel for each location. This improves quality and consistency.
 
+::: {style="text-align: center;"}
+<img src="./assets/temporal_stack.jpg" width="300"/>
+:::
+
 **4. Applying Models to Extract Meaning**
 
-Once the cleaned, composited imagery is "ready", it doesn’t automatically become a <span style="color:#5ecba7">usable indicator</span>. Most neighbourhood-level metrics come from models applied to the processed pixels—e.g., vegetation indices, land-cover classifiers, built-up area models, water detection algorithms, or machine-learning products trained on labeled examples.
+Once the cleaned, composited imagery is "ready", it doesn’t automatically become a [usable indicator]{style="color:#5ecba7"}. Most neighbourhood-level metrics come from models applied to the processed pixels—e.g., vegetation indices, land-cover classifiers, built-up area models, water detection algorithms, or machine-learning products trained on labeled examples.
 
 Through these steps, solar reflections, microwave signals, and raw pixel values evolve into structured, interpretable data—metrics that can be mapped, summarized, and ultimately used to understand conditions on the ground.
 
-::: {.callout-important}
-
-And once you finally have usable pixels, you’re only halfway there. To make satellite-derived information <span style="color:#5ecba7">useful, usable, and actually used</span>, by policy makers or social scientists, you need to convert pixel grids into familiar formats—vector data (.gpkg), tables, CSVs. Otherwise, your insights stay locked inside a raster.
-
+::: callout-important
+And once you finally have usable pixels, you’re only halfway there. To make satellite-derived information [useful, usable, and actually used]{style="color:#5ecba7"}, by policy makers or social scientists, you need to convert pixel grids into familiar formats—vector data (.gpkg), tables, CSVs. Otherwise, your insights stay locked inside a raster.
 :::
 
-**5. Aggregate up**
-Even the best pixel-level data isn’t immediately useful for most social, economic, or policy questions. The final step is to translate pixel grids into meaningful geographic units—neighbourhoods, districts, buffers, or any custom boundary. This requires carefully aggregating thousands of pixels that often don’t align neatly with administrative shapes. Differences in spatial extent, resolution, and boundary overlap must be resolved so that each unit receives a consistent, interpretable value.
+**5. Aggregate up** Even the best pixel-level data isn’t immediately useful for most social, economic, or policy questions. The final step is to translate pixel grids into meaningful geographic units—neighbourhoods, districts, buffers, or any custom boundary. This requires carefully aggregating thousands of pixels that often don’t align neatly with administrative shapes. Differences in spatial extent, resolution, and boundary overlap must be resolved so that each unit receives a consistent, interpretable value.
 
-This is the moment where satellite data becomes something that can <span style="color:#5ecba7">actually be used</span>: a table, a geopackage, or a metric attached to a place—ready for statistical analysis, comparison, or integration with survey and administrative data.
+This is the moment where satellite data becomes something that can [actually be used]{style="color:#5ecba7"}: a table, a geopackage, or a metric attached to a place—ready for statistical analysis, comparison, or integration with survey and administrative data.
 
 ## Challenges in Raw Workflow
 
-Working directly with raw satellite data is difficult for most users: 
+Working directly with raw satellite data is difficult for most users:
 
-- Files are huge (literally),  
+-   Files are huge (literally),
 
-- Require significant compute power, 
+-   Require significant compute power,
 
-- Rely on complex remote-sensing algorithms. 
+-   Rely on complex remote-sensing algorithms.
 
 Even after processing, linking pixel-level information to meaningful social or administrative units is technically demanding. Pre-processed and validated products save time, reduce errors, and ensure consistent, reliable results.
 
 ## Why Products Like Imago Simplify the Process
 
--   <span style="color:#5ecba7">Pre-computed, ready-to-use</span> MOSA/LSOA-level statistics.
+-   [Pre-computed, ready-to-use]{style="color:#5ecba7"} MOSA/LSOA-level statistics.
 
--   No need to download or handle <span style="color:#5ecba7">large imagery</span> or run <span style="color:#5ecba7">complex algorithms</span>.
+-   No need to download or handle [large imagery]{style="color:#5ecba7"} or run [complex algorithms]{style="color:#5ecba7"}.
 
 -   Preserved local detail. Clear benefit of small-area data.
 
-
 # Icebreaker questions:
 
-- What’s the largest dataset or file you’ve ever had to manage—and how did you handle it?
-	
-- Looking at the satellite data workflow, which steps do you think are most critical for ensuring accurate results?
-	
-- Where do you imagine errors or uncertainty are most likely to sneak into the data—and why?
-	
-- If you could automate one part of the satellite-to-metrics pipeline, which would it be and why?
+-   What’s the largest dataset or file you’ve ever had to manage—and how did you handle it?
 
+-   Looking at the satellite data workflow, which steps do you think are most critical for ensuring accurate results?
+
+-   Where do you imagine errors or uncertainty are most likely to sneak into the data—and why?
+
+-   If you could automate one part of the satellite-to-metrics pipeline, which would it be and why?
