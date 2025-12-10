@@ -24,8 +24,6 @@ The current IMAGO data release includes the following thematic datasets:
 
 **Temperature** – Measures of temperature patterns across regions.
 
-**Pollution** – Indicators of air quality and pollution exposure.
-
 **Flooding** – Flood risk and flood-related environmental measures.
 
 **Sun Probability Framework** – A spatial metric capturing probability of sunlight exposure.
