@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -35,15 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="./assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-70a47bd5681a7291082a5b9f83d58762.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-485d01fc63b59abcd3ee1bf1e8e2748d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -97,9 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -166,14 +163,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#how-hard-is-it-to-process-satellite-data" id="toc-how-hard-is-it-to-process-satellite-data" class="nav-link active" data-scroll-target="#how-hard-is-it-to-process-satellite-data">How hard is it to process satellite data?</a></li>
-  <li><a href="#the-satellite-data-pipeline" id="toc-the-satellite-data-pipeline" class="nav-link" data-scroll-target="#the-satellite-data-pipeline">The Satellite Data Pipeline</a></li>
+  <li><a href="#pixel-by-pixel-clouds-by-cloud" id="toc-pixel-by-pixel-clouds-by-cloud" class="nav-link active" data-scroll-target="#pixel-by-pixel-clouds-by-cloud">Pixel by pixel, clouds by cloud</a></li>
+  <li><a href="#types-of-satellite-data-a-quick-overview" id="toc-types-of-satellite-data-a-quick-overview" class="nav-link" data-scroll-target="#types-of-satellite-data-a-quick-overview">Types of Satellite Data: A Quick Overview</a></li>
+  <li><a href="#from-orbit-to-neighborhood-level-insights-how-satellite-data-becomes-useful" id="toc-from-orbit-to-neighborhood-level-insights-how-satellite-data-becomes-useful" class="nav-link" data-scroll-target="#from-orbit-to-neighborhood-level-insights-how-satellite-data-becomes-useful">From Orbit to Neighborhood-Level Insights: How Satellite Data Becomes Useful</a></li>
   <li><a href="#challenges-in-raw-workflow" id="toc-challenges-in-raw-workflow" class="nav-link" data-scroll-target="#challenges-in-raw-workflow">Challenges in Raw Workflow</a></li>
   <li><a href="#why-products-like-imago-simplify-the-process" id="toc-why-products-like-imago-simplify-the-process" class="nav-link" data-scroll-target="#why-products-like-imago-simplify-the-process">Why Products Like Imago Simplify the Process</a></li>
-  <li><a href="#icebreaker-questions" id="toc-icebreaker-questions" class="nav-link" data-scroll-target="#icebreaker-questions">Icebreaker questions:</a>
-  <ul class="collapse">
-  <li><a href="#further-readings" id="toc-further-readings" class="nav-link" data-scroll-target="#further-readings">Further readings</a></li>
-  </ul></li>
+  <li><a href="#icebreaker-questions" id="toc-icebreaker-questions" class="nav-link" data-scroll-target="#icebreaker-questions">Icebreaker questions:</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/Imago-SDRUK/Imago-training/edit/main/satellites_to_areas.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/Imago-SDRUK/Imago-training/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -199,61 +194,96 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="how-hard-is-it-to-process-satellite-data" class="level1">
-<h1>How hard is it to process satellite data?</h1>
-<ul>
-<li><p>Brief explanation of what raw satellite data looks like (spectral bands, huge files).</p></li>
-<li><p>Short illustration/demo: raw image → cleaned image → aggregated product.</p></li>
-<li><p>Emphasize that satellite data is not a ready-made map—significant processing steps are required.</p></li>
-</ul>
+<p>Imago is the Imagery Data Service for sustainability, prosperity and wellbeing. At Imago, our mission is to make (satellite) imagery more <span style="color:#5ecba7">useful, useable, and used</span>.</p>
+<div style="text-align: center;">
+<p><img src="./assets/corepillars.png" width="400"></p>
+</div>
+<section id="pixel-by-pixel-clouds-by-cloud" class="level2">
+<h2 class="anchored" data-anchor-id="pixel-by-pixel-clouds-by-cloud">Pixel by pixel, clouds by cloud</h2>
+<p>Satellite data <em>looks</em> like a map—but it definitely isn’t one yet.</p>
+<p>Before it becomes ready for analysis, it passes through a long chain of processing steps. What satellites actually beam down are raw, multi-band images: massive files full of noise, distortions, clouds, and values that don’t mean little until we transform them.</p>
+<div style="text-align: center;">
+<p><img src="./assets/stickgirl1.png" width="400"></p>
+</div>
+<div style="text-align: center;">
+<p><img src="./assets/stickgirl2.png" width="400"></p>
+</div>
 </section>
-<section id="the-satellite-data-pipeline" class="level1">
-<h1>The Satellite Data Pipeline</h1>
+<section id="types-of-satellite-data-a-quick-overview" class="level2">
+<h2 class="anchored" data-anchor-id="types-of-satellite-data-a-quick-overview">Types of Satellite Data: A Quick Overview</h2>
+<p>Satellite data is collected:</p>
 <ul>
-<li><p>Walk participants through the journey from orbit to neighbourhood-level metrics:</p></li>
-<li><p>Capturing raw imagery (Sentinel, Landsat)</p></li>
-<li><p>Atmospheric correction + cloud masking</p></li>
-<li><p>Temporal compositing to reduce noise</p></li>
-<li><p>Spatial aggregation to small geographic units such as LSOA/MSOA</p></li>
+<li><p>by <strong>sensors</strong> on the satellites that are sensitive to specific ranges of wavelengths of light (the fancy term for this is spectral bands)</p></li>
+<li><p>at a <strong>specific time</strong> and from a <strong>specific geographic area</strong> (the fancy term for this is spatiotemporal)</p></li>
+<li><p>at a particular <strong>resolution</strong>, meaning that one pixel corresponds to some geographic area with units like “meters per pixel” (images have a total size that is often referred to as a scene size or frame)</p></li>
+<li><p>with a particular <strong>frequency</strong> known as the refresh rate, revisit time, or repeat cycle (the rate at which all geographic areas the satellite observes are re-visited)</p></li>
 </ul>
-<p>Optional quick example: the difference between a pixel-level value vs.&nbsp;an aggregated area-level mean.</p>
+<p>Satellite data comes in several forms, each capturing the Earth differently and serving different analytical purposes. The two most commonly discussed types are:</p>
+<p><strong>Spectral (Optical) Data</strong></p>
+<p>Optical sensors record reflected sunlight across multiple wavelengths—visible, near-infrared, shortwave infrared, and beyond. When these sensors collect more than three wavelengths simultaneously, the data is called multispectral; when they capture dozens to hundreds of wavelengths, it becomes hyperspectral. These richer spectral profiles allow us to distinguish vegetation types, water quality, soil characteristics, burn severity, and more.</p>
+<p>Optical data is especially useful for: • Land-cover classification • Vegetation indices • Water detection and turbidity • General “photo-like” interpretation</p>
+<p>However, <span style="color:#f09553">optical data is limited by daylight and cloud cover</span>, which can block the sensor’s view.</p>
+<p><strong>SAR (Synthetic Aperture Radar)</strong></p>
+<p>SAR sensors use microwave energy rather than sunlight, meaning they can operate through clouds, through smoke, and at night. Instead of capturing reflected light, SAR measures the interaction between microwave pulses and surface structure, generating detailed information on texture, moisture, and change.</p>
+<p>SAR is particularly valuable for: • Flood detection and inundation mapping • Soil moisture estimation • Ice and glacier movement • Forest structure and deforestation monitoring • Urban infrastructure mapping</p>
+<p>SAR data is extremely powerful but also more <span style="color:#f09553">complex to process and interpret due to noise, speckle, and geometric distortions</span>.</p>
 </section>
-<section id="challenges-in-raw-workflow" class="level1">
-<h1>Challenges in Raw Workflow</h1>
-<ul>
-<li><p>Highlight why most users cannot (or should not) work directly with raw satellite data:</p></li>
-<li><p>Massive data volumes and file handling</p></li>
-<li><p>Need for compute resources (e.g., cloud platforms)</p></li>
-<li><p>Technical complexity of remote sensing algorithms</p></li>
-<li><p>Difficulties linking pixel-based data to meaningful social units</p></li>
-<li><p>Why pre-processed and validated data products save time and improve reliability</p></li>
-</ul>
+<section id="from-orbit-to-neighborhood-level-insights-how-satellite-data-becomes-useful" class="level2">
+<h2 class="anchored" data-anchor-id="from-orbit-to-neighborhood-level-insights-how-satellite-data-becomes-useful">From Orbit to Neighborhood-Level Insights: How Satellite Data Becomes Useful</h2>
+<p>Turning satellite imagery into meaningful metrics is a <span style="color:#5ecba7">multi-step journey</span>. What starts as raw data captured hundreds of kilometers above Earth eventually becomes the neighborhood-scale information we use in research, planning, and policy. The transformation looks roughly like this. Each step removes errors, aligns the data, and extracts meaningful information:</p>
+<p><strong>1. Capturing Raw Imagery</strong></p>
+<p>Missions like <code>Sentinel</code> and <code>Landsat</code> continuously collect raw optical, multispectral, or radar imagery. At this stage, the data is massive, unrefined, and full of distortions—far from the clean maps we’re used to seeing.</p>
+<p><strong>2. Atmospheric Correction &amp; Cloud Masking</strong></p>
+<p>Before the data can be analyzed, it must be “cleaned.” Atmospheric correction removes the effects of haze, aerosols, and varying illumination. Cloud masking identifies and removes cloud-covered pixels (and often cloud shadows). This step is crucial—otherwise, half the world would be obscured by clouds.</p>
+<p><strong>3. Temporal Compositing to Reduce Noise</strong></p>
+<p>Because a single satellite pass might still contain noise, missing data, or residual clouds, multiple images across a time window are combined. Temporal composites—like monthly or seasonal stacks—select the clearest or most representative pixel for each location. This improves quality and consistency.</p>
+<p><strong>4. Applying Models to Extract Meaning</strong></p>
+<p>Once the cleaned, composited imagery is “ready”, it doesn’t automatically become a <span style="color:#5ecba7">usable indicator</span>. Most neighbourhood-level metrics come from models applied to the processed pixels—e.g., vegetation indices, land-cover classifiers, built-up area models, water detection algorithms, or machine-learning products trained on labeled examples.</p>
+<p>Through these steps, solar reflections, microwave signals, and raw pixel values evolve into structured, interpretable data—metrics that can be mapped, summarized, and ultimately used to understand conditions on the ground.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>And once you finally have usable pixels, you’re only halfway there. To make satellite-derived information <span style="color:#5ecba7">useful, usable, and actually used</span>, by policy makers or social scientists, you need to convert pixel grids into familiar formats—vector data (.gpkg), tables, CSVs. Otherwise, your insights stay locked inside a raster.</p>
+</div>
+</div>
+<p><strong>5. Aggregate up</strong> Even the best pixel-level data isn’t immediately useful for most social, economic, or policy questions. The final step is to translate pixel grids into meaningful geographic units—neighbourhoods, districts, buffers, or any custom boundary. This requires carefully aggregating thousands of pixels that often don’t align neatly with administrative shapes. Differences in spatial extent, resolution, and boundary overlap must be resolved so that each unit receives a consistent, interpretable value.</p>
+<p>This is the moment where satellite data becomes something that can <span style="color:#5ecba7">actually be used</span>: a table, a geopackage, or a metric attached to a place—ready for statistical analysis, comparison, or integration with survey and administrative data.</p>
 </section>
-<section id="why-products-like-imago-simplify-the-process" class="level1">
-<h1>Why Products Like Imago Simplify the Process</h1>
+<section id="challenges-in-raw-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="challenges-in-raw-workflow">Challenges in Raw Workflow</h2>
+<p>Working directly with raw satellite data is difficult for most users:</p>
 <ul>
-<li><p>Pre-computed, ready-to-use LSOA-level statistics</p></li>
-<li><p>No need to handle large imagery or complex algorithms</p></li>
-<li><p>Clear benefit of small-area data: show a LSOA vs MSOA comparison map to illustrate how detail disappears at larger scales</p></li>
-<li><p>Introduce the three products available (for Newcastle / region): Pollution, Heat, SPF</p></li>
+<li><p>Files are huge (literally),</p></li>
+<li><p>Require significant compute power,</p></li>
+<li><p>Rely on complex remote-sensing algorithms.</p></li>
 </ul>
-<p>Explain how they align with deprivation and social vulnerability analyses</p>
+<p>Even after processing, linking pixel-level information to meaningful social or administrative units is technically demanding. Pre-processed and validated products save time, reduce errors, and ensure consistent, reliable results.</p>
+</section>
+<section id="why-products-like-imago-simplify-the-process" class="level2">
+<h2 class="anchored" data-anchor-id="why-products-like-imago-simplify-the-process">Why Products Like Imago Simplify the Process</h2>
+<ul>
+<li><p><span style="color:#5ecba7">Pre-computed, ready-to-use</span> MOSA/LSOA-level statistics.</p></li>
+<li><p>No need to download or handle <span style="color:#5ecba7">large imagery</span> or run <span style="color:#5ecba7">complex algorithms</span>.</p></li>
+<li><p>Preserved local detail. Clear benefit of small-area data.</p></li>
+</ul>
 </section>
 <section id="icebreaker-questions" class="level1">
 <h1>Icebreaker questions:</h1>
 <ul>
-<li><p>What’s the biggest file you’ve ever worked with?</p></li>
-<li><p>What steps in the satellite data pipeline do you think matter most for accuracy?</p></li>
-<li><p>Where do you think errors or uncertainty might creep in?</p></li>
-</ul>
-<section id="further-readings" class="level2">
-<h2 class="anchored" data-anchor-id="further-readings">Further readings</h2>
-<ul>
-<li><a href="https://www.neonscience.org/resources/learning-hub/tutorials/raster-data-r">Raster Data in R</a></li>
+<li><p>What’s the largest dataset or file you’ve ever had to manage—and how did you handle it?</p></li>
+<li><p>Looking at the satellite data workflow, which steps do you think are most critical for ensuring accurate results?</p></li>
+<li><p>Where do you imagine errors or uncertainty are most likely to sneak into the data—and why?</p></li>
+<li><p>If you could automate one part of the satellite-to-metrics pipeline, which would it be and why?</p></li>
 </ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -308,14 +338,13 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
