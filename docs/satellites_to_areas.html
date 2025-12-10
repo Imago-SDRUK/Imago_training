@@ -221,7 +221,13 @@ ul.task-list li input[type="checkbox"] {
 <p>Satellite data comes in several forms, each capturing the Earth differently and serving different analytical purposes. The two most commonly discussed types are:</p>
 <p><strong>Spectral (Optical) Data</strong></p>
 <p>Optical sensors record reflected sunlight across multiple wavelengths—visible, near-infrared, shortwave infrared, and beyond. When these sensors collect more than three wavelengths simultaneously, the data is called multispectral; when they capture dozens to hundreds of wavelengths, it becomes hyperspectral. These richer spectral profiles allow us to distinguish vegetation types, water quality, soil characteristics, burn severity, and more.</p>
-<p>Optical data is especially useful for: • Land-cover classification • Vegetation indices • Water detection and turbidity • General “photo-like” interpretation</p>
+<p>Optical data is especially useful for:</p>
+<ul>
+<li>Land-cover classification</li>
+<li>Vegetation indices</li>
+<li>Water detection and turbidity</li>
+<li>General “photo-like” interpretation</li>
+</ul>
 <p>However, <span style="color:#f09553">optical data is limited by daylight and cloud cover</span>, which can block the sensor’s view.</p>
 <p><strong>SAR (Synthetic Aperture Radar)</strong></p>
 <p>SAR sensors use microwave energy rather than sunlight, meaning they can operate through clouds, through smoke, and at night. Instead of capturing reflected light, SAR measures the interaction between microwave pulses and surface structure, generating detailed information on texture, moisture, and change.</p>
@@ -237,6 +243,9 @@ ul.task-list li input[type="checkbox"] {
 <p>Before the data can be analyzed, it must be “cleaned.” Atmospheric correction removes the effects of haze, aerosols, and varying illumination. Cloud masking identifies and removes cloud-covered pixels (and often cloud shadows). This step is crucial—otherwise, half the world would be obscured by clouds.</p>
 <p><strong>3. Temporal Compositing to Reduce Noise</strong></p>
 <p>Because a single satellite pass might still contain noise, missing data, or residual clouds, multiple images across a time window are combined. Temporal composites—like monthly or seasonal stacks—select the clearest or most representative pixel for each location. This improves quality and consistency.</p>
+<div style="text-align: center;">
+<p><img src="./assets/temporal_stack.jpg" width="300"></p>
+</div>
 <p><strong>4. Applying Models to Extract Meaning</strong></p>
 <p>Once the cleaned, composited imagery is “ready”, it doesn’t automatically become a <span style="color:#5ecba7">usable indicator</span>. Most neighbourhood-level metrics come from models applied to the processed pixels—e.g., vegetation indices, land-cover classifiers, built-up area models, water detection algorithms, or machine-learning products trained on labeled examples.</p>
 <p>Through these steps, solar reflections, microwave signals, and raw pixel values evolve into structured, interpretable data—metrics that can be mapped, summarized, and ultimately used to understand conditions on the ground.</p>
