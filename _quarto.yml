@@ -21,9 +21,9 @@ book:
   chapters:
     - index.qmd
     - datasets.qmd
-    - preparing.qmd
     - satellites_to_areas.qmd
     - policy.qmd
+    - preparing.qmd
     - demo1.qmd
     - packages.qmd
 
