@@ -56,6 +56,8 @@ import geopandas as gpd
 
 # Plotting
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 from matplotlib import cm
 import seaborn as sns
 
@@ -159,7 +161,7 @@ quantiles
 ```
 :::
 
-**Exploring the Distribution of Winter Minimum Temperature**
+**Exploring the Distribution of Summer Maximum Temperature**
 
 A histogram is a useful way to examine the shape of the distribution, including skewness and the presence of extreme values.
 
@@ -255,7 +257,7 @@ fig, ax = plt.subplots(figsize=(10, 8))
 # Colormap 
 viridis = plt.get_cmap('coolwarm')
 
-# Plot MSOA polygons coloured by winter minimum temperature
+# Plot MSOA polygons coloured by summer maximum temperature
 msoa_temp.plot(
     column="summer_max_tmp",
     cmap=viridis,
@@ -281,7 +283,7 @@ ax.set_axis_off()
 # Make legend text smaller after creation
 cb = ax.get_figure().axes[-1]   # colorbar axis is always last
 cb.tick_params(labelsize=8)     # smaller tick labels
-cb.set_ylabel("Winter Min Temp (°C)", fontsize=9)
+cb.set_ylabel("Summer Max Temp (°C)", fontsize=9)
 
 plt.figtext(
     0.5, 0.02,
@@ -360,6 +362,12 @@ This provides consistent, authoritative geographic relationships between postcod
 zip_file <- tempfile(fileext = ".zip")
 unzipped_dir <- tempfile()
 
+# Ensure temp files are deleted at the end
+on.exit({
+  unlink(zip_file)
+  unlink(unzipped_dir, recursive = TRUE)
+}, add = TRUE)
+
 # Download ZIP
 download.file(
   url = "https://www.arcgis.com/sharing/rest/content/items/7fc55d71a09d4dcfa1fd6473138aacc3/data",
@@ -385,7 +393,8 @@ LSOA21_MSOA21 <- read_csv(lookup_path)
 
 # Keep only necessary columns
 LSOA21_MSOA21 <- LSOA21_MSOA21 %>%
-  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm)
+  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm) %>%
+  distinct(lsoa21cd, .keep_all = TRUE)  # drop duplicates by LSOA 
 
 # Join to IMD 
 lsoa_msoa_imd <- LSOA21_MSOA21 %>%
@@ -432,7 +441,7 @@ LSOA21_MSOA21 = pd.read_csv(lookup_path)
 # Keep only necessary columns
 LSOA21_MSOA21 = LSOA21_MSOA21[
     ["lsoa21cd", "msoa21cd", "ladcd", "lsoa21nm", "msoa21nm", "ladnm"]
-]
+].drop_duplicates(subset="lsoa21cd")
 
 # Join to IMD
 lsoa_msoa_imd = LSOA21_MSOA21.merge(
@@ -593,32 +602,31 @@ msoa_final = msoa_imd_agg.merge(
 ```
 :::
 
-# Create a scatterplot: exposure to cold vs. deprivation decile
+# Create a scatterplot: exposure to heat vs. deprivation decile
 
-Next, we explore the relationship between *summar maximum temperature* and health deprivation. We can visualize this using a scatterplot and then quantify it with a simple linear regression model, where the health rank is the outcome and summar maximum temperature is the predictor.
+Next, we explore the relationship between *summer maximum temperature* and health deprivation. We can visualize this using a scatterplot and then quantify it with a simple linear regression model, where the health rank is the outcome and summer maximum temperature is the predictor.
 
 ::: callout-note
 In reality, multiple factors influence deprivation, so this is a simplified illustration. Additional variables would likely play a role in a more complete analysis.
 
 If we want to examine the specific relationship between hot temperature and health deprivation in a causal way, we would also need to account for confounding factors that could influence both temperature exposure and health These might include:
 
-•   **Socioeconomic and demographic factors**: income, employment, education levels, age distribution, and ethnicity.
+• **Socioeconomic and demographic factors**: income, employment, education levels, age distribution, and ethnicity.
 
-•   **Housing characteristics**: building quality, insulation, heating systems, tenure (owned vs rented), and urban density.
+• **Housing characteristics**: building quality, insulation, heating systems, tenure (owned vs rented), and urban density.
 
-•   **Environmental features**: altitude, proximity to water, green space, and urban heat island effects.
+• **Environmental features**: altitude, proximity to water, green space, and urban heat island effects.
 
-•   **Health and vulnerability indicators**: prevalence of chronic illnesses, respiratory conditions, or other factors affecting resilience to cold.
+• **Health and vulnerability indicators**: prevalence of chronic illnesses, respiratory conditions, or other factors affecting resilience to cold.
 
-•   **Infrastructure and access**: availability of public transport, energy affordability, and access to healthcare or social services.
-
+• **Infrastructure and access**: availability of public transport, energy affordability, and access to healthcare or social services.
 :::
 
 The code below:
 
 -   Fits the model,
 -   Extracts the regression equation and R² value, and
--   Visualises the relationship using a scatterplot with a fitted trend line and an annotated equation.
+-   Visualise the relationship using a scatterplot with a fitted trend line and an annotated equation.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -657,9 +665,40 @@ ggplot(msoa_final, aes(x = summer_max_tmp, y = health_rank_msoa)) +
     alpha = 0.8
   ) +
   
+  scale_x_continuous(limits = c(18, NA)) +   # ← start x-axis at 18°C
+
   expand_limits(
-    x = range(msoa_final$summer_max_tmp, na.rm = TRUE),
     y = range(msoa_final$health_rank_msoa, na.rm = TRUE)
+  ) +
+  
+  labs(
+    title = "Relationship Between Summer Max Temp. and Health",
+    subtitle = "Higher ranks indicate lower deprivation (1 = most deprived)",
+    x = "Summer Max Temp (°C)",
+    y = "Health Deprivation"
+  ) +
+  
+  theme_minimal(base_size = 10) +
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    plot.subtitle = element_text(size = 11, margin = margin(b = 10)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "grey85")
+  ) +
+  
+  labs(
+    title = "Relationship Between Summer Max Temp. and Health",
+    subtitle = "Higher ranks indicate lower deprivation (1 = most deprived)",
+    x = "Summer Max Temp (°C)",
+    y = "Health Deprivation"
+  ) +
+  
+  theme_minimal(base_size = 10) +
+  theme(
+    plot.title = element_text(face = "bold", size = 12),
+    plot.subtitle = element_text(size = 11, margin = margin(b = 10)),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(colour = "grey85")
   ) +
   
   labs(
@@ -684,11 +723,17 @@ ggplot(msoa_final, aes(x = summer_max_tmp, y = health_rank_msoa)) +
 fig, ax = plt.subplots(figsize=(10, 8), facecolor='#4a4a49')
 ax.set_facecolor('#4a4a49')
  
+# Extract columns FIRST
 x = msoa_final["summer_max_tmp"]
 y = msoa_final["health_rank_msoa"]
  
+# Create mask and filter
+mask = ~(x.isna() | y.isna())
+x = x[mask]
+y = y[mask]
+ 
 # Scatter
-ax.scatter(x, y, alpha=0.4, s=10, color='#a4bee0', edgecolor='none')
+ax.scatter(x, y, alpha=0.4, s=10, color='#EE4B2B', edgecolor='none')
  
 # Regression line
 slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
@@ -710,9 +755,9 @@ for spine in ax.spines.values():
  
 plt.tight_layout()
 plt.show()
+ 
 
 ```
-
 :::
 
 ## Calculate correlations and simple inequality metrics
@@ -729,6 +774,7 @@ cor_test
 ```
 
 ### Python
+
 ```{python}
 # Drop missing values for the two columns
 x = msoa_final['summer_max_tmp']
@@ -745,10 +791,11 @@ print(f"P-value: {p_value:.3g}")
 
 ## Exploring IMD rank quintiles
 
-First, we remove MSOAs with missing IMD rank or winter minimum temperature values to avoid NA values flowing through the analysis. The quintiles are created (1 = most deprived MSOAs, 5 = least deprived).
+First, we remove MSOAs with missing `health rank` or `summer maximum temperature` values to avoid NA values flowing through the analysis. The quintiles are created (1 = most deprived MSOAs, 5 = least deprived).
 
 ::: {.panel-tabset group="language"}
 ### R
+
 ```{r}
 msoa_final_clean <- msoa_final %>%
   drop_na(health_rank_msoa, summer_max_tmp) %>%        # ensure complete cases
@@ -760,6 +807,7 @@ msoa_final_clean <- msoa_final %>%
 
 msoa_final_clean <- st_as_sf(msoa_final_clean)
 ```
+
 ### Python
 
 ```{python}
@@ -773,12 +821,9 @@ msoa_final_clean["health_quintile"] = pd.qcut(
     labels=[1, 2, 3, 4, 5]
 ).astype(int)
 ```
-
 :::
 
-
-
-## Identify MSOAs with highest temp and most deprived
+## Identify hottest and most deprived MSOAs
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -786,10 +831,10 @@ msoa_final_clean["health_quintile"] = pd.qcut(
 ```{r}
 msoa_hotspots <- msoa_final_clean %>%
   mutate(
-    summertemp_decile = ntile(-summer_max_tmp, 5),             # 10 = coldest
-    health_decile = ntile(-health_rank_msoa, 5)      # 10 = most deprived
+    summertemp_decile = ntile(summer_max_tmp, 3),             # hottest
+    health_decile = ntile(-health_rank_msoa, 3)      # most deprived
   ) %>%
-  filter(summertemp_decile == 5 & health_decile == 5)  # coldest + high deprivation
+  filter(summertemp_decile == 3 & health_decile == 3)  # hottest + most deprivation
 
 msoa_hotspots <- st_as_sf(msoa_hotspots)
 ```
@@ -798,13 +843,28 @@ msoa_hotspots <- st_as_sf(msoa_hotspots)
 
 ```{python}
 
-```
+msoa_hotspots = msoa_final_clean.copy()
 
+# Create deciles (5 groups here)
+msoa_hotspots["summertemp_decile"] = pd.qcut(
+    msoa_hotspots["summer_max_tmp"], q=3, labels=False
+) + 1   # labels 
+
+msoa_hotspots["health_decile"] = pd.qcut(
+    -msoa_hotspots["health_rank_msoa"], q=3, labels=False
+) + 1   # labels
+
+# Filter to the hottest temps & most deprived
+msoa_hotspots = msoa_hotspots[
+    (msoa_hotspots["summertemp_decile"] == 3) &
+    (msoa_hotspots["health_decile"] == 3)
+]
+```
 :::
 
 ## Scatter plot with quadrants (best to show inequality trend)
 
-Plot Minimum Temperature vs. IMD rank and highlight hotspots. Hotspots appear in the bottom-left quadrant: low temperature (coldest days) + high deprivation.
+Plot maximum temperature vs. health rank and highlight hotspots. Hotspots appear in the bottom-left quadrant: low temperature (coldest days) + high deprivation.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -814,7 +874,7 @@ ggplot(msoa_final_clean, aes(x =summer_max_tmp, y = health_rank_msoa)) +
   geom_point(alpha = 0.3) +
   geom_point(data = msoa_hotspots, colour = "red", size = 2) +
   labs(
-    title = "Deprivation (MSOA-level) vs. Winter temp.",
+    title = "Deprivation (MSOA-level) vs. Summer temp.",
     x = "Summer (°C)",
     y = "IMD rank (lower = more deprived)"
   ) +
@@ -822,11 +882,36 @@ ggplot(msoa_final_clean, aes(x =summer_max_tmp, y = health_rank_msoa)) +
 ```
 
 ### Python
+
 ```{python}
+plt.figure(figsize=(8, 6))
+
+# All points
+plt.scatter(
+    msoa_final_clean["summer_max_tmp"],
+    msoa_final_clean["health_rank_msoa"],
+    color="black",
+    alpha=0.3
+)
+
+# Hotspots (highlighted in red)
+plt.scatter(
+    msoa_hotspots["summer_max_tmp"],
+    msoa_hotspots["health_rank_msoa"],
+    color="red",
+    s=30
+)
+
+plt.title("Deprivation (MSOA-level) vs. Summer temp.")
+plt.xlabel("Summer (°C)")
+plt.ylabel("IMD rank (lower = more deprived)")
+
+plt.tight_layout()
+plt.show()
 ```
 :::
 
-## Which Local Authorities are the most deprived & have lowest winter temperature?
+## Which Local Authorities are hottest during the summer and most deprived?
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -838,21 +923,21 @@ msoa_hotspots %>%
 ```
 
 ### Python
+
 ```{python}
-
+result = msoa_hotspots.groupby('ladnm').size().reset_index(name='n').sort_values('n', ascending=False)
+print(result)
 ```
-
-
 :::
 
 # Bivariate choropleth map
 
 Created bivariate categories. Now map them:
 
--   low PM2.5 + low deprivation
--   low PM2.5 + high deprivation
--   high PM2.5 + low deprivation
--   high PM2.5 + high deprivation (hotspots)
+-   high heat + low health deprivation
+-   high heat + high health deprivation
+-   high heat + low health deprivation
+-   high heat + high health deprivation (hotspots)
 
 # Generate a bivariate map
 
@@ -865,23 +950,10 @@ msoa_bi <- msoa_final_clean %>%
     summer_class = ntile(summer_max_tmp, 3),        # 1 = low exposure, 3 = high
     health_class  = ntile(-health_rank_msoa, 3),    # -rank so 1 = least deprived → 3 = most deprived
     bi_class   = paste0(summer_class, "-", health_class)
-  )
-
+  ) 
 ```
 
 ```{r}
-  biv_palette <- c(
-  "1-1" = "#e8e8e8",
-  "2-1" = "#b5c0da",
-  "3-1" = "#6c83b5",
-  "1-2" = "#e4acac",
-  "2-2" = "#b28c9e",
-  "3-2" = "#896290",
-  "1-3" = "#de2d26",
-  "2-3" = "#a50f15",
-  "3-3" = "#67000d"
-)
-
 bi_palette <- c(
   "1-1" = "#D9EBF5", # low heat, low deprivation (very light blue)
   "2-1" = "#E8E0D5", # medium heat, low deprivation (warm beige)
@@ -900,13 +972,13 @@ bi_palette <- c(
 ```{r}
 p_map <- ggplot(msoa_bi) +
   geom_sf(aes(fill = bi_class), colour = NA) +
-  scale_fill_manual(values = biv_palette) +
+  scale_fill_manual(values = bi_palette) +
   labs(
     title = "Bivariate Map: Summer Temp and Health Deprivation",
     fill = "Bivariate class",
     subtitle = "Summer Max Temp (x-axis) × Health Rank (y-axis)"
   ) +
-  theme_minimal() +
+  theme_void() +
   theme(
     legend.position = "none",
     plot.title = element_text(face = "bold")
@@ -921,7 +993,7 @@ legend_df <- expand_grid(
 ) %>%
   mutate(
     bi_class = paste0(summer_class, "-", health_class),
-    fill = biv_palette[bi_class]
+    fill = bi_palette[bi_class]
   )
 
 p_legend <- ggplot(legend_df, aes(x = summer_class, y = health_class, fill = fill)) +
@@ -948,27 +1020,116 @@ final_map
 ```
 
 ### Python
-:::
 
+```{python}
+# --- Create bivariate classes ---
+# Merging back to geospatial data
+msoa_final_clean = msoa_final_clean.merge(msoa_uk[["data_zone_code","geometry"]], left_on="msoa21cd", right_on="data_zone_code", how="left")
+
+msoa_bi = msoa_final_clean.copy()
+msoa_bi = gpd.GeoDataFrame(msoa_bi, geometry="geometry")
+ 
+msoa_bi["summer_class"] = pd.qcut(
+    msoa_bi["summer_max_tmp"],
+    q=3,
+    labels=[1, 2, 3]  # 1 = low, 3 = high
+)
+ 
+msoa_bi["health_class"] = pd.qcut(
+    msoa_bi["health_rank_msoa"],
+    q=3,
+    labels=[3, 2, 1]  # Reversed: 3 = most deprived (low rank)
+)
+ 
+msoa_bi["bi_class"] = (
+    msoa_bi["summer_class"].astype(str) + "-" + msoa_bi["health_class"].astype(str)
+)
+ 
+# --- Define palette ---
+bi_palette = {
+    "1-1": "#D9EBF5",  # low heat, low deprivation
+    "2-1": "#E8E0D5",  # medium heat, low deprivation
+    "3-1": "#F5B895",  # high heat, low deprivation
+    "1-2": "#ACD4E8",  # low heat, medium deprivation
+    "2-2": "#D5D5D5",  # medium heat, medium deprivation
+    "3-2": "#E67676",  # high heat, medium deprivation
+    "1-3": "#6A9ABD",  # low heat, high deprivation
+    "2-3": "#C99191",  # medium heat, high deprivation
+    "3-3": "#C83737",  # high heat, high deprivation
+}
+ 
+# Map colors to data
+msoa_bi["color"] = msoa_bi["bi_class"].map(bi_palette)
+ 
+# --- 3. Create map ---
+fig, ax = plt.subplots(figsize=(12, 10))
+ 
+msoa_bi.plot(
+    ax=ax,
+    color=msoa_bi["color"],
+    edgecolor="none"
+)
+ 
+ax.set_title("Bivariate Map: Summer Temp and Health Deprivation", fontweight="bold", fontsize=14)
+ax.set_axis_off()
+ 
+# --- Create inset legend (3x3 grid) ---
+ax_legend = inset_axes(
+    ax,
+    width="15%",
+    height="15%",
+    loc="lower right",
+    borderpad=2
+)
+ 
+# Build legend grid
+legend_grid = np.zeros((3, 3), dtype=object)
+for i, health in enumerate([3, 2, 1]):      # y-axis: top = most deprived
+    for j, summer in enumerate([1, 2, 3]):  # x-axis: left = low temp
+        legend_grid[i, j] = bi_palette[f"{summer}-{health}"]
+ 
+# Convert to RGB for imshow
+from matplotlib.colors import to_rgb
+rgb_grid = np.array([[to_rgb(c) for c in row] for row in legend_grid])
+ 
+ax_legend.imshow(rgb_grid, origin="upper")
+ax_legend.set_xticks([0, 1, 2])
+ax_legend.set_yticks([0, 1, 2])
+ax_legend.set_xticklabels(["Low", "", "High"], fontsize=8)
+ax_legend.set_yticklabels(["High", "", "Low"], fontsize=8)
+ax_legend.set_xlabel("Summer Temp →", fontsize=8)
+ax_legend.set_ylabel("← Deprivation", fontsize=8)
+ax_legend.tick_params(length=0)
+ 
+plt.tight_layout()
+plt.show()
+```
+:::
 
 ## Highlight hotspots on a map
 
-We can highlight hotspots on top of a greyscale map. Immediately shows where the worst areas are.
+We can highlight hotspots on top of a greyscale map. Immediately shows where the worst areas are. MSOAs in red are where hottest temperatures overlap with high health deprivation. What does this actually tell us?
 
-::: {.panel-tabset group="language"}
-### R
-
-```{r}
+```{r, echo=FALSE}
 msoa_bi_hotspots <- msoa_final_clean %>%
   mutate(
-    summertemp_class = ntile(summer_max_tmp, 5),
-    health_class  = ntile(-health_rank_msoa, 5),
+    summertemp_class = ntile(summer_max_tmp, 3),
+    health_class  = ntile(-health_rank_msoa, 3),
     bi_class   = paste0(summertemp_class, "-", health_class)
   ) %>%
   filter(bi_class == "3-3")
+
+msoa_bi_hotspots <- msoa_final_clean %>%
+  mutate(
+    summertemp_decile = ntile(summer_max_tmp, 3),             # 10 = hottest
+    health_decile = ntile(-health_rank_msoa, 3)      # 10 = most deprived
+  ) %>%
+  filter(summertemp_decile == 3 & health_decile == 3)  # hottest + high deprivation
+
+msoa_bi_hotspots <- st_as_sf(msoa_bi_hotspots)
 ```
 
-```{r}
+```{r, echo=FALSE}
 ggplot() +
   
   # Base map in light grey
@@ -1002,20 +1163,13 @@ ggplot() +
   )
 ```
 
-### Python
-:::
-
-
-
-=======
-• MSOAs in red are where coldest temperatures overlap with high deprivation, i.e. the environmental inequality hotspots. 
-• Because hotspots sit on top of a greyscale basemap, they stand out instantly.
->>>>>>> Stashed changes
-
 # Other things
 
-Of course there is a lot more to explore here:
-- for example urban vs rural about heat and deprivation would be a key factor to add to the analysys.
-- building tyoes/quality
-- Interesting to explore other aspects of heat + specific IMD measures such as education + housing in poor condition + mental health + antisocial behaviour
+Now it’s your turn to explore one of our [other data products](https://data.imago.ac.uk/)! There’s a lot more to investigate here. Some ideas to get you started:
 
+-   Urban vs. Rural Differences: Examine how heat and deprivation vary between urban and rural areas given that at first glance there seems to be a clear *urban heat island* effect.
+-   Other IMD Measures: explore links between temperature and other aspects of deprivation, such as:
+    1.  Education levels
+    2.  Housing in poor condition
+    3.  Mental health
+-   Other Imago data: `Flooding` or `Sun Probability Framework`.
