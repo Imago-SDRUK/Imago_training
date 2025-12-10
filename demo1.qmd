@@ -934,8 +934,8 @@ print(result)
 
 Created bivariate categories. Now map them:
 
--   high heat + low health deprivation
--   high heat + high health deprivation
+-   low heat + low health deprivation
+-   low heat + high health deprivation
 -   high heat + low health deprivation
 -   high heat + high health deprivation (hotspots)
 
