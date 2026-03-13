@@ -3,7 +3,7 @@
 A comparison of some key `R` and `Python` packages.
 
 | Purpose | Package | Key Functions |
-|--------|---------|----------------|
+|------------------|--------------------|----------------------------------|
 | **Vector data handling** (points, lines, polygons) | **geopandas** (Python) <br> **sf** (R) | `read_file()`, `sjoin()`, `to_crs()`, `dissolve()` <br> `st_read()`, `st_join()`, `st_transform()`, `st_union()`, `st_as_sf()` |
 | **Raster data handling** (reading/writing gridded data) | **rasterio** (Python) <br> **terra** (R) | `open()`, `read()`, `mask()`, `warp.reproject()` <br> `rast()`, `vect()`, `crop()`, `mask()`, `extract()` |
 | **Multi-dimensional arrays** (NetCDF, climate data) | **xarray** (Python) <br> **terra** (R) | `open_dataset()`, `sel()`, `mean()` <br> `rast()`, `app()`, `subset()` |
@@ -23,8 +23,7 @@ A comparison of some key `R` and `Python` packages.
 Some of these Packages marked will not be used in this workshop but are useful for advanced workflows.
 :::
 
-::: callout-important 
-
+::: callout-important
 Important packages for raster data in R.
 
 -   `terra`: the best way of loading and processing raster data.
@@ -40,6 +39,5 @@ There are also the following packages which we will not be using in this worksho
 -   `gganimate`: a package that allows you to turn your ggplot2 graphs into gifs.
 -   `rayshader`: create animated 3D graphs and maps in R.
 -   `countrycode`: a useful package to automatically generate ISO codes from country names (and vice versa), assign continents to countries.
--   `doparallel`: my go-to package for parallel processing. 
-
-::: 
+-   `doparallel`: my go-to package for parallel processing.
+:::
