@@ -81,13 +81,13 @@ MSOA boundary data can be downloaded from the [Imago data catalogue](https://ima
 ### R
 
 ```{r}
-msoa_uk <- read_sf("./data/UK_MSOA_IZB_SDZ.gpkg")
+msoa_uk <- read_sf("/data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg")
 ```
 
 ### Python
 
 ```{python}
-msoa_uk = gpd.read_file("./data/UK_MSOA_IZB_SDZ.gpkg")
+msoa_uk = gpd.read_file("./data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg")
 ```
 :::
 
