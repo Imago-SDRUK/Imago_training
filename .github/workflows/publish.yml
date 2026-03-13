@@ -66,7 +66,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install Python Dependencies
+       - name: Install Python Dependencies
         run: |
           pip install jupyter
           pip install numpy pandas geopandas \
@@ -74,9 +74,13 @@ jobs:
             statsmodels scipy \
             requests
 
+      - name: Configure reticulate to use system Python
+        run: |
+          echo 'RETICULATE_PYTHON=/usr/bin/python3' >> $GITHUB_ENV
+
       - name: Render Quarto Project
         uses: quarto-dev/quarto-actions/render@v2
-
+        
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
