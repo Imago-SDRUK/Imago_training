@@ -52,6 +52,7 @@ jobs:
             any::tidyverse
             any::readxl
             any::sf
+            any::reticulate
             any::tmap
             any::geojsonsf
             any::osmdata
