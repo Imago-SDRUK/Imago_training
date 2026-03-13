@@ -105,9 +105,8 @@ We've prepared a shared Google Drive folder with some starter colab notebooks fo
 
 **Step 1: Add the shared folder to your Drive**
 
-1.  Open the shared folder link: [Workshop Data Folder](https://drive.google.com/drive/folders/1SLlkM-yp210y0TYD3lYPM5Y_XgSFPNhg?usp=sharing) <!-- Replace with actual link -->
-2.  Right-click the folder and select **"Add shortcut to Drive"**
-3.  Choose where to place it (we recommend your root "My Drive")
+1.  Open the shared folder link: [Workshop Data Folder](https://drive.google.com/drive/folders/1SLlkM-yp210y0TYD3lYPM5Y_XgSFPNhg?usp=sharing)
+2.  **Copy** the folder and add it to **your own Drive**
 
 **Step 2: Set your working directory**
 
@@ -254,12 +253,12 @@ remotes::install_version("sf", version = "1.0-14")
 ::: callout-note
 ## Installation in Colab
 
-In Google Colab: 
+In Google Colab:
 
-- Python packages use `%pip` (magic command) to ensure installation in the correct environment 
-- R packages use the standard `install.packages()` function 
-- Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab 
-- For geospatial packages, you'll typically need to install them at the start of your notebook
+-   Python packages use `%pip` (magic command) to ensure installation in the correct environment
+-   R packages use the standard `install.packages()` function
+-   Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab
+-   For geospatial packages, you'll typically need to install them at the start of your notebook
 :::
 
 ### Loading Packages
@@ -291,4 +290,4 @@ import pandas as pd
 # You can also import specific functions
 from pyfixest.estimation import feols
 ```
-
+:::
