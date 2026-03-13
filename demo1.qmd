@@ -15,7 +15,7 @@ We will start by loading core packages for working with spatial data. See detail
 ::: {.panel-tabset group="language"}
 ### R
 
-```{r message=FALSE}
+```{r}
 # Core data handling and plotting
 library(tidyverse)   # Data manipulation + ggplot2
 library(dplyr)       # (Loaded with tidyverse, listed here for clarity)
@@ -37,7 +37,7 @@ library(cowplot)     # Combining and arranging plots
 library(fs)          # File and directory helpers
 ```
 
-```{r, echo=FALSE}
+```{r}
 library(reticulate)
 ```
 
@@ -81,7 +81,7 @@ MSOA boundary data can be downloaded from the [Imago data catalogue](https://ima
 ### R
 
 ```{r}
-msoa_uk <- read_sf("/data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg")
+msoa_uk <- read_sf("./data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg")
 ```
 
 ### Python
