@@ -10,7 +10,7 @@ Once you are comfortable with the workflow, feel free to try it out on other dat
 
 ## Installing packages
 
-We will start by loading core packages for working with spatial data. See detailed description of [R](https://r.geocompx.org/) and [Python](https://py.geocompx.org/)
+We will start by loading core packages for working with spatial data. See detailed description of [R](https://r.geocompx.org/) and [Python](https://py.geocompx.org/);
 
 ::: {.panel-tabset group="language"}
 ### R
