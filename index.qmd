@@ -1,6 +1,6 @@
 # Welcome {.unnumbered}
 
-## Using Imago Data Products for Social Research & Policy
+## Imago for evidence-based policy
 
 Join us for a hands-on introduction to using [Imago: Data Service for Imagery](https://imago.ac.uk/) data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.
 

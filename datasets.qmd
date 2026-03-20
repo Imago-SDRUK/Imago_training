@@ -6,7 +6,7 @@ This page provides guidance on how to access and download the IMAGO data product
 
 All Imago datasets for this release can be accessed and downloaded from the following website:
 
-<https://imago.ac.uk/data>
+<https://data.imago.ac.uk/>
 
 The website hosts all available files along with supporting documentation.
 
@@ -23,8 +23,6 @@ The data products are provided in multiple formats to support different analytic
 The current IMAGO data release includes the following thematic datasets:
 
 **Temperature** – Measures of temperature patterns across regions.
-
-**Pollution** – Indicators of air quality and pollution exposure.
 
 **Flooding** – Flood risk and flood-related environmental measures.
 

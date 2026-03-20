@@ -51,68 +51,72 @@ Since we'll be working with both R and Python in this workshop, you may need to 
 3.  Choose a hardware accelerator if needed (None, GPU, or TPU)
 4.  Click **Save**
 
-::: callout-note
-Changing the runtime type will restart your session, so do this before running any code. You can only use one language per notebook.
-:::
-
 Once connected, you can start writing and executing code!
 
 ## File organization
 
 ### Recipe 1: Mounting Your Google Drive
 
-To access files from your Google Drive within Colab, you need to "mount" it first.
+To access files from your Google Drive within Colab, you need to "mount" it first. This step is necessary only if you are using Colab.
 
-**For Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
+Google Drive mounting is only available in Colab's Python runtime. To use R with Drive access:
+
+1.  Start with a **Python runtime** and mount your drive:
+
+```{python}
+#| eval: false
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 
-**For R:**
+2.  Switch to the **R runtime** (Runtime → Change runtime type → R). The drive mount persists.
+3.  Now you can access your files using the mounted path:
 
-``` r
-library(googledrive)
-drive_auth() 
+```{r}
+#| eval: false
+setwd('/content/drive/MyDrive/WorkshopData/')
+df <- read.csv('imd_msoa.csv')
 ```
+
+## Python
+
+```{python}
+#| eval: false
+from google.colab import drive
+drive.mount('/content/drive')
+```
+:::
 
 You'll be prompted to authorize access. Click the link, sign in, and copy the authorization code back to Colab.
 
 ::: callout-tip
-After mounting, your Drive files will be accessible at `/content/drive/MyDrive/` in the session.
+After mounting, your Drive files will be accessible at `/content/drive/MyDrive/` in the session. Mounting Google Drive is optional. You can also upload files directly to the Colab runtime using the file browser in the left sidebar. These files are temporary and will be deleted when the runtime disconnects.
 :::
 
 ### Recipe 2: Accessing the Workshop Data Folder
 
-<!-- How are we sharing data? Do we want them to download this data? -->
+We've prepared a shared Google Drive folder with some starter colab notebooks for this workshop.
 
-We've prepared a shared Google Drive folder with all the necessary datasets for this workshop.
+-   [Python notebook](https://colab.research.google.com/drive/1iXXQeRedroYMCKqueB-ZHtdEf3t9pIle?usp=sharing)
+-   [R notebook](https://colab.research.google.com/drive/1YX0L1V0-9FE68RyVocLaPwpyKr-xPn7t?usp=sharing)
 
 **Step 1: Add the shared folder to your Drive**
 
-1.  Open the shared folder link: [Workshop Data Folder](#) <!-- Replace with actual link -->
-2.  Right-click the folder and select **"Add shortcut to Drive"**
-3.  Choose where to place it (we recommend your root "My Drive")
+1.  Open the shared folder link: [Workshop Data Folder](https://drive.google.com/drive/folders/1SLlkM-yp210y0TYD3lYPM5Y_XgSFPNhg?usp=sharing)
+2.  **Copy** the folder and add it to **your own Drive**
 
 **Step 2: Set your working directory**
 
 After mounting your Drive, change to the workshop data directory so you can use relative paths.
 
-**Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
-import os
-os.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
-
-# Now you can use relative paths
-import pandas as pd
-df = pd.read_csv('data/dataset.csv')
-```
-
-**R:**
-
-``` r
+```{r}
+#| eval: false
 setwd('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
 
 # Now you can use relative paths
@@ -120,36 +124,28 @@ library(readr)
 df <- read_csv('data/dataset.csv')
 ```
 
+## Python
+
+```{python}
+#| eval: false
+import os
+os.chdir('/content/drive/MyDrive/WorkshopData/')  # Adjust path if needed
+
+# Now you can use relative paths
+import pandas as pd
+df = pd.read_csv('data/dataset.csv')
+```
+:::
+
 ### Downloading Data from imago
 
 [Imago](https://imago.com) hosts the datasets we'll use. Here's how to download them directly to your Drive.
 
-**Using Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
-import requests
-import os
-
-# Mount drive first (see Recipe 1)
-# Make a directory to save your outputs
-output_dir = '/content/drive/MyDrive/workshop_data/'
-os.makedirs(output_dir, exist_ok=True)
-
-# Download file
-url = 'https://imago.example.com/dataset.csv'  # Replace with actual URL
-filename = url.split('/')[-1]
-output_path = os.path.join(output_dir, filename)
-
-response = requests.get(url)
-with open(output_path, 'wb') as f:
-    f.write(response.content)
-    
-print(f"Downloaded to: {output_path}")
-```
-
-**Using R:**
-
-``` r
+```{r}
+#| eval: false
 library(googledrive)
 
 # Set up output directory
@@ -165,59 +161,68 @@ download.file(url, destfile = output_path, mode = "wb")
 print(paste("Downloaded to:", output_path))
 ```
 
+## Python
+
+```{python}
+#| eval: false
+import requests
+import os
+
+# Mount drive first (see Recipe 1)
+# Make a directory to save your outputs
+output_dir = '/content/drive/MyDrive/WorkshopData/'
+os.makedirs(output_dir, exist_ok=True)
+
+# Download file
+url = 'https://imago.example.com/dataset.csv'  # Replace with actual URL
+filename = url.split('/')[-1]
+output_path = os.path.join(output_dir, filename)
+
+response = requests.get(url)
+with open(output_path, 'wb') as f:
+    f.write(response.content)
+    
+print(f"Downloaded to: {output_path}")
+```
+:::
+
 ### Quick Data Check
 
 After downloading, verify your data loaded correctly:
 
-**Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
-import pandas as pd
-df = pd.read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')
-print(df.head())
-print(df.info())
-```
-
-**R:**
-
-``` r
+```{r}
+#| eval: false
 library(readr)
-df <- read_csv('/content/drive/MyDrive/workshop_data/dataset.csv')
+df <- read_csv('/content/drWorkshopData/dataset.csv')
 head(df)
 str(df)
 ```
+
+## Python
+
+```{python}
+#| eval: false
+import pandas as pd
+df = pd.read_csv('/content/drive/MyDrive/WorkshopData/dataset.csv')
+print(df.head())
+print(df.info())
+```
+:::
 
 ## Installing and loading Packages
 
 Before you can use specialized packages for geospatial analysis and statistics, you need to install them (download and set them up on your system or runtime) and then load them (make their functions available in your current session). You only need to install a package once, but you must load it every time you start a new session.
 
-```{=html}
-<!--
-Here I would just highlight the packages/libraries used in both R and Python. The below was for a previous workshop
-
-SP: I compiled information from the workshop Martina, Vivian and I ran for our PhD colleagues at the LSE
--->
-```
-
 ### Installing packages
 
-**Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
-# Using conda (preferred for local installations)
-# Run in terminal/command line:
-conda install geopandas rasterio xarray -c conda-forge
-
-# Using pip (in Colab or Jupyter notebooks)
-%pip install geopandas rasterio xarray pyfixest
-
-# Install specific version
-%pip install geopandas==0.14.0
-```
-
-**R:**
-
-``` r
+```{r}
+#| eval: false
 # Install from CRAN
 install.packages("sf")
 install.packages(c("terra", "exactextractr", "ggplot2"))
@@ -229,29 +234,40 @@ remotes::install_github("r-spatial/sf")
 remotes::install_version("sf", version = "1.0-14")
 ```
 
+## Python
+
+```{python}
+#| eval: false
+# Using conda (preferred for local installations)
+# Run in terminal/command line:
+#conda install geopandas rasterio xarray -c conda-forge
+
+# Using pip (in Colab or Jupyter notebooks)
+%pip install geopandas rasterio xarray pyfixest
+
+# Install specific version
+%pip install geopandas==0.14.0
+```
+:::
+
 ::: callout-note
 ## Installation in Colab
 
-In Google Colab: - Python packages use `%pip` (magic command) to ensure installation in the correct environment - R packages use the standard `install.packages()` function - Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab - For geospatial packages, you'll typically need to install them at the start of your notebook
+In Google Colab:
+
+-   Python packages use `%pip` (magic command) to ensure installation in the correct environment
+-   R packages use the standard `install.packages()` function
+-   Many common packages (pandas, numpy, matplotlib) are pre-installed in Colab
+-   For geospatial packages, you'll typically need to install them at the start of your notebook
 :::
 
 ### Loading Packages
 
-**Python:**
+::: {.panel-tabset group="language"}
+## R
 
-``` python
-# Import packages
-import geopandas as gpd
-import rasterio
-import pandas as pd
-
-# You can also import specific functions
-from pyfixest.estimation import feols
-```
-
-**R:**
-
-``` r
+```{r}
+#| eval: false
 # Load packages
 library(sf)
 library(terra)
@@ -262,3 +278,16 @@ library(ggplot2)
 require(dplyr)
 ```
 
+## Python
+
+```{python}
+#| eval: false
+# Import packages
+import geopandas as gpd
+import rasterio
+import pandas as pd
+
+# You can also import specific functions
+from pyfixest.estimation import feols
+```
+:::

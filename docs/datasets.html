@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.7.32">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -30,7 +30,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./preparing.html" rel="next">
+<link href="./satellites_to_areas.html" rel="next">
 <link href="./index.html" rel="prev">
 <link href="./assets/Imago-logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -96,9 +96,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Imago training</a> 
         <div class="sidebar-tools-main">
@@ -127,12 +125,6 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./preparing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Setting up for the workshop</span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
   <a href="./satellites_to_areas.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">From grids to areas</span></a>
   </div>
@@ -145,8 +137,20 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./preparing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setting up</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./demo1.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Imago data product with R</span></a>
+ <span class="menu-text">Explore datasets with R/Python</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./packages.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Geospatial and Statistical Packages</span></a>
   </div>
 </li>
     </ul>
@@ -194,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="accessing-imago-data-products" class="level2">
 <h2 class="anchored" data-anchor-id="accessing-imago-data-products">Accessing IMAGO Data Products</h2>
 <p>All Imago datasets for this release can be accessed and downloaded from the following website:</p>
-<p><a href="https://imago.ac.uk/data" class="uri">https://imago.ac.uk/data</a></p>
+<p><a href="https://data.imago.ac.uk/" class="uri">https://data.imago.ac.uk/</a></p>
 <p>The website hosts all available files along with supporting documentation.</p>
 </section>
 <section id="available-data-formats" class="level2">
@@ -210,7 +214,6 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="included-data-for-this-release">Included Data for This Release</h2>
 <p>The current IMAGO data release includes the following thematic datasets:</p>
 <p><strong>Temperature</strong> – Measures of temperature patterns across regions.</p>
-<p><strong>Pollution</strong> – Indicators of air quality and pollution exposure.</p>
 <p><strong>Flooding</strong> – Flood risk and flood-related environmental measures.</p>
 <p><strong>Sun Probability Framework</strong> – A spatial metric capturing probability of sunlight exposure.</p>
 </section>
@@ -282,14 +285,13 @@ ul.task-list li input[type="checkbox"] {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
         }
-      }
-      return codeEl.innerText;
+        return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -638,8 +640,8 @@ ul.task-list li input[type="checkbox"] {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./preparing.html" class="pagination-link" aria-label="Setting up for the workshop">
-        <span class="nav-page-text">Setting up for the workshop</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./satellites_to_areas.html" class="pagination-link" aria-label="From grids to areas">
+        <span class="nav-page-text">From grids to areas</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
