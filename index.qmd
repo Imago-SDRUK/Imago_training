@@ -1,3 +1,5 @@
+<img src="assets/Imago-logo.png" alt="Imago Logo" style="float:right; width: 150px;"/>
+
 # Welcome {.unnumbered}
 
 ## Imago for evidence-based policy

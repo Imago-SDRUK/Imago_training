@@ -12,7 +12,6 @@ book:
       Imago | UKRI Imagery Data Service
     right: |
       This book was built with <a href="https://quarto.org/">Quarto</a>.
-  cover-image: assets/Imago-logo.png
   favicon: assets/Imago-logo.png
   repo-url: https://github.com/Imago-SDRUK/Imago-training
   repo-branch: main
