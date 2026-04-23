@@ -36,7 +36,8 @@ jobs:
             libxml2-dev \
             libfontconfig1-dev \
             libharfbuzz-dev \
-            libfribidi-dev
+            libfribidi-dev \
+            cargo
 
       - name: Set up Python
         id: setup-python
