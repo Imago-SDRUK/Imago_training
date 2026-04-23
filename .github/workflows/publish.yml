@@ -80,6 +80,7 @@ jobs:
             any::viridis
             any::cowplot
             any::fs
+            any::gifski
      
       - name: Install TinyTeX
         run: quarto install tinytex
