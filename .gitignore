@@ -241,3 +241,5 @@ data/File_3_IoD2025 Supplementary Indices_IDACI and IDAOPI(IoD2025 IDACI & IDAOP
 data/File_2_IoD2025 Domains of Deprivation(IoD2025 Domains).csv
 data/File_1_IoD2025 Index of Multiple Deprivation(IMD25).csv
 *.html
+demo.ipynb
+docs/
