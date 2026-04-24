@@ -1,8 +1,12 @@
 on:
   workflow_dispatch:
   push:
-    branches: [main, auto_render]
+    branches: [main, 15-failed-auto-renders-creating-orphan-artefacts ]
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+  
 name: Quarto Publish
 
 permissions:
