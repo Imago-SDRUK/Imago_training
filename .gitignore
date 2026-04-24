@@ -242,3 +242,4 @@ data/File_2_IoD2025 Domains of Deprivation(IoD2025 Domains).csv
 data/File_1_IoD2025 Index of Multiple Deprivation(IMD25).csv
 *.html
 demo.ipynb
+docs/
