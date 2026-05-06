@@ -38,11 +38,9 @@ website:
           - policy.qmd
       - section: "2. Research trainings"
         contents:
-          - preparing.qmd
-          - demo1.qmd
+          - airtemp.qmd
           - precipitation.qmd
           - spf.qmd
-          - timeseries.qmd
       - section: "Reference"
         contents:
           - packages.qmd

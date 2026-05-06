@@ -1,20 +1,52 @@
 # Welcome {.unnumbered}
 
-## Imago for evidence-based policy
+## Imago
 
-Join us for a hands-on introduction to using [Imago: Data Service for Imagery](https://imago.ac.uk/) data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.
+> _Hands-on training for working with imagery-derived data_
 
-This session has been developed by the [Imago team](https://imago.ac.uk/about).
+<img src="assets/Imago-logo.png" alt="Imago Logo" width="300"/>
 
-Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.
+This site brings together training materials produced by [Imago](https://imago.ac.uk), part of the [Smart Data Research UK](https://www.sdruk.ukri.org/) family. Our trainings are designed for two audiences: **policy and analyst users** working with prepared indicators in tools like Excel, and **researchers** working with raw and processed data in R or Python.
 
-Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.
+Each training is self-contained. You can work through them in order or pick the topics relevant to your needs.
 
-The website is **free to use** and is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/). A compilation of this web course is hosted as a GitHub repository that you can access:
+## Before you start
 
--   As an [html website](https://Imago-SDRUK.github.io/Imago_training/).
--   As a [GitHub repository](https://github.com/Imago-SDRUK/Imago_training).
+If you are new to the kinds of data Imago produces, start with these orientation pages:
 
-## Contact {.unnumbered}
+- [Data sets](datasets.qmd) — what's available and where it comes from
+- [From grids to areas](satellites_to_areas.qmd) — how raw satellite data becomes area-level indicators
+- [Geo-spatial and statistical packages](packages.qmd) — reference for the R and Python tooling we use
 
-> The Imago team - imago \[at\] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.
+## 1. Policy trainings
+
+For analysts and policy users. No coding required — these trainings work with prepared indicators in spreadsheet tools.
+
+| Training | Topic | Format |
+|----------|-------|--------|
+| [Data Insights with Excel](policy.qmd) | Exploring climate and vulnerability indicators in Excel | Excel |
+
+## 2. Research trainings
+
+For researchers comfortable with R or Python. These trainings work with raw and processed data and assume basic familiarity with at least one of the two languages.
+
+Each training has a written walkthrough you can read, and a runnable notebook you can launch directly in your browser via [JupyterLite](https://jupyter.org/try-jupyter/lab/) — no installation required.
+
+| Training | Topic | Read | Run in browser |
+|----------|-------|------|----------------|
+| Air temperature | Heat and cold exposure | [Notebook](airtemp.qmd) | [Launch]() |
+| Precipitation | Working with precipitation indicators | _Coming soon_ | _Coming soon_ |
+| SPF: Sun probability framework | Joining and aggregating spatial data | _Coming soon_ | _Coming soon_ |
+
+## Contributing
+
+These materials are openly developed on [GitHub](https://github.com/Imago-SDRUK/Imago-training). We welcome corrections, suggestions, and new training contributions — please open an issue or pull request.
+
+## License
+
+This repository uses a dual-licensing approach:
+
+- **MIT License** for all software code (see [LICENSE](LICENSE))
+- **Creative Commons Attribution 4.0 International (CC BY 4.0)** for documentation, data, and non-code content
+
+See the [LICENSE](LICENSE) file for full details.
