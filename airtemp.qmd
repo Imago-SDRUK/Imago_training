@@ -35,6 +35,9 @@ library(cowplot)     # Combining and arranging plots
 
 # File system utilities
 library(fs)          # File and directory helpers
+
+# GIFS
+library(gifski)
 ```
 
 ```{r}
@@ -575,10 +578,10 @@ msoa_temp['msoa21cd'] = msoa_temp['MSOA21C'].astype(str).str.strip()
 
 Join the aggregated IMD data with the MSOA-level heat dataset by MSOA code. The final dataset contains:
 
-- MSOA identifiers and names
-- LAD identifiers and names
-- `Summer Maximum Temperature`
-- Aggregated `Health rank`
+-   MSOA identifiers and names
+-   LAD identifiers and names
+-   `Summer Maximum Temperature`
+-   Aggregated `Health rank`
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -624,9 +627,9 @@ If we want to examine the specific relationship between hot temperature and heal
 
 The code below:
 
-- Fits the model,
-- Extracts the regression equation and R² value, and
-- Visualise the relationship using a scatterplot with a fitted trend line and an annotated equation.
+-   Fits the model,
+-   Extracts the regression equation and R² value, and
+-   Visualise the relationship using a scatterplot with a fitted trend line and an annotated equation.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -934,10 +937,10 @@ print(result)
 
 Created bivariate categories. Now map them:
 
-- low heat + low health deprivation
-- low heat + high health deprivation
-- high heat + low health deprivation
-- high heat + high health deprivation (hotspots)
+-   low heat + low health deprivation
+-   low heat + high health deprivation
+-   high heat + low health deprivation
+-   high heat + high health deprivation (hotspots)
 
 # Generate a bivariate map
 
@@ -1163,111 +1166,14 @@ ggplot() +
   )
 ```
 
-## 
-
-## Animated hotspot exploration
-
-This section explores the intersection of heat and health deprivation using a bivariate animation that zooms into specific hotspots.
-
-::: {.panel-tabset group="language"}
-### R (tmap)
-
-```{r, message=FALSE, warning=FALSE, results='hide'}
-# 1. Target Selection
-# Identify hotspots for zooming in Greater London (using E09 prefix)
-london_hotspot <- msoa_bi %>%
-    filter(bi_class == "3-3" & grepl("^E09", ladcd)) %>%
-    slice(1)
-
-# Fallback 1: Any 3-3 hotspot nationally
-if (nrow(london_hotspot) == 0) {
-    message("No London 3-3 hotspot found. Falling back to national.")
-    london_hotspot <- msoa_bi %>%
-        filter(bi_class == "3-3") %>%
-        slice(1)
-}
-
-# Fallback 2: Any 3-1 or 1-3 if 3-3 is missing (unlikely but possible)
-if (nrow(london_hotspot) == 0) {
-    london_hotspot <- msoa_bi %>% slice(1)
-}
-
-# Low Heat / Low Deprivation hotspot for comparison
-low_hotspot <- msoa_bi %>%
-    filter(bi_class == "1-1") %>%
-    slice(1)
-if (nrow(low_hotspot) == 0) low_hotspot <- msoa_bi %>% slice(n())
-
-# 2. Animation Prep: Define zoom extents
-full_bbox <- st_bbox(msoa_bi)
-hot_bbox <- st_bbox(st_buffer(london_hotspot, 5000))
-low_bbox <- st_bbox(st_buffer(low_hotspot, 5000))
-
-# Interpolation helper for smooth zoom effect
-interpolate_bbox <- function(b1, b2, n) {
-    lapply(seq(0, 1, length.out = n), function(a) {
-        res <- (1 - a) * b1 + a * b2
-        class(res) <- class(b1)
-        attributes(res)$crs <- attributes(b1)$crs
-        res
-    })
-}
-
-# Build sequence of bounding boxes (Transitions + Staying)
-bboxes <- c(
-    replicate(5, full_bbox, simplify = FALSE), # Intro
-    interpolate_bbox(full_bbox, hot_bbox, 10), # Zoom in Hot
-    replicate(10, hot_bbox, simplify = FALSE), # Stay at Hot
-    interpolate_bbox(hot_bbox, full_bbox, 10), # Zoom out
-    interpolate_bbox(full_bbox, low_bbox, 10), # Zoom in Low
-    replicate(10, low_bbox, simplify = FALSE), # Stay at Low
-    interpolate_bbox(low_bbox, full_bbox, 10) # Return
-)
-
-# 3. Build Animation Frames
-tmap_mode("plot")
-frames <- lapply(seq_along(bboxes), function(i) {
-    bb <- bboxes[[i]]
-    if (any(is.na(bb))) return(NULL)
-
-    m <- tm_shape(msoa_bi, bbox = bb) +
-        tm_polygons("bi_class", palette = bi_palette, border.col = "white", border.alpha = 0.1, legend.show = FALSE) +
-        tm_layout(title = "Heat & Deprivation Hotspots (R)", title.size = 0.8)
-
-    # Highlight High Hotspot (if it exists)
-    if (nrow(london_hotspot) > 0 && i > 10 && i < 35) {
-        m <- m + tm_shape(london_hotspot) + tm_borders(col = "black", lwd = 2) +
-            tm_text("msoa21nm", size = 0.7, bg.color = "white", bg.alpha = 0.5)
-    }
-    # Highlight Low Hotspot (if it exists)
-    if (nrow(low_hotspot) > 0 && i > 40 && i < 65) {
-        m <- m + tm_shape(low_hotspot) + tm_borders(col = "black", lwd = 2) +
-            tm_text("msoa21nm", size = 0.7, bg.color = "white", bg.alpha = 0.5)
-    }
-    return(m)
-})
-
-# Filter out potentially NULL frames to prevent tmap_animation crash
-frames <- frames[!sapply(frames, is.null)]
-
-# 4. Save Optimized Animation
-if (length(frames) > 0) {
-    suppressMessages(tmap_animation(frames, filename = "hotspot_animation_lite.gif", delay = 15, width = 500, height = 500))
-} else {
-    message("Error: Animation frames could not be generated.")
-}
-```
-:::
-
-![Animated Hotspot Zoom](hotspot_animation_lite.gif)
 
 # Other things
 
 Now it’s your turn to explore one of our [other data products](https://data.imago.ac.uk/)! There’s a lot more to investigate here. Some ideas to get you started:
 
-- Urban vs. Rural Differences: Examine how heat and deprivation vary between urban and rural areas given that at first glance there seems to be a clear *urban heat island* effect.
-- Other IMD Measures: explore links between temperature and other aspects of deprivation, such as:
-  1.  Education levels
-  2.  Housing in poor condition
-  3.  Mental health
-- Other Imago data: `Flooding` or `Sun Probability Framework`.
+-   Urban vs. Rural Differences: Examine how heat and deprivation vary between urban and rural areas given that at first glance there seems to be a clear *urban heat island* effect.
+-   Other IMD Measures: explore links between temperature and other aspects of deprivation, such as:
+    1.  Education levels
+    2.  Housing in poor condition
+    3.  Mental health
+-   Other Imago data: `Flooding` or `Sun Probability Framework`.

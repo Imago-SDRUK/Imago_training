@@ -1,0 +1,18 @@
+---
+title: "Spatial features and SPF data"
+---
+
+::: {.callout-note}
+## Coming soon
+
+This training is in development. Check back soon, or [open an issue](https://github.com/Imago-SDRUK/Imago-training/issues) if you'd like to be notified when it's ready.
+:::
+
+A research-track training on working with spatial features in R or Python — joining, aggregating, and analysing geographic data alongside Imago indicators.
+
+**Planned content:**
+
+- Reading and writing common spatial formats
+- Spatial joins and area-weighted aggregation
+- Working with administrative geographies
+- Combining spatial features with Imago indicators
