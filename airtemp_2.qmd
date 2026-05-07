@@ -1,14 +1,10 @@
-# Air temperature - panel {#sec-airtemp2 .unnumbered}
+# Air temperature - Panel {#sec-airtemp2 .unnumbered}
 
-**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England, first as a cross-section, then as a panel — building toward the kind of regression analysis used in regional science.
-
-**Training approach**: The instructor demonstrates the workflow end-to-end. We use just two indicators throughout — `summer_max_tmp` and `extreme_hot_days_mean` — but the same logic transfers to any of the sixteen indicators in the product.
+**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England. We now explore a the panel data.
 
 ------------------------------------------------------------------------
 
 ## Installing packages
-
-For Part 2 we only need data handling, plotting, and spatial reading — no regression yet, no IMD, no Excel.
 
 ::: {.panel-tabset group="language"}
 ### R

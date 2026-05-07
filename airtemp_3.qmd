@@ -1,14 +1,12 @@
 # Air temperature - Climate inequality {#sec-airtemp3 .unnumbered}
 
-**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England, first as a cross-section, then as a panel — building toward the kind of regression analysis used in regional science.
-
-**Training approach**: The instructor demonstrates the workflow end-to-end. We use just two indicators throughout — `summer_max_tmp` and `extreme_hot_days_mean` — but the same logic transfers to any of the sixteen indicators in the product. The final section sketches three further directions students can take on their own.
+**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England, moving towards regression analysis.
 
 ------------------------------------------------------------------------
 
 ## Installing packages
 
-For Part 3 we work entirely with the panel CSV saved in Part 2 and the MSOA-level IMD aggregate from Part 1, so we don't need any spatial or Excel-reading libraries here — just data handling, plotting, and the regression engines.
+Here we work entirely with the panel CSV saved and the MSOA-level IMD aggregate.
 
 ::: {.panel-tabset group="language"}
 ### R

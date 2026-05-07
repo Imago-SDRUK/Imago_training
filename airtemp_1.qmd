@@ -1,14 +1,18 @@
-# Air temperature - the basics {#sec-airtemp .unnumbered}
+# Air temperature - Basics {#sec-airtemp .unnumbered}
 
-**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England, first as a cross-section, then as a panel — building toward the kind of regression analysis used in regional science.
+**Goal**: Use the Imago [air temperature](https://data.imago.ac.uk/datasets?vocab_general=temperature&offset=10) product to explore the relationship between heat exposure and deprivation in England. We start by exploring a cross-section.
 
 **Training approach**: The instructor demonstrates the workflow end-to-end. We use just two indicators throughout — `summer_max_tmp` and `extreme_hot_days_mean` — but the same logic transfers to any of the sixteen indicators in the product.
+
+::: {.callout-note}
+First, you will need to sign up and log in to our [data catalogue](https://data.imago.ac.uk/).
+:::
 
 ------------------------------------------------------------------------
 
 # Cross-sectional foundations {#sec-cross-section}
 
-We start with a single year. The Imago air temperature product publishes one geopackage per year covering 2015–2024; we use 2024 here as our cross-section. The questions for Part 1 are the natural ones a researcher would ask the first time they meet a new dataset: what does the distribution look like, where in the country are the hottest places, and how does heat exposure relate to deprivation?
+We start with a single year. The Imago air temperature product publishes one `geopackage` per year covering 2015–2024; we use 2024 here as our cross-section. The questions for this sections the natural ones a researcher would ask the first time they meet a new dataset: what does the distribution look like, where in the country are the hottest places, and how does heat exposure relate to deprivation?
 
 ## Installing packages
 
@@ -59,7 +63,7 @@ import requests
 
 ## Loading the 2024 cross-section
 
-The Imago air temperature product publishes one geopackage per year. Each file already contains the MSOA boundary geometry alongside the temperature indicators, so we do not need a separate boundary file for the maps in Part 1.
+The Imago air temperature product publishes one geopackage per year. Each file already contains the MSOA boundary geometry alongside the temperature indicators, so we do not need a separate boundary file.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -195,7 +199,7 @@ Mapping the two indicators side by side gives us the spatial pattern. Hotter and
 ::: {.panel-tabset group="language"}
 ### R
 
-```{r, fig.width=10, fig.height=6}
+```{r, fig.width=10, fig.height=6, warning=FALSE}
 library(patchwork)   # only needed for the side-by-side composite below
 
 map_smt <- ggplot(msoa_temp) +
@@ -417,7 +421,7 @@ msoa_imd_agg.to_csv("./data/derived/msoa_imd_agg.csv", index=False)
 :::
 
 ::: callout-note
-IMD only covers England. The MSOA boundary file covers the whole UK. The join below is therefore a left join from IMD to the temperature data — Scottish, Welsh and Northern Irish MSOAs will appear with missing health ranks. We drop them before the regressions in Part 1 and Part 3.
+IMD only covers England. The MSOA boundary file covers the whole UK. The join below is therefore a left join from IMD to the temperature data — Scottish, Welsh and Northern Irish MSOAs will appear with missing health ranks. We drop them before the regressions.
 :::
 
 ### Join IMD to the cross-section
@@ -493,7 +497,7 @@ Both heat exposure measures are strongly and positively associated with the MSOA
 
 In the English IMD convention, **rank 1 is the most health-deprived area**, so a positive coefficient means hotter MSOAs tend to rank as **less** health-deprived. This counterintuitive sign almost certainly reflects geography rather than a protective effect of heat: warmer parts of England (the south and southeast) are on average more affluent and healthier than cooler post-industrial areas in the north and midlands. The two specifications explain a similar share of variation (R² ≈ 0.12), with extreme hot days a marginally better fit.
 
-These bivariate associations confound heat exposure with regional patterns of deprivation, age structure, urbanity, and housing. We'll return to this once controls are added.
+These bivariate associations confound heat exposure with regional patterns of deprivation, age structure, urbanity, and housing. 
 :::
 
 A scatter plot for `summer_max_tmp` makes the relationship visible:
@@ -562,5 +566,5 @@ Two questions a single cross-section *cannot* answer at all:
 1.  Is the relationship stable over time, or has it strengthened or weakened?
 2.  Has the gap between the most and least deprived MSOAs widened, narrowed, or held steady?
 
-For both of these we need a panel — which is what Part 2 builds.
+For both of these we need a panel.
 :::
