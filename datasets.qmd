@@ -1,43 +1,55 @@
 # Data sets {.unnumbered}
 
-This page provides guidance on how to access and download the IMAGO data products for this training.
+This page describes the Imago data products used across this training and explains how to access them.
 
-## Accessing IMAGO Data Products
+## Where to find the data
 
-All Imago datasets for this release can be accessed and downloaded from the following website:
+All Imago datasets are hosted on the Imago data catalogue:
 
 <https://data.imago.ac.uk/>
 
-The website hosts all available files along with supporting documentation.
+The catalogue holds every published file alongside metadata and licensing information. You will need to create a free account to download files. Once logged in, you can browse, filter by tag (for example `CLiVE`, `temperature`, `floods`), and download in your preferred format.
 
-## Available Data Formats
+## Datasets used in this training
 
-The data products are provided in multiple formats to support different analytical needs:
+The trainings on this site draw on four thematic data products from the **CLiVE** suite (Climate, Local Vulnerability and Exposure) and the **Sun Probability Framework (SPF)**. The table below summarises what is currently available at the time of writing. Year ranges and product versions are updated periodically — always check the catalogue for the latest release.
 
--   `CSV (.csv)` – Tabular data suitable for use in most statistical and data analysis software.
--   `GeoPackage (.gpkg)` – A spatial data format compatible with GIS software such as QGIS and ArcGIS.
--   `Metadata files` – Documentation describing variables, measurement units, methodologies, and data sources.
+| Theme | Product | Spatial unit | Time coverage | Format |
+|---|---|---|---|---|
+| **Air temperature** | Temperature indicators (CLiVE) | MSOA (England) | 2015–2024, annual | `.csv`, `.gpkg` |
+| **Precipitation** | Precipitation indicators (CLiVE) | MSOA (England) | 2015-2024, annual | `.csv`, `.gpkg` |
+| **Sun Probability Framework (SPF)** | Cloud probability statistics per small area | MSOA / LSOA (UK) | 2024 (v1.0) | `.csv`, `.gpkg` |
+| **Floods** | Flood exposure indicators (CLiVE) | MSOA (England) | 2024 | `.csv`, `.gpkg` |
 
-## Included Data for This Release
 
-The current IMAGO data release includes the following thematic datasets:
+### Brief description of each product
 
-**Temperature** – Measures of temperature patterns across regions.
+**Air temperature.** Annual MSOA-level indicators derived from HadUK-Grid, including summer maxima, winter minima, mean temperatures, and counts of extreme hot and cold days and spells. One geopackage per year, with MSOA geometry attached. See the [air temperature training](airtemp.qmd) for a worked example.
 
-**Flooding** – Flood risk and flood-related environmental measures.
+**Precipitation.** Annual MSOA-level indicators describing rainfall patterns, including totals, wet- and dry-day counts, and extreme rainfall measures. Companion product to the temperature indicators and aligned to the same spatial framework. See the [precipitation training](precipitation.qmd).
 
-**Sun Probability Framework** – A spatial metric capturing probability of sunlight exposure.
+**Sun Probability Framework (SPF).** Small-area statistics translating Sentinel-2 cloud mask data into measures of sunlight probability. The current release covers 2024. See the [SPF training](spf.qmd) and the dataset record for [Cloud probability statistics per small area in 2024 (v1.0)](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2024-version-1-0).
 
-## Metadata Information
+**Floods.** MSOA-level indicators of flood exposure for England, intended to support work on local vulnerability to fluvial, pluvial and coastal flooding.
 
-Metadata is provided alongside each dataset and includes rich information on variable descriptions, definitions, spatial and temporal coverage, data provenance and methodology.
+## File formats
 
-## File structure and format details
+Each dataset is provided in two interchangeable formats:
 
-Data users are encouraged to consult the metadata before working with the datasets, as it provides essential context for interpretation and analysis.
+- **`CSV (.csv)`** — flat tabular data for use in R, Python, Stata, or any statistical software. No geometry.
+- **`GeoPackage (.gpkg)`** — spatial format with MSOA geometry attached, ready to use in R (`sf`), Python (`geopandas`), QGIS, or ArcGIS.
 
-## Downloading the Data
+Use the CSV when you only need the indicators (for joins, regressions, summary tables) and the GeoPackage when you need to map or do spatial analysis. The two contain the same indicator columns; the only difference is whether geometry is included.
 
-Simply visit the Imago data page, browse the available datasets, and download the files in your preferred format. You will need to create an account on the IMAGO website before downloading the data. Once logged in, you can browse the available datasets and download the files in your preferred format.
+## Metadata
 
-If you have questions about accessing or interpreting the data, please get in touch with us (imago\@liverpool.ac.uk).
+Every dataset on the catalogue ships with a metadata file describing variable definitions, units, spatial and temporal coverage, source data, and the methodology used to derive each indicator. **Read the metadata before working with the data** — it is the quickest way to avoid misinterpretation.
+
+## Downloading
+
+1. Go to <https://data.imago.ac.uk/> and create an account (free).
+2. Browse or search the catalogue. You can filter by tag (for example `CLiVE`, `temperature`, `floods`, `msoa`).
+3. Open the dataset record and download the file format you need.
+4. The metadata file is listed alongside the data — download it too.
+
+If you have questions about accessing or interpreting any of the products, get in touch at [imago\@liverpool.ac.uk](mailto:imago@liverpool.ac.uk).
