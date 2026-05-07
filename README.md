@@ -1,7 +1,7 @@
 
 <img src="assets/Imago-logo.png" alt="Imago Logo" width="300"/>
 
-# Imago Template Repository
+# Imago training Repository
 
 This is the repository for hands-on workshops using *Imago: Data Service for Imagery* data products. Imago transforms satellite imagery into ready-to-use datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.
 
