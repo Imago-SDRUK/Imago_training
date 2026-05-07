@@ -37,7 +37,7 @@ import pyfixest as pf      # Fast fixed-effects models (mirrors R's fixest)
 ```
 :::
 
-We also redefine a couple of small helpers that Part 2 used, so this file runs on its own:
+We also redefine a couple of small helpers, so this file runs on its own:
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -75,7 +75,7 @@ The strategy:
 
 ## Setup
 
-We start from the panel saved in Part 2 and the MSOA-level IMD aggregate from Part 1.
+We start from the panel and the MSOA-level IMD aggregate from Part 1.
 
 ::: {.panel-tabset group="language"}
 ### R
@@ -130,7 +130,7 @@ panel_imd.info()
 ::: callout-note
 ## Why hold IMD fixed?
 
-The English Indices of Deprivation are released roughly every four years; the version we use here is IMD 2025. We could in principle use IMD 2019 for the early years of the panel and IMD 2025 for the later years, but two complications make this impractical for a teaching exercise: (i) IMD 2019 was published at LSOA-2011 boundaries while IMD 2025 uses LSOA-2021 boundaries, so the aggregations to MSOA are not directly comparable, and (ii) we would then be modelling change in *both* exposure and deprivation simultaneously, which is conceptually a different question. We hold deprivation fixed at IMD 2025 and let exposure vary over time. Part 4 sketches the alternative approach.
+The English Indices of Deprivation are released roughly every four years; the version we use here is IMD 2025. We could in principle use IMD 2019 for the early years of the panel and IMD 2025 for the later years, but two complications make this impractical for a teaching exercise: (i) IMD 2019 was published at LSOA-2011 boundaries while IMD 2025 uses LSOA-2021 boundaries, so the aggregations to MSOA are not directly comparable, and (ii) we would then be modelling change in *both* exposure and deprivation simultaneously, which is conceptually a different question. We hold deprivation fixed at IMD 2025 and let exposure vary over time. 
 :::
 
 ## Headline figure: the exposure gap over time
@@ -239,7 +239,7 @@ The gap (Q1 − Q5) is **negative in every year on both metrics**, meaning the m
 This reflects England's geography of deprivation: the most deprived MSOAs are concentrated in the cooler north and post-industrial midlands, while the affluent south and southeast are warmer. So in the English context, the climate-justice intuition that deprived areas face greater heat exposure does not hold at the national scale — though it may well hold *within* cities, which an MSOA-level national analysis can't see.
 :::
 
-## Formal test 1: regress the gap on year
+## Test 1: regress the gap on year
 
 The simplest formal test treats the annual gap as an outcome and regresses it on year. The slope is the average annual change in the gap.
 
@@ -275,6 +275,7 @@ print(m_gap_ehd.summary().tables[1])
 :::
 
 ::: callout-note
+
 ## Interpretation
 
 Neither trend is statistically distinguishable from zero. The Q1−Q5 gap in summer maximum temperature has drifted by about **−0.007°C per year**, and the gap in extreme hot days by about **−0.003 days per year** — both with standard errors many times larger than the point estimates, and R² values essentially zero.
@@ -284,7 +285,7 @@ So the deprivation–exposure gap is **persistent but not widening or narrowing*
 Two caveats. First, with only ten yearly observations these regressions have very little statistical power — a real trend could easily be hidden by year-to-year volatility, particularly for extreme hot days. Second, a stable national-level gap can mask divergent within-region or within-city dynamics that aggregation washes out.
 :::
 
-## Formal test 2: panel regression with two-way fixed effects
+## Test 2: panel regression with two-way fixed effects
 
 The MSOA-level version uses the full panel. We model exposure as a function of an interaction between *being in the most deprived quintile* and a year trend, with MSOA fixed effects to absorb time-invariant local characteristics:
 
@@ -332,6 +333,7 @@ etable(m_panel_smt, m_panel_ehd,
 :::
 
 ::: callout-note
+
 ## Main takeaway
 
 The deprivation–heat gap is **not constant — it spikes in the hottest summers**. On average, the most deprived MSOAs are cooler than the rest of England, reflecting the country's north–south geography of deprivation. But in extreme-heat years like **2018 and 2022**, that pattern sharpens: deprived areas face **+2°C more summer heat and several additional extreme hot days** relative to their usual position. Those are precisely the years when heat causes the most harm to health.
