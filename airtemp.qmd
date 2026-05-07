@@ -1,0 +1,1254 @@
+# Air temperature {#sec-airtemp .unnumbered}
+
+**Goal**: Use the Imago air temperature product to explore the relationship between heat exposure and deprivation in England, first as a cross-section, then as a panel — building toward the kind of regression analysis used in regional science.
+
+**Training approach**: The instructor demonstrates the workflow end-to-end. We use just two indicators throughout — `summer_max_tmp` and `extreme_hot_days_mean` — but the same logic transfers to any of the sixteen indicators in the product. Part 4 sketches three further directions students can take on their own.
+
+**Audience**: Regional scientists comfortable with linear regression who want to see how to set up a balanced MSOA panel and run a simple two-way fixed-effects model in `fixest`.
+
+------------------------------------------------------------------------
+
+# Part 1 — Cross-sectional foundations {#sec-cross-section}
+
+We start with a single year. The Imago air temperature product publishes one geopackage per year covering 2015–2024; we use 2024 here as our cross-section. The questions for Part 1 are the natural ones a researcher would ask the first time they meet a new dataset: what does the distribution look like, where in the country are the hottest places, and how does heat exposure relate to deprivation?
+
+## Installing packages
+
+We load core packages for working with spatial data, plotting, and (later) panel regression. See detailed descriptions of [R](https://r.geocompx.org/) and [Python](https://py.geocompx.org/) for the geospatial side.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE, warning=FALSE}
+# Core data handling and plotting
+library(tidyverse)   # Data manipulation + ggplot2
+library(readxl)      # Reading Excel files
+
+# Spatial data and mapping
+library(sf)          # Simple Features
+
+# Plot styling
+library(viridis)     # Colourblind-friendly palettes
+
+# Panel regression (used in Part 3)
+library(fixest)      # Fast fixed-effects models
+
+# Python interop (only needed if rendering both languages)
+library(reticulate)
+```
+
+### Python
+
+```{python}
+# Standard library
+import os
+import tempfile
+import zipfile
+
+# Data & geospatial
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+
+# Plotting
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Statistics
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+from scipy import stats
+from scipy.stats import pearsonr
+import pyfixest as pf      # Fast fixed-effects models (mirrors R's fixest)
+
+# Networking
+import requests
+```
+:::
+
+## Loading the 2024 cross-section
+
+The Imago air temperature product publishes one geopackage per year. Each file already contains the MSOA boundary geometry alongside the temperature indicators, so we do not need a separate boundary file for the maps in Part 1.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+msoa_temp <- read_sf("./data/temperature_indicators_MSOA_2024.gpkg")
+
+# A look at the first few rows
+glimpse(msoa_temp)
+```
+
+### Python
+
+```{python}
+msoa_temp = gpd.read_file("./data/temperature_indicators_MSOA_2024.gpkg")
+msoa_temp.head()
+```
+:::
+
+This file contains all sixteen indicators in the product. For this training we work with two:
+
+-   **`summer_max_tmp`** — the maximum temperature reached during summer, in °C. A *central tendency* measure of how hot summers get.
+-   **`extreme_hot_days_mean`** — the mean number of days per year crossing an extreme-heat threshold. An *intensity* or *dose* measure of how often heat extremes occur.
+
+These two are conceptually distinct. A place can have moderate summer maxima but many extreme-heat days (a long warm season), or high summer maxima but few extreme days (short, intense peaks). The inequality story may differ between them.
+
+## Distribution of the two indicators
+
+We start with summary statistics, then look at the distribution shape with histograms.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+msoa_temp %>%
+  st_drop_geometry() %>%
+  summarise(
+    across(
+      c(summer_max_tmp, extreme_hot_days_mean),
+      list(
+        mean = ~mean(.x, na.rm = TRUE),
+        sd   = ~sd(.x,   na.rm = TRUE),
+        min  = ~min(.x,  na.rm = TRUE),
+        max  = ~max(.x,  na.rm = TRUE)
+      ),
+      .names = "{.col}__{.fn}"
+    )
+  ) %>%
+  pivot_longer(everything(),
+               names_to = c("indicator", "stat"),
+               names_sep = "__")
+```
+
+### Python
+
+```{python}
+(
+    msoa_temp[["summer_max_tmp", "extreme_hot_days_mean"]]
+    .agg(["mean", "std", "min", "max"])
+)
+```
+:::
+
+Now the histograms. We use a small reshape so we can plot both indicators on the same panel grid.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, fig.width=9, fig.height=4}
+msoa_temp %>%
+  st_drop_geometry() %>%
+  pivot_longer(
+    cols = c(summer_max_tmp, extreme_hot_days_mean),
+    names_to  = "indicator",
+    values_to = "value"
+  ) %>%
+  mutate(
+    indicator_label = recode(indicator,
+      "summer_max_tmp"        = "Summer maximum temperature (°C)",
+      "extreme_hot_days_mean" = "Extreme hot days (count)"
+    )
+  ) %>%
+  ggplot(aes(x = value)) +
+  geom_histogram(bins = 30, colour = "white", fill = "darkred") +
+  facet_wrap(~ indicator_label, scales = "free") +
+  labs(
+    title = "Distribution of heat exposure across MSOAs, 2024",
+    x = NULL, y = "Count"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title         = element_text(face = "bold", margin = margin(b = 12)),
+    strip.text         = element_text(face = "bold", margin = margin(b = 6)),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.spacing.x    = unit(1.5, "lines"),
+    plot.margin        = margin(t = 10, r = 15, b = 10, l = 10)
+  )
+```
+
+### Python
+
+```{python}
+fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+axes[0].hist(msoa_temp["summer_max_tmp"].dropna(),
+             bins=30, edgecolor="white", color="darkred")
+axes[0].set_title("Summer maximum temperature (°C)", fontweight="bold")
+axes[0].set_ylabel("Count")
+
+axes[1].hist(msoa_temp["extreme_hot_days_mean"].dropna(),
+             bins=30, edgecolor="white", color="darkred")
+axes[1].set_title("Extreme hot days (count)", fontweight="bold")
+axes[1].set_ylabel("Count")
+
+for ax in axes:
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.grid(axis="x", visible=False)
+
+fig.suptitle("Distribution of heat exposure across MSOAs, 2024",
+             fontweight="bold", y=1.02)
+
+plt.tight_layout()
+plt.subplots_adjust(wspace=0.25, top=0.88)
+plt.show()
+```
+:::
+
+## Mapping by local area
+
+Mapping the two indicators side by side gives us the spatial pattern. Hotter and more frequently-extreme MSOAs concentrate in particular regions — predominantly the south-east and major urban areas.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, fig.width=10, fig.height=6}
+map_smt <- ggplot(msoa_temp) +
+  geom_sf(aes(fill = summer_max_tmp), colour = NA) +
+  scale_fill_distiller(
+    palette = "RdBu", direction = -1,
+    name = "°C",
+    breaks = scales::pretty_breaks(5)
+  ) +
+  labs(title = "Summer maximum temperature") +
+  theme_void(base_size = 10) +
+  theme(plot.title = element_text(face = "bold"))
+
+map_ehd <- ggplot(msoa_temp) +
+  geom_sf(aes(fill = extreme_hot_days_mean), colour = NA) +
+  scale_fill_distiller(
+    palette = "RdBu", direction = -1,
+    name = "Days",
+    breaks = scales::pretty_breaks(5)
+  ) +
+  labs(title = "Extreme hot days") +
+  theme_void(base_size = 10) +
+  theme(plot.title = element_text(face = "bold"))
+
+# Side by side using patchwork
+library(patchwork)
+map_smt + map_ehd +
+  plot_annotation(
+    title = "Heat exposure across MSOAs, 2024",
+    caption = "Source: Imago air temperature indicators.",
+    theme = theme(plot.title = element_text(face = "bold", size = 13))
+  )
+```
+
+### Python
+
+```{python}
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+
+msoa_temp.plot(
+    column="summer_max_tmp", cmap="coolwarm",
+    legend=True, ax=axes[0], linewidth=0,
+    legend_kwds={"shrink": 0.5, "label": "°C"}
+)
+axes[0].set_title("Summer maximum temperature", fontweight="bold")
+axes[0].set_axis_off()
+
+msoa_temp.plot(
+    column="extreme_hot_days_mean", cmap="coolwarm",
+    legend=True, ax=axes[1], linewidth=0,
+    legend_kwds={"shrink": 0.5, "label": "Days"}
+)
+axes[1].set_title("Extreme hot days", fontweight="bold")
+axes[1].set_axis_off()
+
+fig.suptitle("Heat exposure across MSOAs, 2024", fontweight="bold")
+plt.tight_layout()
+plt.show()
+```
+:::
+
+## Merge with the Index of Multiple Deprivation
+
+The [English Indices of Deprivation 2025](https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025) provide the deprivation measure used throughout this training. We focus on the *Health Deprivation and Disability* domain because heat exposure has a clear pathway through health.
+
+IMD is published at LSOA level; the temperature data are at MSOA level. We therefore need to (i) download IMD, (ii) use the ONS LSOA→MSOA lookup, and (iii) aggregate the LSOA-level health rank up to MSOAs.
+
+### Download IMD 2025
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+tmp_file <- tempfile(fileext = ".xlsx")
+
+download.file(
+  url = "https://assets.publishing.service.gov.uk/media/691decfae39a085bda43efcd/File_2_IoD2025_Domains_of_Deprivation.xlsx",
+  destfile = tmp_file,
+  mode = "wb"
+)
+
+imd <- read_excel(tmp_file, sheet = "IoD2025 Domains")
+unlink(tmp_file)
+
+names(imd)
+```
+
+### Python
+
+```{python}
+tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx").name
+
+url = ("https://assets.publishing.service.gov.uk/media/"
+       "691decfae39a085bda43efcd/File_2_IoD2025_Domains_of_Deprivation.xlsx")
+r = requests.get(url)
+with open(tmp_file, "wb") as f:
+    f.write(r.content)
+
+imd = pd.read_excel(tmp_file, sheet_name="IoD2025 Domains")
+os.remove(tmp_file)
+
+print(imd.columns.tolist())
+```
+:::
+
+### LSOA → MSOA lookup
+
+We use the ONS [Postcode → OA → LSOA → MSOA → LAD best-fit lookup (May 2025)](https://geoportal.statistics.gov.uk/datasets/589ae01495bf4ddfaaa25b96476d53d7/about) to link LSOA codes to their parent MSOAs.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE}
+zip_file     <- tempfile(fileext = ".zip")
+unzipped_dir <- tempfile()
+
+on.exit({
+  unlink(zip_file)
+  unlink(unzipped_dir, recursive = TRUE)
+}, add = TRUE)
+
+download.file(
+  url = "https://www.arcgis.com/sharing/rest/content/items/7fc55d71a09d4dcfa1fd6473138aacc3/data",
+  destfile = zip_file, mode = "wb"
+)
+
+unzip(zip_file, exdir = unzipped_dir)
+unlink(zip_file)
+
+lookup_path <- list.files(
+  unzipped_dir, pattern = "\\.csv$",
+  recursive = TRUE, full.names = TRUE
+)
+
+LSOA21_MSOA21 <- read_csv(lookup_path) %>%
+  select(lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm) %>%
+  distinct(lsoa21cd, .keep_all = TRUE)
+```
+
+### Python
+
+```{python, warning=FALSE}
+zip_file = tempfile.NamedTemporaryFile(delete=False, suffix=".zip").name
+unzipped_dir = tempfile.mkdtemp()
+
+url = ("https://www.arcgis.com/sharing/rest/content/items/"
+       "7fc55d71a09d4dcfa1fd6473138aacc3/data")
+r = requests.get(url)
+with open(zip_file, "wb") as f:
+    f.write(r.content)
+
+with zipfile.ZipFile(zip_file, "r") as z:
+    z.extractall(unzipped_dir)
+os.remove(zip_file)
+
+lookup_path = None
+for root, _, files in os.walk(unzipped_dir):
+    for file in files:
+        if file.lower().endswith(".csv"):
+            lookup_path = os.path.join(root, file)
+            break
+    if lookup_path:
+        break
+
+LSOA21_MSOA21 = (
+    pd.read_csv(lookup_path)
+    [["lsoa21cd", "msoa21cd", "ladcd", "lsoa21nm", "msoa21nm", "ladnm"]]
+    .drop_duplicates(subset="lsoa21cd")
+)
+```
+:::
+
+### Aggregate IMD to MSOA
+
+We join the LSOA→MSOA lookup to IMD, keep just the Health Deprivation columns, and aggregate to MSOA by taking the mean of the LSOA-level rank within each MSOA.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE}
+lsoa_msoa_imd <- LSOA21_MSOA21 %>%
+  left_join(imd, by = c("lsoa21cd" = "LSOA code (2021)")) %>%
+  select(
+    lsoa21cd, msoa21cd, ladcd, lsoa21nm, msoa21nm, ladnm,
+    health_rank   = `Health Deprivation and Disability Rank (where 1 is most deprived)`,
+    health_decile = `Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)`
+  )
+
+msoa_imd_agg <- lsoa_msoa_imd %>%
+  group_by(msoa21cd, msoa21nm, ladcd, ladnm) %>%
+  summarise(health_rank_msoa = mean(health_rank, na.rm = TRUE), .groups = "drop")
+```
+
+### Python
+
+```{python}
+lsoa_msoa_imd = (
+    LSOA21_MSOA21
+    .merge(imd, how="left",
+           left_on="lsoa21cd", right_on="LSOA code (2021)")
+    .rename(columns={
+        "Health Deprivation and Disability Rank (where 1 is most deprived)": "health_rank",
+        "Health Deprivation and Disability Decile (where 1 is most deprived 10% of LSOAs)": "health_decile"
+    })
+    [["lsoa21cd", "msoa21cd", "ladcd", "lsoa21nm", "msoa21nm", "ladnm",
+      "health_rank", "health_decile"]]
+)
+
+msoa_imd_agg = (
+    lsoa_msoa_imd
+    .groupby(["msoa21cd", "msoa21nm", "ladcd", "ladnm"], as_index=False)
+    .agg(health_rank_msoa=("health_rank", "mean"))
+)
+```
+:::
+
+::: callout-note
+IMD only covers England. The MSOA boundary file covers the whole UK. The join below is therefore a left join from IMD to the temperature data — Scottish, Welsh and Northern Irish MSOAs will appear with missing health ranks. We drop them before the regressions in Part 1 and Part 3.
+:::
+
+### Join IMD to the cross-section
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+msoa_temp <- msoa_temp %>%
+  mutate(msoa21cd = trimws(as.character(dt_zn_c)))
+
+msoa_2024 <- msoa_imd_agg %>%
+  left_join(
+    msoa_temp %>%
+      st_drop_geometry() %>%
+      select(msoa21cd, summer_max_tmp, extreme_hot_days_mean),
+    by = "msoa21cd"
+  ) %>%
+  drop_na(health_rank_msoa, summer_max_tmp, extreme_hot_days_mean)
+```
+
+### Python
+
+```{python}
+msoa_temp["msoa21cd"] = msoa_temp["dt_zn_c"].astype(str).str.strip()
+
+msoa_2024 = (
+    msoa_imd_agg
+    .merge(
+        msoa_temp[["msoa21cd", "summer_max_tmp", "extreme_hot_days_mean"]],
+        how="left", on="msoa21cd"
+    )
+    .dropna(subset=["health_rank_msoa", "summer_max_tmp", "extreme_hot_days_mean"])
+)
+```
+:::
+
+## Cross-sectional regression
+
+We now have what we need to ask the cross-sectional version of our question: in 2024, are MSOAs with higher heat exposure also more deprived?
+
+We fit two simple OLS regressions, one per indicator. The outcome is the MSOA's mean health rank (lower rank = more deprived); the regressor is heat exposure.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+m_smt_2024 <- feols(health_rank_msoa ~ summer_max_tmp,        data = msoa_2024)
+m_ehd_2024 <- feols(health_rank_msoa ~ extreme_hot_days_mean, data = msoa_2024)
+
+etable(m_smt_2024, m_ehd_2024,
+       headers = c("Summer max. temp.", "Extreme hot days"),
+       digits = 3)
+```
+
+### Python
+
+```{python}
+m_smt_2024 = smf.ols("health_rank_msoa ~ summer_max_tmp",
+                     data=msoa_2024).fit()
+m_ehd_2024 = smf.ols("health_rank_msoa ~ extreme_hot_days_mean",
+                     data=msoa_2024).fit()
+
+print(m_smt_2024.summary().tables[1])
+print(m_ehd_2024.summary().tables[1])
+```
+:::
+
+::: callout-note
+## Interpretation
+
+Both heat exposure measures are strongly and positively associated with the MSOA health rank. A 1°C increase in mean summer maximum temperature is associated with a shift of about **2,179 places up the national ranking**, and one additional extreme hot day per year with a shift of about **2,485 places**. Both coefficients are highly significant (*p* \< 0.001).
+
+In the English IMD convention, **rank 1 is the most health-deprived area**, so a positive coefficient means hotter MSOAs tend to rank as **less** health-deprived. This counterintuitive sign almost certainly reflects geography rather than a protective effect of heat: warmer parts of England (the south and southeast) are on average more affluent and healthier than cooler post-industrial areas in the north and midlands. The two specifications explain a similar share of variation (R² ≈ 0.12), with extreme hot days a marginally better fit.
+
+These bivariate associations confound heat exposure with regional patterns of deprivation, age structure, urbanity, and housing. We'll return to this once controls are added.
+:::
+
+A scatter plot for `summer_max_tmp` makes the relationship visible:
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, fig.width=8, fig.height=5, message=FALSE, warning=FALSE}
+ggplot(msoa_2024, aes(x = summer_max_tmp, y = health_rank_msoa)) +
+  geom_point(alpha = 0.25, size = 1.2, colour = "firebrick") +
+  geom_smooth(method = "lm", se = TRUE,
+              colour = "black", linewidth = 0.9, fill = "grey80") +
+  labs(
+    title    = "Health deprivation vs. summer maximum temperature, 2024",
+    subtitle = "Higher rank = less deprived. Each point is one MSOA.",
+    x = "Summer max. temperature (°C)",
+    y = "Health deprivation rank"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    plot.subtitle = element_text(colour = "grey40"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Python
+
+```{python}
+fig, ax = plt.subplots(figsize=(8, 5))
+
+x = msoa_2024["summer_max_tmp"]
+y = msoa_2024["health_rank_msoa"]
+
+ax.scatter(x, y, alpha=0.25, s=10, color="firebrick")
+
+slope, intercept, r_value, p_value, _ = stats.linregress(x, y)
+x_line = np.linspace(x.min(), x.max(), 100)
+ax.plot(x_line, slope * x_line + intercept, color="black", linewidth=2)
+
+ax.set_title("Health deprivation vs. summer maximum temperature, 2024",
+             fontweight="bold")
+ax.set_xlabel("Summer max. temperature (°C)")
+ax.set_ylabel("Health deprivation rank")
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+:::
+
+::: callout-note
+## What this regression *can* and *cannot* tell us
+
+The slope coefficients tell us about the average association between heat exposure and deprivation in 2024. They do not tell us about causation: many factors influence both heat exposure and health outcomes, including:
+
+-   **Socioeconomic and demographic composition**: income, employment, education, age structure, ethnicity.
+-   **Housing characteristics**: building quality, insulation, heating systems, tenure, urban density.
+-   **Environmental features**: altitude, proximity to water, green space, urban heat island intensity.
+-   **Health and vulnerability**: prevalence of chronic illness, respiratory conditions.
+-   **Infrastructure and access**: public transport, energy affordability, healthcare access.
+
+A serious causal analysis would require controlling for these — and even then, identifying a causal effect of heat exposure on health-related deprivation would need a research design (e.g. plausibly exogenous variation in heat exposure) that goes beyond a single cross-section.
+
+Two questions a single cross-section *cannot* answer at all:
+
+1.  Is the relationship stable over time, or has it strengthened or weakened?
+2.  Has the gap between the most and least deprived MSOAs widened, narrowed, or held steady?
+
+For both of these we need a panel — which is what Part 2 builds.
+:::
+
+# Part 2 — Building the panel {#sec-panel}
+
+The Imago air temperature product publishes one geopackage per year, covering 2015 to 2024. In this section we:
+
+1.  Load all ten years and stack them into a long-format panel,
+2.  Keep only the two indicators we need (`summer_max_tmp` and `extreme_hot_days_mean`),
+3.  Run sanity checks to confirm the panel is balanced and complete,
+4.  Produce two descriptive figures showing what has happened nationally over the decade.
+
+## Loading 2015–2024
+
+Each yearly file follows the convention `temperature_indicators_MSOA_<year>.gpkg`. We loop over the ten years, read each file, drop the geometry (to keep the panel light), keep only the columns we need, and stack the results into a single long table.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE}
+years <- 2015:2024
+
+temp_panel <- map_dfr(years, function(yr) {
+  path <- sprintf("./data/temperature_indicators_MSOA_%d.gpkg", yr)
+  read_sf(path) %>%
+    st_drop_geometry() %>%
+    select(dt_zn_c, summer_max_tmp, extreme_hot_days_mean) %>%
+    mutate(year = yr)
+})
+
+glimpse(temp_panel)
+```
+
+### Python
+
+```{python}
+years = list(range(2015, 2025))
+
+frames = []
+for yr in years:
+    path = f"./data/temperature_indicators_MSOA_{yr}.gpkg"
+    df = (
+        gpd.read_file(path)
+        .drop(columns="geometry")
+        [["dt_zn_c", "summer_max_tmp", "extreme_hot_days_mean"]]
+        .assign(year=yr)
+    )
+    frames.append(df)
+
+temp_panel = pd.concat(frames, ignore_index=True)
+temp_panel.info()
+```
+:::
+
+## Panel diagnostics
+
+Before doing anything analytical, we check that the panel behaves as expected. Three questions:
+
+1.  How many MSOAs do we have per year?
+2.  Is the panel balanced — does every MSOA appear in every year?
+3.  Are there missing values in either of our two indicators?
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+# 1. MSOAs per year
+temp_panel %>%
+  count(year, name = "n_msoa")
+```
+
+```{r}
+# 2. Balanced panel check — does every MSOA appear in all 10 years?
+years_per_msoa <- temp_panel %>%
+  count(dt_zn_c, name = "n_years")
+
+table(years_per_msoa$n_years)
+```
+
+```{r}
+# 3. Missing values per indicator per year
+temp_panel %>%
+  group_by(year) %>%
+  summarise(
+    n_total               = n(),
+    miss_summer_max_tmp   = sum(is.na(summer_max_tmp)),
+    miss_extreme_hot_days = sum(is.na(extreme_hot_days_mean))
+  )
+```
+
+### Python
+
+```{python}
+# 1. MSOAs per year
+print(temp_panel.groupby("year").size().rename("n_msoa"))
+
+# 2. Balanced panel check — does every MSOA appear in all 10 years?
+years_per_msoa = temp_panel.groupby("dt_zn_c").size().rename("n_years")
+print(years_per_msoa.value_counts())
+
+# 3. Missing values per indicator per year
+print(
+    temp_panel
+    .groupby("year")
+    .agg(
+        n_total=("dt_zn_c", "size"),
+        miss_summer_max_tmp=("summer_max_tmp", lambda s: s.isna().sum()),
+        miss_extreme_hot_days=("extreme_hot_days_mean", lambda s: s.isna().sum()),
+    )
+)
+```
+:::
+
+If the panel is balanced and complete, we can move on. If not, it is worth investigating before proceeding — unbalanced panels are not fatal but they do affect how some estimators behave.
+
+## National trends over the decade
+
+A first look: how have these two indicators evolved nationally? We compute the cross-MSOA mean and the interquartile range each year, and plot them.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+national_trends <- temp_panel %>%
+  pivot_longer(
+    cols = c(summer_max_tmp, extreme_hot_days_mean),
+    names_to = "indicator",
+    values_to = "value"
+  ) %>%
+  group_by(year, indicator) %>%
+  summarise(
+    mean_val = mean(value, na.rm = TRUE),
+    q25      = quantile(value, 0.25, na.rm = TRUE),
+    q75      = quantile(value, 0.75, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  mutate(
+    indicator_label = recode(indicator,
+      "summer_max_tmp"        = "Summer maximum temperature (°C)",
+      "extreme_hot_days_mean" = "Extreme hot days (count)"
+    )
+  )
+```
+
+```{r, fig.width=9, fig.height=4}
+ggplot(national_trends, aes(x = year, y = mean_val)) +
+  geom_ribbon(aes(ymin = q25, ymax = q75), fill = "firebrick", alpha = 0.15) +
+  geom_line(colour = "firebrick", linewidth = 0.9) +
+  geom_point(colour = "firebrick", size = 1.5) +
+  facet_wrap(~ indicator_label, scales = "free_y") +
+  scale_x_continuous(breaks = years) +
+  labs(
+    title    = "National trends in heat exposure across MSOAs, 2015–2024",
+    subtitle = "Solid line: cross-MSOA mean. Shaded band: interquartile range.",
+    x = NULL, y = NULL,
+    caption = "Source: Imago air temperature indicators."
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    plot.subtitle = element_text(colour = "grey40"),
+    strip.text    = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Python
+
+```{python}
+national_trends = (
+    temp_panel
+    .melt(id_vars=["dt_zn_c", "year"],
+          value_vars=["summer_max_tmp", "extreme_hot_days_mean"],
+          var_name="indicator", value_name="value")
+    .groupby(["year", "indicator"], as_index=False)
+    .agg(
+        mean_val=("value", "mean"),
+        q25=("value", lambda s: s.quantile(0.25)),
+        q75=("value", lambda s: s.quantile(0.75)),
+    )
+)
+
+label_map = {
+    "summer_max_tmp": "Summer maximum temperature (°C)",
+    "extreme_hot_days_mean": "Extreme hot days (count)",
+}
+national_trends["indicator_label"] = national_trends["indicator"].map(label_map)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharex=True)
+order = ["extreme_hot_days_mean", "summer_max_tmp"]
+
+for ax, ind in zip(axes, order):
+    sub = national_trends[national_trends["indicator"] == ind]
+    ax.fill_between(sub["year"], sub["q25"], sub["q75"],
+                    color="firebrick", alpha=0.15)
+    ax.plot(sub["year"], sub["mean_val"],
+            color="firebrick", linewidth=1.4, marker="o")
+    ax.set_title(label_map[ind], fontweight="bold")
+    ax.set_xticks(years)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+fig.suptitle("National trends in heat exposure across MSOAs, 2015–2024",
+             fontweight="bold", y=1.02)
+fig.text(0.5, -0.02,
+         "Solid line: cross-MSOA mean. Shaded band: interquartile range.",
+         ha="center", color="grey", fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+Two things to look for in the figure: (i) is there a level trend in either indicator, and (ii) is the IQR widening, narrowing, or stable? A widening IQR would suggest *all* MSOAs are not warming together — already a hint that the inequality story may be live.
+
+## A sample of trajectories
+
+The national mean hides a lot. To see panel structure directly, we plot the trajectories of 50 randomly sampled MSOAs against the national mean.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+set.seed(42)
+
+sample_codes <- temp_panel %>%
+  distinct(dt_zn_c) %>%
+  slice_sample(n = 50) %>%
+  pull(dt_zn_c)
+
+trajectories <- temp_panel %>%
+  filter(dt_zn_c %in% sample_codes) %>%
+  pivot_longer(
+    cols = c(summer_max_tmp, extreme_hot_days_mean),
+    names_to = "indicator",
+    values_to = "value"
+  ) %>%
+  mutate(
+    indicator_label = recode(indicator,
+      "summer_max_tmp"        = "Summer maximum temperature (°C)",
+      "extreme_hot_days_mean" = "Extreme hot days (count)"
+    )
+  )
+
+national_means <- national_trends %>%
+  select(year, indicator, indicator_label, mean_val)
+```
+
+```{r, fig.width=9, fig.height=4}
+ggplot() +
+  geom_line(
+    data = trajectories,
+    aes(x = year, y = value, group = dt_zn_c),
+    colour = "grey60", alpha = 0.4, linewidth = 0.3
+  ) +
+  geom_line(
+    data = national_means,
+    aes(x = year, y = mean_val),
+    colour = "firebrick", linewidth = 1
+  ) +
+  facet_wrap(~ indicator_label, scales = "free_y") +
+  scale_x_continuous(breaks = years) +
+  labs(
+    title    = "MSOA-level trajectories, 2015–2024",
+    subtitle = "Grey lines: 50 randomly sampled MSOAs. Red line: national mean.",
+    x = NULL, y = NULL
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    plot.subtitle = element_text(colour = "grey40"),
+    strip.text    = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Python
+
+```{python}
+rng = np.random.default_rng(42)
+
+all_codes = temp_panel["dt_zn_c"].unique()
+sample_codes = rng.choice(all_codes, size=50, replace=False)
+
+trajectories = (
+    temp_panel[temp_panel["dt_zn_c"].isin(sample_codes)]
+    .melt(id_vars=["dt_zn_c", "year"],
+          value_vars=["summer_max_tmp", "extreme_hot_days_mean"],
+          var_name="indicator", value_name="value")
+)
+trajectories["indicator_label"] = trajectories["indicator"].map(label_map)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharex=True)
+
+for ax, ind in zip(axes, order):
+    sub_t = trajectories[trajectories["indicator"] == ind]
+    for code, grp in sub_t.groupby("dt_zn_c"):
+        ax.plot(grp["year"], grp["value"],
+                color="grey", alpha=0.4, linewidth=0.5)
+    sub_n = national_trends[national_trends["indicator"] == ind]
+    ax.plot(sub_n["year"], sub_n["mean_val"],
+            color="firebrick", linewidth=1.6)
+    ax.set_title(label_map[ind], fontweight="bold")
+    ax.set_xticks(years)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+
+fig.suptitle("MSOA-level trajectories, 2015–2024",
+             fontweight="bold", y=1.02)
+fig.text(0.5, -0.02,
+         "Grey lines: 50 randomly sampled MSOAs. Red line: national mean.",
+         ha="center", color="grey", fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+The trajectories make two things visible. First, individual MSOAs are noisy from year to year — single-year cross-sections (like Part 1) can be misleading. Second, the spread between MSOAs is large and the lines do not look parallel: some MSOAs may be warming faster than others. That is exactly the question Part 3 takes up.
+
+## Save the panel
+
+We save the assembled panel so Part 3 can pick it up without re-reading all ten geopackages.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+dir.create("./data/derived", showWarnings = FALSE, recursive = TRUE)
+write_csv(temp_panel, "./data/derived/temp_panel_2015_2024.csv")
+```
+
+### Python
+
+```{python}
+os.makedirs("./data/derived", exist_ok=True)
+temp_panel.to_csv("./data/derived/temp_panel_2015_2024.csv", index=False)
+```
+:::
+
+# Part 3 — Climate inequality over time {#sec-inequality}
+
+We now turn to the central question of this training:
+
+> **Has the gap in heat exposure between the most and least deprived MSOAs in England widened over the decade 2015–2024?**
+
+This question maps directly onto a literature on *unequal exposure* to environmental hazards. The key idea: deprived populations are more exposed to environmental risks, and that exposure gap can change over time as cities densify, green space is unevenly distributed, and climate change accelerates.
+
+The strategy:
+
+1.  Hold IMD fixed at 2025 (i.e. classify MSOAs into deprivation quintiles once),
+2.  Track how mean exposure evolves in each quintile over 2015–2024,
+3.  Test formally whether the gap between the most and least deprived quintiles is widening.
+
+## Setup
+
+We start from the panel saved in Part 2 and the MSOA-level IMD aggregate from Part 1.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE}
+# Panel from Part 2
+temp_panel <- read_csv("./data/derived/temp_panel_2015_2024.csv")
+
+# Merge in the MSOA-level health rank from Part 1, then build IMD quintiles.
+# Q1 = most deprived (lowest rank), Q5 = least deprived (highest rank).
+panel_imd <- temp_panel %>%
+  inner_join(
+    msoa_imd_agg %>% select(msoa21cd, health_rank_msoa),
+    by = c("dt_zn_c" = "msoa21cd")
+  ) %>%
+  mutate(
+    health_quintile = ntile(health_rank_msoa, 5),
+    q1_dummy        = as.integer(health_quintile == 1)  # 1 = most deprived
+  )
+
+glimpse(panel_imd)
+```
+
+### Python
+
+```{python}
+# Panel from Part 2
+temp_panel = pd.read_csv("./data/derived/temp_panel_2015_2024.csv")
+
+# Merge in the MSOA-level health rank from Part 1, then build IMD quintiles.
+# Q1 = most deprived (lowest rank), Q5 = least deprived (highest rank).
+panel_imd = (
+    temp_panel
+    .merge(
+        msoa_imd_agg[["msoa21cd", "health_rank_msoa"]],
+        how="inner", left_on="dt_zn_c", right_on="msoa21cd"
+    )
+    .drop(columns="msoa21cd")
+)
+
+panel_imd["health_quintile"] = pd.qcut(
+    panel_imd["health_rank_msoa"], q=5, labels=False
+) + 1
+panel_imd["q1_dummy"] = (panel_imd["health_quintile"] == 1).astype(int)
+
+panel_imd.info()
+```
+:::
+
+::: callout-note
+## Why hold IMD fixed?
+
+The English Indices of Deprivation are released roughly every four years; the version we use here is IMD 2025. We could in principle use IMD 2019 for the early years of the panel and IMD 2025 for the later years, but two complications make this impractical for a teaching exercise: (i) IMD 2019 was published at LSOA-2011 boundaries while IMD 2025 uses LSOA-2021 boundaries, so the aggregations to MSOA are not directly comparable, and (ii) we would then be modelling change in *both* exposure and deprivation simultaneously, which is conceptually a different question. We hold deprivation fixed at IMD 2025 and let exposure vary over time. Part 4 sketches the alternative approach.
+:::
+
+## Headline figure: the exposure gap over time
+
+For each year, we compute the mean of each indicator within IMD Q1 (most deprived) and within IMD Q5 (least deprived). The gap is the difference: Q1 minus Q5. Plotting the gap series over time gives the visual headline.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+gap_series <- panel_imd %>%
+  filter(health_quintile %in% c(1, 5)) %>%
+  pivot_longer(
+    cols = c(summer_max_tmp, extreme_hot_days_mean),
+    names_to = "indicator", values_to = "value"
+  ) %>%
+  group_by(year, indicator, health_quintile) %>%
+  summarise(mean_val = mean(value, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(
+    names_from   = health_quintile,
+    values_from  = mean_val,
+    names_prefix = "q"
+  ) %>%
+  mutate(
+    gap = q1 - q5,
+    indicator_label = recode(indicator,
+      "summer_max_tmp"        = "Summer maximum temperature (°C)",
+      "extreme_hot_days_mean" = "Extreme hot days (count)"
+    )
+  )
+```
+
+```{r, fig.width=9, fig.height=4}
+ggplot(gap_series, aes(x = year, y = gap)) +
+  geom_hline(yintercept = 0, colour = "grey50", linetype = "dashed") +
+  geom_line(colour = "firebrick", linewidth = 0.9) +
+  geom_point(colour = "firebrick", size = 2) +
+  facet_wrap(~ indicator_label, scales = "free_y") +
+  scale_x_continuous(breaks = years) +
+  labs(
+    title    = "Exposure gap between most and least deprived MSOAs, 2015–2024",
+    subtitle = "Gap = mean exposure in IMD Q1 (most deprived) − mean exposure in IMD Q5 (least deprived)",
+    x = NULL, y = "Q1 − Q5",
+    caption = "Source: Imago air temperature indicators; English IMD 2025."
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title    = element_text(face = "bold"),
+    plot.subtitle = element_text(colour = "grey40"),
+    strip.text    = element_text(face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+### Python
+
+```{python}
+gap_long = (
+    panel_imd[panel_imd["health_quintile"].isin([1, 5])]
+    .melt(id_vars=["dt_zn_c", "year", "health_quintile"],
+          value_vars=["summer_max_tmp", "extreme_hot_days_mean"],
+          var_name="indicator", value_name="value")
+    .groupby(["year", "indicator", "health_quintile"], as_index=False)
+    .agg(mean_val=("value", "mean"))
+)
+
+gap_series = (
+    gap_long
+    .pivot_table(index=["year", "indicator"],
+                 columns="health_quintile", values="mean_val")
+    .reset_index()
+    .rename(columns={1: "q1", 5: "q5"})
+)
+gap_series.columns.name = None
+gap_series["gap"] = gap_series["q1"] - gap_series["q5"]
+gap_series["indicator_label"] = gap_series["indicator"].map(label_map)
+
+fig, axes = plt.subplots(1, 2, figsize=(11, 4), sharex=True)
+
+for ax, ind in zip(axes, order):
+    sub = gap_series[gap_series["indicator"] == ind]
+    ax.axhline(0, color="grey", linestyle="--", linewidth=0.8)
+    ax.plot(sub["year"], sub["gap"],
+            color="firebrick", linewidth=1.4, marker="o")
+    ax.set_title(label_map[ind], fontweight="bold")
+    ax.set_xticks(years)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    ax.set_ylabel("Q1 − Q5")
+
+fig.suptitle("Exposure gap between most and least deprived MSOAs, 2015–2024",
+             fontweight="bold", y=1.02)
+fig.text(0.5, -0.02,
+         "Gap = mean exposure in IMD Q1 (most deprived) − mean exposure in IMD Q5 (least deprived)",
+         ha="center", color="grey", fontsize=9)
+
+plt.tight_layout()
+plt.show()
+```
+:::
+
+::: callout-note
+## Interpretation
+
+The gap (Q1 − Q5) is **negative in every year on both metrics**, meaning the most deprived MSOAs (IMD Q1) consistently experience *less* heat exposure than the least deprived (Q5). For summer maximum temperature the gap is fairly stable at around −1 to −1.5°C, while the extreme-hot-days gap widens sharply in hotter summers (2017, 2019, 2022 reaching −3 to −4 days).
+
+This reflects England's geography of deprivation: the most deprived MSOAs are concentrated in the cooler north and post-industrial midlands, while the affluent south and southeast are warmer. So in the English context, the climate-justice intuition that deprived areas face greater heat exposure does not hold at the national scale — though it may well hold *within* cities, which an MSOA-level national analysis can't see.
+:::
+
+## Formal test 1: regress the gap on year
+
+The simplest formal test treats the annual gap as an outcome and regresses it on year. The slope is the average annual change in the gap.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+gap_smt <- gap_series %>% filter(indicator == "summer_max_tmp")
+gap_ehd <- gap_series %>% filter(indicator == "extreme_hot_days_mean")
+
+m_gap_smt <- feols(gap ~ year, data = gap_smt)
+m_gap_ehd <- feols(gap ~ year, data = gap_ehd)
+
+etable(m_gap_smt, m_gap_ehd,
+       headers = c("Summer max. temp.", "Extreme hot days"),
+       digits = 4)
+```
+
+### Python
+
+```{python}
+gap_smt = gap_series[gap_series["indicator"] == "summer_max_tmp"]
+gap_ehd = gap_series[gap_series["indicator"] == "extreme_hot_days_mean"]
+
+m_gap_smt = smf.ols("gap ~ year", data=gap_smt).fit()
+m_gap_ehd = smf.ols("gap ~ year", data=gap_ehd).fit()
+
+print("Summer max. temp.")
+print(m_gap_smt.summary().tables[1])
+print("\nExtreme hot days")
+print(m_gap_ehd.summary().tables[1])
+```
+:::
+
+::: callout-note
+## Interpretation
+
+Neither trend is statistically distinguishable from zero. The Q1−Q5 gap in summer maximum temperature has drifted by about **−0.007°C per year**, and the gap in extreme hot days by about **−0.003 days per year** — both with standard errors many times larger than the point estimates, and R² values essentially zero.
+
+So the deprivation–exposure gap is **persistent but not widening or narrowing** over 2015–2024: the most deprived MSOAs remain consistently cooler than the least deprived, year after year, with no detectable trend in either direction.
+
+Two caveats. First, with only ten yearly observations these regressions have very little statistical power — a real trend could easily be hidden by year-to-year volatility, particularly for extreme hot days. Second, a stable national-level gap can mask divergent within-region or within-city dynamics that aggregation washes out.
+:::
+
+## Formal test 2: panel regression with two-way fixed effects
+
+The MSOA-level version uses the full panel. We model exposure as a function of an interaction between *being in the most deprived quintile* and a year trend, with MSOA fixed effects to absorb time-invariant local characteristics:
+
+$$
+\text{Exposure}_{it} = \alpha_i + \gamma \cdot \text{year}_t + \beta \cdot (\text{Q1}_i \times \text{year}_t) + \varepsilon_{it}
+$$
+
+The coefficient $\beta$ on the interaction is the **divergence slope** — the additional annual change in exposure for the most-deprived quintile relative to the rest. A positive, statistically significant $\beta$ means the gap is widening.
+
+We cluster standard errors at the MSOA level to account for serial correlation within areas.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+m_panel_smt <- feols(
+  summer_max_tmp ~ year + i(year, q1_dummy, ref = 2015) | dt_zn_c,
+  data = panel_imd
+)
+
+m_panel_ehd <- feols(
+  extreme_hot_days_mean ~ year + i(year, q1_dummy, ref = 2015) | dt_zn_c,
+  data = panel_imd
+)
+
+etable(m_panel_smt, m_panel_ehd,
+       headers = c("Summer max. temp.", "Extreme hot days"),
+       cluster = ~dt_zn_c)
+```
+
+### Python
+
+```{python}
+#m_panel_smt = pf.feols(
+#    "summer_max_tmp ~ year + i(year, q1_dummy, ref=2015) | dt_zn_c",
+#    data=panel_imd, vcov={"CRV1": "dt_zn_c"}
+#)
+#m_panel_ehd = pf.feols(
+#    "extreme_hot_days_mean ~ year + i(year, q1_dummy, ref=2015) | dt_zn_c",
+#    data=panel_imd, vcov={"CRV1": "dt_zn_c"}
+#)
+#pf.etable([m_panel_smt, m_panel_ehd],
+#          model_heads=["Summer max. temp.", "Extreme hot days"])
+          
+```
+:::
+
+::: callout-note
+## Main takeaway
+
+The deprivation–heat gap is **not constant — it spikes in the hottest summers**. On average, the most deprived MSOAs are cooler than the rest of England, reflecting the country's north–south geography of deprivation. But in extreme-heat years like **2018 and 2022**, that pattern sharpens: deprived areas face **+2°C more summer heat and several additional extreme hot days** relative to their usual position. Those are precisely the years when heat causes the most harm to health.
+:::
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+m_smt_slope <- feols(
+  summer_max_tmp ~ year + year:q1_dummy | dt_zn_c,
+  data = panel_imd
+)
+
+m_ehd_slope <- feols(
+  extreme_hot_days_mean ~ year + year:q1_dummy | dt_zn_c,
+  data = panel_imd
+)
+
+etable(m_smt_slope, m_ehd_slope,
+       headers = c("Summer max. temp.", "Extreme hot days"),
+       cluster = ~dt_zn_c)
+```
+
+### Python
+
+```{python}
+#m_smt_slope = pf.feols(
+#    "summer_max_tmp ~ year + year:q1_dummy | dt_zn_c",
+#    data=panel_imd, vcov={"CRV1": "dt_zn_c"}
+#)
+
+#m_ehd_slope = pf.feols(
+#    "extreme_hot_days_mean ~ year + year:q1_dummy | dt_zn_c",
+#    data=panel_imd, vcov={"CRV1": "dt_zn_c"}
+#)
+
+#pf.etable([m_smt_slope, m_ehd_slope],
+#          model_heads=["Summer max. temp.", "Extreme hot days"])
+```
+:::
+
+::: callout-note
+## Main takeaway
+
+Averaged across the decade, the heat-exposure gap between the most deprived MSOAs (Q1) and the rest is **slightly narrowing over time** — by about **0.0003°C and 0.0002 extreme hot days per year**. The trend is statistically significant but **substantively negligible**: at this rate it would take centuries to close even the modest existing gap. The earlier year-by-year results are the more informative reading — what matters is the *spikes* in extreme summers, not the long-run slope.
+:::
+
+## Reading the results
+
+Three things worth pausing on:
+
+1.  **Sign and size.** The divergence slopes are negative — the gap is narrowing — but the magnitudes (around −0.0003°C and −0.0002 days per year) are too small to matter substantively.
+2.  **Statistical vs substantive significance.** With \~6,800 MSOAs × 10 years, even trivial slopes will register as highly significant. The stars aren't the interesting part.
+3.  **Year-by-year vs single slope.** The year-by-year specification tells a different story: large coefficients concentrated in 2018 and 2022 rather than a smooth trend. The divergence is **episodic, tied to heatwave years**, which carries quite different policy implications than a gradual drift.
+
+# Part 4 — Further directions
+
+The exercise above stays in a narrow lane: one outcome (heat), one explanatory dimension (deprivation), one geography (MSOA), one country (England). Three natural extensions:
+
+::: {.callout-tip collapse="true"}
+## Option A — Comparing IMD releases
+
+We held deprivation fixed at IMD 2025. The richer question is whether MSOAs that *became* more deprived also *became* hotter — a difference-in-differences design linking IMD 2019 to early panel years and IMD 2025 to later ones. The catch is that IMD 2019 uses LSOA-2011 boundaries and IMD 2025 uses LSOA-2021, so the LSOA-to-MSOA aggregations are not directly comparable without a rebuild via the ONS LSOA changes lookup.
+:::
+
+::: {.callout-tip collapse="true"}
+## Option B — Extreme heat as a treatment
+
+Flip the framing: treat cumulative `extreme_hot_days_mean` over 2015–2024 as the *dose* rather than the outcome. Candidate outcomes include changes in MSOA-level health deprivation (with the boundary caveats above), housing prices (Land Registry Price Paid), or migration flows (ONS internal migration estimates). Identification is the hard part — heat exposure correlates with many unmeasured local features — but this is closer to the questions regional scientists usually want to answer.
+:::
+
+::: {.callout-tip collapse="true"}
+## Option C — Spatial spillovers
+
+Our regressions treat each MSOA as independent of its neighbours; urban heat islands, green space, and deprivation all cluster across administrative boundaries. A natural extension is to test for spatial dependence (Moran's I) and estimate SLX or SAR models. In R: `spdep` and `spatialreg`; in Python: `pysal`. Particularly relevant given that the year-by-year results above suggest exposure spikes are geographically concentrated in heatwave years.
+:::

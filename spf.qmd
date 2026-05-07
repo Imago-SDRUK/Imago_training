@@ -1,0 +1,29 @@
+---
+title: "SPF: Sun Probability Framework"
+---
+
+::: {.callout-note}
+## Coming soon
+
+This training is in development. Check back soon, or [open an issue](https://github.com/Imago-SDRUK/Imago-training/issues) if you'd like to be notified when it's ready.
+:::
+
+## What is SPF?
+
+Sunlight exposure shapes human behaviour, health, and wellbeing — from mood and physical activity to the price of houses. Yet researchers and policymakers have lacked accessible, high-resolution data on local sunlight conditions. Existing approaches either rely on regional aggregates that are too broad, or on sun-angle calculations that are computationally expensive and difficult to apply at scale.
+
+The **Sun Probability Framework (SPF)** addresses this gap. It translates complex satellite cloud mask data into simple measures of sunlight probability at the geographic scales researchers already work with — small areas, neighbourhoods, and administrative units.
+
+The underlying dataset is openly available: [Cloud probability statistics per small area in 2024 (v1.0)](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2024-version-1-0).
+
+## What you'll learn
+
+This research-track training walks through working with SPF data in R or Python.
+
+**Planned content:**
+
+- What SPF measures and how it's derived from satellite cloud masks
+- Loading and exploring the small-area cloud probability dataset
+- Aggregating sunlight probability to your own geographies of interest
+- Visualising spatial patterns of sunlight exposure across the UK
+- Linking SPF to other indicators — health, housing, behaviour
