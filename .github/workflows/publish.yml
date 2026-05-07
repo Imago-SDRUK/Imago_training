@@ -55,7 +55,8 @@ jobs:
           python3 -m pip install numpy pandas geopandas \
             matplotlib seaborn \
             statsmodels scipy \
-            requests openpyxl 
+            requests openpyxl \
+            pyfixest
             
       - name: Configure reticulate
         run: |
