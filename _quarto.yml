@@ -38,7 +38,12 @@ website:
           - policy.qmd
       - section: "2. Research trainings"
         contents:
-          - airtemp.qmd
+          - section: "Air temperature"
+            contents:
+              - airtemp_1.qmd
+              - airtemp_2.qmd
+              - airtemp_3.qmd
+              - airtemp_4.qmd
           - precipitation.qmd
           - spf.qmd
       - section: "Reference"
