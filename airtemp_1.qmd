@@ -4,8 +4,17 @@
 
 **Training approach**: The instructor demonstrates the workflow end-to-end. We use just two indicators throughout — `summer_max_tmp` and `extreme_hot_days_mean` — but the same logic transfers to any of the sixteen indicators in the product.
 
-::: {.callout-note}
-First, you will need to sign up and log in to our [data catalogue](https://data.imago.ac.uk/).
+::: callout-note
+## Getting the data
+
+The Imago air temperature data is hosted on our [data catalogue](https://data.imago.ac.uk/). To download it:
+
+1. **Sign up** for a free account on the [data catalogue](https://data.imago.ac.uk/) and log in.
+2. **Search** for `air temperature MSOA` (or browse the [temperature datasets](https://data.imago.ac.uk/datasets?vocab_general=temperature)).
+3. Open each yearly dataset — for example, [Air Temperature Indicators per MSOA in 2015](https://data.imago.ac.uk/datasets/air-temperature-indicators-per-msoa-in-2015) — and download the `.gpkg` file.
+4. Save the files into a `./data/` folder in your project, keeping the original filenames (`temperature_indicators_MSOA_2015.gpkg`, …, `temperature_indicators_MSOA_2024.gpkg`).
+
+For this training you'll need all ten years (2015–2024) if you plan to follow Part 2 onwards. For Part 1 alone, only the 2024 file is needed.
 :::
 
 ------------------------------------------------------------------------
@@ -497,7 +506,7 @@ Both heat exposure measures are strongly and positively associated with the MSOA
 
 In the English IMD convention, **rank 1 is the most health-deprived area**, so a positive coefficient means hotter MSOAs tend to rank as **less** health-deprived. This counterintuitive sign almost certainly reflects geography rather than a protective effect of heat: warmer parts of England (the south and southeast) are on average more affluent and healthier than cooler post-industrial areas in the north and midlands. The two specifications explain a similar share of variation (R² ≈ 0.12), with extreme hot days a marginally better fit.
 
-These bivariate associations confound heat exposure with regional patterns of deprivation, age structure, urbanity, and housing. 
+These bivariate associations confound heat exposure with regional patterns of deprivation, age structure, urbanity, and housing.
 :::
 
 A scatter plot for `summer_max_tmp` makes the relationship visible:
