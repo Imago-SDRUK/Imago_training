@@ -1,6 +1,6 @@
 # Welcome {.unnumbered}
 
-## Imago
+## Imago training
 
 > _Hands-on training for working with imagery-derived data_
 
