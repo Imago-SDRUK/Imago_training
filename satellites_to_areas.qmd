@@ -8,6 +8,20 @@ Imago is the Imagery Data Service for sustainability, prosperity and wellbeing. 
 
 This page is a short tour of how satellite imagery becomes the kind of dataset social science researchers or policymaker can actually use — what gets collected, what shape it arrives in, and how [Imago]{style="color:#5ecba7"} turns it into neighbourhood-level statistics ready for analysis.
 
+## Pixel by pixel, clouds by cloud
+
+Satellite data *looks* like a map—but it definitely isn’t one yet.
+
+Before it becomes ready for analysis, it passes through a long chain of processing steps. What satellites actually beam down are raw, multi-band images: massive files full of noise, distortions, clouds, and values that don’t mean little until we transform them.
+
+::: {style="text-align: center;"}
+  <img src="./assets/stickgirl1.png" width="400">
+:::
+
+::: {style="text-align: center;"}
+  <img src="./assets/stickgirl2.png" width="400">
+:::
+
 ## How satellite data is collected
 
 Satellites don't take photographs in the everyday sense. They are flying sensors that record the Earth's surface in a very specific, highly structured way. Four properties define what any satellite dataset is:
