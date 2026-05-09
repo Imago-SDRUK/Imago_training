@@ -177,25 +177,42 @@ Each training has a written walkthrough you can read, and a runnable notebook yo
       <td><span class="training-name">1. The basics</span></td>
       <td class="training-topic">Cross-sectional foundations: distribution, mapping, IMD merge, OLS</td>
       <td><a class="training-btn read" href="airtemp_1.qmd">Notebook</a></td>
-      <td><a class="training-btn launch" href="#">Launch</a></td>
+            <td>
+        <a class="training-btn launch" href="https://mybinder.org/v2/gh/itsshaonlee/IMAGO-TRAINING-DEMOS/HEAD?"> <!--CHANGE THIS WHEN TRAINING DEMO IS TRANSFERRED-->
+          Launch
+        </a>
+      </td>
     </tr>
-    <tr class="group-airtemp">
+      <tr class="group-airtemp">
       <td><span class="training-name">2. Panel data</span></td>
       <td class="training-topic">Building the 2015–2024 MSOA panel and inspecting trajectories</td>
       <td><a class="training-btn read" href="airtemp_2.qmd">Notebook</a></td>
-      <td><a class="training-btn launch" href="#">Launch</a></td>
+      <td>
+        <a class="training-btn launch" href="https://mybinder.org/v2/gh/itsshaonlee/IMAGO-TRAINING-DEMOS/HEAD?"> 
+          Launch
+        </a>
+      </td>
     </tr>
+    
     <tr class="group-airtemp">
       <td><span class="training-name">3. Climate inequality</span></td>
       <td class="training-topic">Has the deprivation–heat gap widened? Two-way fixed effects</td>
       <td><a class="training-btn read" href="airtemp_3.qmd">Notebook</a></td>
-      <td><a class="training-btn launch" href="#">Launch</a></td>
+            <td>
+        <a class="training-btn launch" href="https://mybinder.org/v2/gh/itsshaonlee/IMAGO-TRAINING-DEMOS/HEAD?">
+          Launch
+        </a>
+      </td>
     </tr>
     <tr class="group-airtemp">
       <td><span class="training-name">4. Bivariate maps</span></td>
       <td class="training-topic">Mapping the joint geography of heat and health deprivation</td>
       <td><a class="training-btn read" href="airtemp_4.qmd">Notebook</a></td>
-      <td><a class="training-btn launch" href="#">Launch</a></td>
+            <td>
+        <a class="training-btn launch" href="https://mybinder.org/v2/gh/itsshaonlee/IMAGO-TRAINING-DEMOS/HEAD?">
+          Launch
+        </a>
+      </td>
     </tr>
 
     <tr class="coming-soon">

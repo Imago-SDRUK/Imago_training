@@ -9,10 +9,10 @@
 
 The Imago air temperature data is hosted on our [data catalogue](https://data.imago.ac.uk/). To download it:
 
-1. **Sign up** for a free account on the [data catalogue](https://data.imago.ac.uk/) and log in.
-2. **Search** for `air temperature MSOA` (or browse the [temperature datasets](https://data.imago.ac.uk/datasets?vocab_general=temperature)).
-3. Open each yearly dataset — for example, [Air Temperature Indicators per MSOA in 2015](https://data.imago.ac.uk/datasets/air-temperature-indicators-per-msoa-in-2015) — and download the `.gpkg` file.
-4. Save the files into a `./data/` folder in your project, keeping the original filenames (`temperature_indicators_MSOA_2015.gpkg`, …, `temperature_indicators_MSOA_2024.gpkg`).
+1.  **Sign up** for a free account on the [data catalogue](https://data.imago.ac.uk/) and log in.
+2.  **Search** for `air temperature MSOA` (or browse the [temperature datasets](https://data.imago.ac.uk/datasets?vocab_general=temperature)).
+3.  Open each yearly dataset — for example, [Air Temperature Indicators per MSOA in 2015](https://data.imago.ac.uk/datasets/air-temperature-indicators-per-msoa-in-2015) — and download the `.gpkg` file.
+4.  Save the files into a `./data/` folder in your project, keeping the original filenames (`temperature_indicators_MSOA_2015.gpkg`, …, `temperature_indicators_MSOA_2024.gpkg`).
 
 For this training you'll need all ten years (2015–2024) if you plan to follow Part 2 onwards. For Part 1 alone, only the 2024 file is needed.
 :::
@@ -94,8 +94,8 @@ msoa_temp.head()
 
 This file contains all sixteen indicators in the product. For this training we work with two:
 
--   **`summer_max_tmp`** — the maximum temperature reached during summer, in °C. A *central tendency* measure of how hot summers get.
--   **`extreme_hot_days_mean`** — the mean number of days per year crossing an extreme-heat threshold. An *intensity* or *dose* measure of how often heat extremes occur.
+- **`summer_max_tmp`** — the maximum temperature reached during summer, in °C. A *central tendency* measure of how hot summers get.
+- **`extreme_hot_days_mean`** — the mean number of days per year crossing an extreme-heat threshold. An *intensity* or *dose* measure of how often heat extremes occur.
 
 These two are conceptually distinct. A place can have moderate summer maxima but many extreme-heat days (a long warm season), or high summer maxima but few extreme days (short, intense peaks). The inequality story may differ between them.
 
@@ -562,11 +562,11 @@ plt.show()
 
 The slope coefficients tell us about the average association between heat exposure and deprivation in 2024. They do not tell us about causation: many factors influence both heat exposure and health outcomes, including:
 
--   **Socioeconomic and demographic composition**: income, employment, education, age structure, ethnicity.
--   **Housing characteristics**: building quality, insulation, heating systems, tenure, urban density.
--   **Environmental features**: altitude, proximity to water, green space, urban heat island intensity.
--   **Health and vulnerability**: prevalence of chronic illness, respiratory conditions.
--   **Infrastructure and access**: public transport, energy affordability, healthcare access.
+- **Socioeconomic and demographic composition**: income, employment, education, age structure, ethnicity.
+- **Housing characteristics**: building quality, insulation, heating systems, tenure, urban density.
+- **Environmental features**: altitude, proximity to water, green space, urban heat island intensity.
+- **Health and vulnerability**: prevalence of chronic illness, respiratory conditions.
+- **Infrastructure and access**: public transport, energy affordability, healthcare access.
 
 A serious causal analysis would require controlling for these — and even then, identifying a causal effect of heat exposure on health-related deprivation would need a research design (e.g. plausibly exogenous variation in heat exposure) that goes beyond a single cross-section.
 
