@@ -8,7 +8,7 @@ Open the product file (e.g., Heat, Pollution, SPF at LSOA level).
 
 The imago dataproducts can be found [here](https://data.imago.ac.uk). Have a look!
 
-![Here is what the raw Temperature data (MSOA-level) looks like.](/data/msoa_temp_exceldemo_fig1.png)
+![Here is what the raw Temperature data (MSOA-level) looks like.](./assets/msoa_temp_exceldemo_fig1.png)
 
 **Check your data includes these key columns:**
 
@@ -30,7 +30,7 @@ Imago datasets are available at commonly used levels of aggregation such as MSOA
 
 `=XLOOKUP([@[data_zone_code]],Table2[msoa21cd],Table2[Health Deprivation and Disability Rank (where 1 is most deprived)], "Not found")`
 
-![Matched data combined with MSOA-level Health IMD indicators](/data/msoa_temp_exceldemo_fig2.png)
+![Matched data combined with MSOA-level Health IMD indicators](./assets/msoa_temp_exceldemo_fig2.png)
 
 In this example, the contextual data is stored in a separate table (`Table 2`). This dataset is an MSOA-level compilation of the LSOA-level IMD indicator components and ranks, available [here](https://docs.google.com/spreadsheets/d/1At65pys4xia9BBKeDbNLFkiVQ1Ta-xso/edit?usp=drive_link&ouid=112072621229517004821&rtpof=true&sd=true "IMD Domains (MSOA-Level)"). It was derived using the processes described in [Explore datasets with R/Python](demo1.qmd).
 
@@ -77,7 +77,7 @@ Percentile ranking:
 
 This shows where each MSOA falls within the distribution (0 to 100 scale).
 
-![Sorting by rank and percentile](/data/msoa_temp_exceldemo_fig3.png)
+![Sorting by rank and percentile](./assets/msoa_temp_exceldemo_fig3.png)
 
 **Conditional Formatting:**
 
@@ -103,7 +103,7 @@ Then, we can see the Winter Minimum Temperature for each such decile using a piv
 
 Rows: Health IMD Decile \| Values: `winter_min_tmp` (set to Average)
 
-![Simple pivot table](/data/msoa_temp_exceldemo_fig4.png)
+![Simple pivot table](./assets/msoa_temp_exceldemo_fig4.png)
 
 Generally, it looks like the IMD rank and lowest winter temperature have a negative correlation. (Why?)
 
@@ -122,7 +122,7 @@ Histogram: Distribution
 1.  Select Metric Value column
 2.  Insert → Charts → Histogram
 
-![Visualising average Wintry temperatures in England](/data/msoa_temp_exceldemo_fig5.png)
+![Visualising average Wintry temperatures in England](./assets/msoa_temp_exceldemo_fig5.png)
 
 ## Further explorations
 

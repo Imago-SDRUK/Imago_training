@@ -1,0 +1,367 @@
+# Air temperature - Bivariate maps {#sec-airtemp4 .unnumbered}
+
+**Goal**: Visualise the joint geography of heat exposure and deprivation. Where in England do high summer temperatures and high health deprivation overlap?
+
+------------------------------------------------------------------------
+
+## Installing packages
+
+This part is mostly cartography.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE, warning=FALSE}
+# Core data handling and plotting
+library(tidyverse)   # Data manipulation + ggplot2
+
+# Spatial data and mapping
+library(sf)          # Simple Features
+
+# Plot composition
+library(cowplot)     # Combine main map with inset legend
+
+# Animation
+library(gifski)      # GIF encoder for save_gif()
+
+# Python interop (only needed if rendering both languages)
+library(reticulate)
+```
+
+### Python
+
+```{python}
+# Data & geospatial
+import numpy as np
+import pandas as pd
+import geopandas as gpd
+
+# Plotting
+import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from matplotlib.colors import to_rgb
+```
+:::
+
+## Load the data
+
+We need three things: the 2024 temperature geopackage (for geometry + summer maximum temperature), the MSOA-level IMD aggregate written by Part 1, and a clean inner join of the two with no missing values.
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE}
+# 1. Temperature + geometry from the 2024 file
+msoa_temp <- read_sf("./data/temperature_indicators_MSOA_2024.gpkg") %>%
+  mutate(msoa21cd = trimws(as.character(dt_zn_c)))
+
+# 2. MSOA-level health rank (built in Part 1)
+msoa_imd_agg <- read_csv("./data/derived/msoa_imd_agg.csv")
+
+# 3. Inner join, drop incomplete rows
+msoa_final_clean <- msoa_temp %>%
+  inner_join(
+    msoa_imd_agg %>% select(msoa21cd, msoa21nm, ladcd, health_rank_msoa),
+    by = "msoa21cd"
+  ) %>%
+  drop_na(summer_max_tmp, health_rank_msoa)
+
+glimpse(msoa_final_clean %>% st_drop_geometry())
+```
+
+### Python
+
+```{python}
+# 1. Temperature + geometry from the 2024 file
+msoa_temp = gpd.read_file("./data/temperature_indicators_MSOA_2024.gpkg")
+msoa_temp["msoa21cd"] = msoa_temp["dt_zn_c"].astype(str).str.strip()
+
+# 2. MSOA-level health rank (built in Part 1)
+msoa_imd_agg = pd.read_csv("./data/derived/msoa_imd_agg.csv")
+
+# 3. Inner join, drop incomplete rows
+msoa_final_clean = (
+    msoa_temp
+    .merge(
+        msoa_imd_agg[["msoa21cd", "msoa21nm", "ladcd", "health_rank_msoa"]],
+        how="inner", on="msoa21cd"
+    )
+    .dropna(subset=["summer_max_tmp", "health_rank_msoa"])
+    .reset_index(drop=True)
+)
+
+msoa_final_clean.info()
+```
+:::
+
+# Bivariate choropleth
+
+A bivariate map shows two variables at once by combining their colour scales into a 3×3 grid. We split MSOAs into terciles on each variable: low/medium/high summer maximum temperature, and low/medium/high health deprivation. Each MSOA falls into one of nine bins, and each bin gets its own colour.
+
+The interesting cells are the corners. The dark-red `3-3` corner is hot *and* deprived — the climate-justice cell. The pale `1-1` corner is cool and affluent. The off-diagonal corners (`3-1` hot but affluent, `1-3` cool but deprived) are England's geography in microcosm.
+
+## Build the bivariate classes and palette
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r}
+msoa_bi <- msoa_final_clean %>%
+  mutate(
+    summer_class = ntile(summer_max_tmp, 3),         # 1 = low temp, 3 = high
+    health_class = ntile(-health_rank_msoa, 3),      # -rank so 3 = most deprived
+    bi_class     = paste0(summer_class, "-", health_class)
+  )
+
+bi_palette <- c(
+  "1-1" = "#D9EBF5",  # low heat, low deprivation
+  "2-1" = "#E8E0D5",  # medium heat, low deprivation
+  "3-1" = "#F5B895",  # high heat, low deprivation
+  "1-2" = "#ACD4E8",  # low heat, medium deprivation
+  "2-2" = "#D5D5D5",  # medium heat, medium deprivation
+  "3-2" = "#E67676",  # high heat, medium deprivation
+  "1-3" = "#6A9ABD",  # low heat, high deprivation
+  "2-3" = "#C99191",  # medium heat, high deprivation
+  "3-3" = "#C83737"   # high heat, high deprivation
+)
+```
+
+### Python
+
+```{python}
+msoa_bi = msoa_final_clean.copy()
+
+msoa_bi["summer_class"] = pd.qcut(
+    msoa_bi["summer_max_tmp"], q=3, labels=[1, 2, 3]
+)
+msoa_bi["health_class"] = pd.qcut(
+    msoa_bi["health_rank_msoa"], q=3, labels=[3, 2, 1]   # reversed
+)
+msoa_bi["bi_class"] = (
+    msoa_bi["summer_class"].astype(str) + "-" + msoa_bi["health_class"].astype(str)
+)
+
+bi_palette = {
+    "1-1": "#D9EBF5",
+    "2-1": "#E8E0D5",
+    "3-1": "#F5B895",
+    "1-2": "#ACD4E8",
+    "2-2": "#D5D5D5",
+    "3-2": "#E67676",
+    "1-3": "#6A9ABD",
+    "2-3": "#C99191",
+    "3-3": "#C83737",
+}
+
+msoa_bi["color"] = msoa_bi["bi_class"].map(bi_palette)
+```
+:::
+
+## Draw the map
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, fig.width=9, fig.height=10}
+p_map <- ggplot(msoa_bi) +
+  geom_sf(aes(fill = bi_class), colour = NA) +
+  scale_fill_manual(values = bi_palette) +
+  labs(
+    title = "Bivariate map: summer temperature and health deprivation",
+    caption = "Sources: Imago temperature indicators, 2024; English IMD 2025."
+  ) +
+  theme_void() +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold")
+  )
+
+# 3x3 inset legend
+legend_df <- expand_grid(summer_class = 1:3, health_class = 1:3) %>%
+  mutate(
+    bi_class = paste0(summer_class, "-", health_class),
+    fill     = bi_palette[bi_class]
+  )
+
+p_legend <- ggplot(legend_df, aes(x = summer_class, y = health_class, fill = fill)) +
+  geom_tile() +
+  scale_fill_identity() +
+  coord_equal() +
+  labs(x = "Summer temp →", y = "Deprivation →") +
+  theme_void() +
+  theme(
+    panel.border = element_rect(colour = "black", fill = NA),
+    axis.title.x = element_text(size = 8, hjust = 0.5, margin = margin(t = 4)),
+    axis.title.y = element_text(size = 8, hjust = 0.5, angle = 90, margin = margin(r = 4))
+  )
+
+ggdraw() +
+  draw_plot(p_map) +
+  draw_plot(p_legend, x = 0.85, y = 0.05, width = 0.12, height = 0.12)
+```
+
+### Python
+
+```{python}
+fig, ax = plt.subplots(figsize=(10, 10))
+
+msoa_bi.plot(ax=ax, color=msoa_bi["color"], edgecolor="none")
+ax.set_title("Bivariate map: summer temperature and health deprivation",
+             fontweight="bold", fontsize=13)
+ax.set_axis_off()
+
+# Inset legend (3x3 grid)
+ax_legend = inset_axes(ax, width="15%", height="15%",
+                       loc="lower right", borderpad=2)
+
+legend_grid = np.zeros((3, 3), dtype=object)
+for i, health in enumerate([3, 2, 1]):       # y-axis: top = most deprived
+    for j, summer in enumerate([1, 2, 3]):   # x-axis: left = low temp
+        legend_grid[i, j] = bi_palette[f"{summer}-{health}"]
+
+rgb_grid = np.array([[to_rgb(c) for c in row] for row in legend_grid])
+
+ax_legend.imshow(rgb_grid, origin="upper")
+ax_legend.set_xticks([0, 1, 2])
+ax_legend.set_yticks([0, 1, 2])
+ax_legend.set_xticklabels(["Low", "", "High"], fontsize=8)
+ax_legend.set_yticklabels(["High", "", "Low"], fontsize=8)
+ax_legend.set_xlabel("Summer temp →", fontsize=8)
+ax_legend.set_ylabel("← Deprivation",  fontsize=8)
+ax_legend.tick_params(length=0)
+
+plt.figtext(0.5, 0.04,
+            "Sources: Imago temperature indicators, 2024; English IMD 2025.",
+            ha="center", fontsize=9, color="grey")
+plt.tight_layout()
+plt.show()
+```
+:::
+
+::: callout-note
+## Reading the map
+
+The dark-red `3-3` cells — hot *and* deprived — cluster in pockets within the south-east, particularly around outer London and the Thames Estuary. The blue `1-3` cells — cool *and* deprived — dominate post-industrial parts of the north and midlands. The pale `1-1` corner (cool, affluent) covers most of rural northern and western England, and the orange `3-1` corner (hot, affluent) sits across much of the affluent south. The map makes visible something the regression in Part 1 obscured: the climate-justice cell exists, but it is *small and geographically specific* rather than a national pattern.
+:::
+
+# Animated hotspot zoom
+
+Bivariate maps at national scale show structure but flatten the local detail. An animation that zooms from the national view into a Greater London `3-3` hotspot, holds, then zooms back out and into a `1-1` cool-affluent area for contrast, gives an audience a feel for both ends of the distribution.
+
+We use `gifski::save_gif()` directly with `ggplot` frames. Each frame re-uses the same MSOA polygons but changes the `coord_sf()` viewport, producing a smooth zoom. The block writes `hotspot_animation_lite.gif` to the working directory.
+
+::: callout-note
+The animation is R-only. Looping `matplotlib` figures into a gif from Python (`imageio.mimsave` or `pillow`) is more code for less polish, so we leave it out of the Python tab here.
+:::
+
+::: {.panel-tabset group="language"}
+### R
+
+```{r, message=FALSE, warning=FALSE, results='hide'}
+# 1. Pick the hotspots
+# A 3-3 (hot + deprived) MSOA in Greater London (LAD codes start with E09)
+london_hotspot <- msoa_bi %>%
+  filter(bi_class == "3-3", grepl("^E09", ladcd)) %>%
+  slice(1)
+
+# Fallback: any 3-3 nationally if no London match
+if (nrow(london_hotspot) == 0) {
+  london_hotspot <- msoa_bi %>% filter(bi_class == "3-3") %>% slice(1)
+}
+
+# A 1-1 (cool + affluent) MSOA for contrast
+low_hotspot <- msoa_bi %>%
+  filter(bi_class == "1-1") %>%
+  slice(1)
+if (nrow(low_hotspot) == 0) low_hotspot <- msoa_bi %>% slice(n())
+
+# 2. Define zoom extents (national bbox + buffered hotspot bboxes)
+full_bbox <- st_bbox(msoa_bi)
+hot_bbox  <- st_bbox(st_buffer(london_hotspot, 5000))
+low_bbox  <- st_bbox(st_buffer(low_hotspot,    5000))
+
+# Helper: linearly interpolate between two bounding boxes
+interpolate_bbox <- function(b1, b2, n) {
+  lapply(seq(0, 1, length.out = n), function(a) {
+    res <- (1 - a) * b1 + a * b2
+    class(res) <- class(b1)
+    attributes(res)$crs <- attributes(b1)$crs
+    res
+  })
+}
+
+# Build the bbox sequence: intro → zoom in hot → stay → zoom out → zoom in low → stay → return
+bboxes <- c(
+  replicate(5,  list(full_bbox)),
+  interpolate_bbox(full_bbox, hot_bbox, 10),
+  replicate(10, list(hot_bbox)),
+  interpolate_bbox(hot_bbox, full_bbox, 10),
+  interpolate_bbox(full_bbox, low_bbox, 10),
+  replicate(10, list(low_bbox)),
+  interpolate_bbox(low_bbox, full_bbox, 10)
+)
+
+# 3. Frame builder — one ggplot per bbox, with optional hotspot outline + label
+make_frame <- function(i) {
+  bb <- bboxes[[i]]
+
+  p <- ggplot(msoa_bi) +
+    geom_sf(aes(fill = bi_class), colour = "white", linewidth = 0.05) +
+    scale_fill_manual(values = bi_palette, guide = "none") +
+    coord_sf(
+      xlim   = c(bb["xmin"], bb["xmax"]),
+      ylim   = c(bb["ymin"], bb["ymax"]),
+      expand = FALSE
+    ) +
+    labs(title = "Heat & deprivation hotspots") +
+    theme_void(base_size = 11) +
+    theme(
+      plot.title    = element_text(face = "bold", hjust = 0.5),
+      plot.margin   = margin(8, 8, 8, 8),
+      panel.background = element_rect(fill = "white", colour = NA),
+      plot.background  = element_rect(fill = "white", colour = NA)
+    )
+
+  # Outline + label the hot hotspot while zoomed in on it
+  if (nrow(london_hotspot) > 0 && i > 10 && i < 35) {
+    p <- p +
+      geom_sf(data = london_hotspot, fill = NA, colour = "black", linewidth = 0.7) +
+      geom_sf_text(data = london_hotspot, aes(label = msoa21nm),
+                   size = 3, colour = "black",
+                   bg.colour = "white", bg.r = 0.15)
+  }
+  # And similarly for the cool hotspot
+  if (nrow(low_hotspot) > 0 && i > 40 && i < 65) {
+    p <- p +
+      geom_sf(data = low_hotspot, fill = NA, colour = "black", linewidth = 0.7) +
+      geom_sf_text(data = low_hotspot, aes(label = msoa21nm),
+                   size = 3, colour = "black",
+                   bg.colour = "white", bg.r = 0.15)
+  }
+  print(p)
+}
+
+# 4. Encode the gif. save_gif() opens its own PNG device, so each frame
+#    is guaranteed to be the same size — no gifski_finish surprises.
+gifski::save_gif(
+  for (i in seq_along(bboxes)) make_frame(i),
+  gif_file = "hotspot_animation_lite.gif",
+  width    = 500,
+  height   = 500,
+  delay    = 0.15,    # seconds per frame
+  res      = 96
+)
+```
+:::
+
+![Animated hotspot zoom](hotspot_animation_lite.gif)
+
+::: callout-tip
+## If the animation still fails
+
+A few quick things to check:
+
+-   **`geom_sf_text(bg.colour = ...)`** requires `ggplot2 ≥ 3.5.0`. On older versions, drop `bg.colour` and `bg.r` — labels will appear without the white halo.
+-   The chunk writes the gif to `hotspot_animation_lite.gif` in your project root. If Quarto can't find the file when rendering, set `knitr::opts_chunk$set(fig.path = ".")` or write to a path you reference in the `![...]()` line.
+-   The animation has \~65 frames; if rendering is slow, drop the `replicate()` and `interpolate_bbox()` counts (e.g. `replicate(3, ...)`, `interpolate_bbox(..., 6)`) for a quicker preview.
+:::

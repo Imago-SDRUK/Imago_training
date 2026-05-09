@@ -1,37 +1,69 @@
 project:
-  type: book
+  type: website
   output-dir: docs
+  resources:
+    - "assets"
 
-book:
+website:
   title: "Imago training"
-  author: "Imago team"
-  date: today
-  
+
   page-footer:
-    left: |
-      Imago | UKRI Imagery Data Service
-    right: |
-      This book was built with <a href="https://quarto.org/">Quarto</a>.
-  cover-image: assets/Imago-logo.png
+    center: |
+      [[Imago]{.green}](https://imago.ac.uk), part of the [[Smart Data Research UK]{.blue}](https://www.sdruk.ukri.org/) family.
+
   favicon: assets/Imago-logo.png
   repo-url: https://github.com/Imago-SDRUK/Imago-training
   repo-branch: main
   repo-actions: [edit, issue]
-  
-  chapters:
-    - index.qmd
-    - datasets.qmd
-    - satellites_to_areas.qmd
-    - policy.qmd
-    - preparing.qmd
-    - demo1.qmd    
-    - packages.qmd
+
+  search:
+    location: sidebar
+    type: overlay
+
+  sidebar:
+    style: floating
+    collapse-level: 1
+    logo: assets/Imago-logo.png
+    tools:
+      - icon: github
+        href: https://github.com/Imago-SDRUK/Imago-training
+    contents:
+      - index.qmd
+      - section: "Getting oriented"
+        contents:
+          - datasets.qmd
+          - satellites_to_areas.qmd
+      - section: "1. Policy trainings"
+        contents:
+          - policy.qmd
+      - section: "2. Research trainings"
+        contents:
+          - section: "Air temperature"
+            contents:
+              - airtemp_1.qmd
+              - airtemp_2.qmd
+              - airtemp_3.qmd
+              - airtemp_4.qmd
+          - precipitation.qmd
+          - spf.qmd
+      - section: "Reference"
+        contents:
+          - packages.qmd
+      - text: "---"
+      - text: "Imago"
+        href: https://imago.ac.uk
+      - text: "GDSL"
+        href: https://liverpool.ac.uk/geographic-data-science
 
 bibliography: references.bib
 
 format:
   html:
-    theme: cosmo
+    theme:
+      - cosmo
+      - assets/imago.scss
+    include-in-header:
+      - text: |
+          <script defer src="https://events.imago.ac.uk/script.js" data-website-id="REPLACE_WITH_TRAINING_SITE_ID"></script>
 
 editor: visual
-

@@ -1,0 +1,18 @@
+---
+title: "Precipitation"
+---
+
+::: callout-note
+## Coming soon
+
+This training is in development. Check back soon, or [open an issue](https://github.com/Imago-SDRUK/Imago-training/issues) if you'd like to be notified when it's ready.
+:::
+
+A research-track training on working with precipitation indicators in R or Python. Covers the conceptual basics of gridded precipitation products and walks through extracting area-level indicators for analysis.
+
+**Planned content:**
+
+-   Sources of precipitation data and their trade-offs
+-   Extracting area-level indicators from gridded products
+-   Defining and computing extreme precipitation events
+-   Linking precipitation indicators to vulnerability and exposure

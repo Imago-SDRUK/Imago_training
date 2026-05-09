@@ -55,8 +55,9 @@ jobs:
           python3 -m pip install numpy pandas geopandas \
             matplotlib seaborn \
             statsmodels scipy \
-            requests openpyxl
-
+            requests openpyxl \
+            pyfixest
+            
       - name: Configure reticulate
         run: |
           echo "RETICULATE_PYTHON=${{ steps.setup-python.outputs.python-path }}" >> $GITHUB_ENV
@@ -86,6 +87,8 @@ jobs:
             any::cowplot
             any::fs
             any::gifski
+            any::fixest
+            any::patchwork
      
       - name: Install TinyTeX
         run: quarto install tinytex

@@ -1,20 +1,230 @@
 # Welcome {.unnumbered}
 
-## Imago for evidence-based policy
+## Imago training
 
-Join us for a hands-on introduction to using [Imago: Data Service for Imagery](https://imago.ac.uk/) data products that transform complex satellite imagery into useful and usable datasets for social science, health, and policy analysis. This workshop is designed for researchers, local authorities, NGOs, and anyone interested in applying imagery-derived evidence to neighbourhood-level challenges.
+> _Hands-on training for working with imagery-derived data_
 
-This session has been developed by the [Imago team](https://imago.ac.uk/about).
+<img src="assets/Imago-logo.png" alt="Imago Logo" width="300"/>
 
-Throughout the workshop, you’ll work with real datasets, explore patterns linked to deprivation, and create simple analyses and maps that you can take back into your own projects.
+This site brings together training materials produced by [Imago](https://imago.ac.uk), part of the [Smart Data Research UK](https://www.sdruk.ukri.org/) family. Our trainings are designed for two audiences: **policy and analyst users** working with prepared indicators in tools like Excel, and **researchers** working with raw and processed data in R or Python.
 
-Whether you’re completely new to satellite data, comfortable with geospatial tools, or mainly work in Excel, this training offers multiple entry points. By the end, you’ll be able to combine Imago data products with other widely used sources to address real social-policy questions.
+Each training is self-contained. You can work through them in order or pick the topics relevant to your needs.
 
-The website is **free to use** and is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/). A compilation of this web course is hosted as a GitHub repository that you can access:
+## Before you start
 
--   As an [html website](https://Imago-SDRUK.github.io/Imago_training/).
--   As a [GitHub repository](https://github.com/Imago-SDRUK/Imago_training).
+If you are new to the kinds of data Imago produces, start with these orientation pages:
 
-## Contact {.unnumbered}
+- [Data sets](datasets.qmd) — what's available and where it comes from
+- [From grids to areas](satellites_to_areas.qmd) — how raw satellite data becomes area-level indicators
+- [Geo-spatial and statistical packages](packages.qmd) — reference for the R and Python tooling we use
 
-> The Imago team - imago \[at\] liverpool.ac.uk Lecturer in Geographic Data Science, University of Liverpool.
+## 1. Policy trainings
+
+For analysts and policy users. No coding required — these trainings work with prepared indicators in spreadsheet tools.
+
+| Training | Topic | Format |
+|----------|-------|--------|
+| [Data Insights with Excel](policy.qmd) | Exploring climate and vulnerability indicators in Excel | Excel |
+
+## 2. Research trainings
+
+For researchers comfortable with R or Python. These trainings work with raw and processed data and assume basic familiarity with at least one of the two languages.
+
+Each training has a written walkthrough you can read, and a runnable notebook you can launch directly in your browser via [JupyterLite](https://jupyter.org/try-jupyter/lab/) — no installation required.
+
+```{=html}
+<style>
+  .training-table {
+    width: 100%;
+    max-width: 880px;
+    margin: 1.5rem 0 2rem;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Figtree', sans-serif;
+    font-size: 0.95rem;
+    color: #24226F;
+  }
+  .training-table thead th {
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #8C91A8;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 2px solid #E2E5F3;
+    background: transparent;
+  }
+  .training-table tbody td {
+    padding: 0.85rem;
+    border-bottom: 1px solid #E2E5F3;
+    vertical-align: middle;
+    line-height: 1.35;
+  }
+  .training-table tbody tr {
+    transition: background 0.12s ease;
+  }
+  .training-table tbody tr:hover {
+    background: #F5F6FB;
+  }
+  .training-table tbody tr.coming-soon {
+    color: #8C91A8;
+  }
+  .training-table tbody tr.coming-soon:hover {
+    background: transparent;
+  }
+
+  /* Group banding: an orange left edge unifies the four Air temperature rows */
+  .training-table tbody tr.group-airtemp td:first-child {
+    border-left: 3px solid #FF8F42;
+    padding-left: 1rem;
+  }
+  .training-table tbody tr.group-airtemp.first td:first-child::before {
+    content: "Air temperature";
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #FF8F42;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+
+  /* The "topic" cell colour drift for the air temperature group */
+  .training-table .training-name {
+    font-weight: 600;
+    color: #24226F;
+  }
+  .training-table .training-topic {
+    color: #4a4a49;
+  }
+  .training-table tr.coming-soon .training-name,
+  .training-table tr.coming-soon .training-topic {
+    color: #8C91A8;
+    font-weight: 500;
+  }
+
+  /* Buttons */
+  .training-btn {
+    display: inline-block;
+    padding: 0.32rem 0.75rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    line-height: 1.2;
+    text-decoration: none;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+    white-space: nowrap;
+  }
+  .training-btn.read {
+    color: #24226F;
+    border-color: #24226F;
+    background: transparent;
+  }
+  .training-btn.read:hover,
+  .training-btn.read:focus-visible {
+    background: #24226F;
+    color: #FFFFFF;
+    outline: none;
+  }
+  .training-btn.launch {
+    color: #FFFFFF;
+    background: #FF8F42;
+    border-color: #FF8F42;
+  }
+  .training-btn.launch:hover,
+  .training-btn.launch:focus-visible {
+    background: #E67A2B;
+    border-color: #E67A2B;
+    outline: none;
+  }
+  .training-btn.disabled {
+    color: #B8BCD1;
+    background: transparent;
+    border-color: #E2E5F3;
+    pointer-events: none;
+    cursor: default;
+    font-style: italic;
+  }
+
+  @media (max-width: 600px) {
+    .training-table thead { display: none; }
+    .training-table tbody td { display: block; padding: 0.4rem 0.85rem; border: none; }
+    .training-table tbody tr {
+      display: block;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #E2E5F3;
+    }
+    .training-table tbody tr.group-airtemp td:first-child {
+      padding-left: 1rem;
+    }
+  }
+</style>
+
+<table class="training-table" aria-label="Imago training catalogue">
+  <thead>
+    <tr>
+      <th scope="col">Training</th>
+      <th scope="col">Topic</th>
+      <th scope="col">Read</th>
+      <th scope="col">Run in browser</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <tr class="group-airtemp first">
+      <td><span class="training-name">1. The basics</span></td>
+      <td class="training-topic">Cross-sectional foundations: distribution, mapping, IMD merge, OLS</td>
+      <td><a class="training-btn read" href="airtemp_1.qmd">Notebook</a></td>
+      <td><a class="training-btn launch" href="#">Launch</a></td>
+    </tr>
+    <tr class="group-airtemp">
+      <td><span class="training-name">2. Panel data</span></td>
+      <td class="training-topic">Building the 2015–2024 MSOA panel and inspecting trajectories</td>
+      <td><a class="training-btn read" href="airtemp_2.qmd">Notebook</a></td>
+      <td><a class="training-btn launch" href="#">Launch</a></td>
+    </tr>
+    <tr class="group-airtemp">
+      <td><span class="training-name">3. Climate inequality</span></td>
+      <td class="training-topic">Has the deprivation–heat gap widened? Two-way fixed effects</td>
+      <td><a class="training-btn read" href="airtemp_3.qmd">Notebook</a></td>
+      <td><a class="training-btn launch" href="#">Launch</a></td>
+    </tr>
+    <tr class="group-airtemp">
+      <td><span class="training-name">4. Bivariate maps</span></td>
+      <td class="training-topic">Mapping the joint geography of heat and health deprivation</td>
+      <td><a class="training-btn read" href="airtemp_4.qmd">Notebook</a></td>
+      <td><a class="training-btn launch" href="#">Launch</a></td>
+    </tr>
+
+    <tr class="coming-soon">
+      <td><span class="training-name">Precipitation</span></td>
+      <td class="training-topic">Working with precipitation indicators</td>
+      <td><span class="training-btn disabled">Coming soon</span></td>
+      <td><span class="training-btn disabled">Coming soon</span></td>
+    </tr>
+
+    <tr class="coming-soon">
+      <td><span class="training-name">SPF: Sun probability framework</span></td>
+      <td class="training-topic">Joining and aggregating spatial data</td>
+      <td><span class="training-btn disabled">Coming soon</span></td>
+      <td><span class="training-btn disabled">Coming soon</span></td>
+    </tr>
+
+  </tbody>
+</table>
+```
+
+## Contributing
+
+These materials are openly developed on [GitHub](https://github.com/Imago-SDRUK/Imago-training). We welcome corrections, suggestions, and new training contributions — please open an issue or pull request.
+
+## License
+
+This repository uses a dual-licensing approach:
+
+- **MIT License** for all software code (see [LICENSE](LICENSE))
+- **Creative Commons Attribution 4.0 International (CC BY 4.0)** for documentation, data, and non-code content
+
+See the [LICENSE](LICENSE) file for full details.
