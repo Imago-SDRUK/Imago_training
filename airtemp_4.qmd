@@ -361,7 +361,7 @@ gifski::save_gif(
 
 A few quick things to check:
 
--   **`geom_sf_text(bg.colour = ...)`** requires `ggplot2 ≥ 3.5.0`. On older versions, drop `bg.colour` and `bg.r` — labels will appear without the white halo.
--   The chunk writes the gif to `hotspot_animation_lite.gif` in your project root. If Quarto can't find the file when rendering, set `knitr::opts_chunk$set(fig.path = ".")` or write to a path you reference in the `![...]()` line.
--   The animation has \~65 frames; if rendering is slow, drop the `replicate()` and `interpolate_bbox()` counts (e.g. `replicate(3, ...)`, `interpolate_bbox(..., 6)`) for a quicker preview.
+- **`geom_sf_text(bg.colour = ...)`** requires `ggplot2 ≥ 3.5.0`. On older versions, drop `bg.colour` and `bg.r` — labels will appear without the white halo.
+- The chunk writes the gif to `hotspot_animation_lite.gif` in your project root. If Quarto can't find the file when rendering, set `knitr::opts_chunk$set(fig.path = ".")` or write to a path you reference in the `![...]()` line.
+- The animation has \~65 frames; if rendering is slow, drop the `replicate()` and `interpolate_bbox()` counts (e.g. `replicate(3, ...)`, `interpolate_bbox(..., 6)`) for a quicker preview.
 :::
