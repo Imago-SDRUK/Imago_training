@@ -44,7 +44,11 @@ website:
               - airtemp_2.qmd
               - airtemp_3.qmd
               - airtemp_4.qmd
-          - precipitation.qmd
+          - section: "Precipitation"
+            contents:
+              - precipitation_1.qmd
+              - precipitation_2.qmd
+              - precipitation_3.qmd
           - spf.qmd
       - section: "Reference"
         contents:

@@ -1,10 +1,10 @@
 ---
-title: Precipitation - Seasonal Rainfall Patterns
+title: Precipitation - Seasonal Rainfall Patterns {#sec-precip2 .unnumbered}
 jupyter: python3
 ---
 
 
-**Data**: 
+**Data**:
 - [Precipitation per MSOA 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024/resources/019de403-6547-7391-a7e7-ae4a43b8c9dc)
 
 **Goal**: Using the Imago Precipitation Product, explore how rainfall changes across the seasons and identify which seasons contribute most to annual rainfall across different parts of the UK.
@@ -39,9 +39,9 @@ precip_msoa.head()
 
 This file contains multiple rainfall indicators. For this notebook we are using the 4 seasonal ones:
 - `winter_rainfall`: Mean rainfall in millimeters during the winter season (December to February)
-- `spring_rainfall`: Mean rainfall in millimeters during the spring season (March to May) 
-- `summer_rainfall`: Mean rainfall in millimeters during the summer season (June to August) 
-- `autumn_rainfall`: Mean rainfall in millimeters during the autumn season (September to November) 
+- `spring_rainfall`: Mean rainfall in millimeters during the spring season (March to May)
+- `summer_rainfall`: Mean rainfall in millimeters during the summer season (June to August)
+- `autumn_rainfall`: Mean rainfall in millimeters during the autumn season (September to November)
 
 ## Understanding Seasonal Rainfall
 
