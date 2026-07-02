@@ -1,15 +1,13 @@
----
 title: Precipitation - Exploring Rainfall Across the UK {#sec-precip1 .unnumbered}
 jupyter: python3
----
 
+**Goal**: Using the Imago precipitation product explore rainfall across the UK, discovering the wettest and driest MSOAs and the regional precipitation characteristics.
 
 **Data**:
 - [Precipitation per MSOA 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024/resources/019de403-6547-7391-a7e7-ae4a43b8c9dc)
 - [Precipitation per LAD 2024](https://data.imago.ac.uk/datasets/precipitation-per-lad-in-2024/resources/019de3db-57ad-7239-bd48-57876ee695f1)
 
-**Goal**: Using the Imago Precipitation Product explore rainfall across the UK, discovering the wettest and driest MSOAs and the regional precipitation characteristics.
-
+::: callout-note
 ## Installing the data
 
 The Imago precipitation data is hosted on the [data catalogue](https://data.imago.ac.uk/). To download it:
@@ -20,8 +18,11 @@ The Imago precipitation data is hosted on the [data catalogue](https://data.imag
 4.  Save the files into a `../data/` folder in your project, keeping the original filenames (`precipitation_indicators_MSOA_2024.gpkg`).
 
 For this notebook you'll need the 2024 file of MSOA, and then repeat for also the 2024 file of LAD.
+:::
 
-## A question to motivate the data
+------------------------------------------------------------------------
+
+# A question to motivate the data
 
 A local authority believes that 2024 was an exceptionally wet year. Before investigating whether rainfall was unusual, we first need to understand how rainfall was distributed across the UK and whether wet conditions were concentrated in specific regions or spread more evenly across the country.
 
@@ -30,6 +31,8 @@ A local authority believes that 2024 was an exceptionally wet year. Before inves
 
 We install core geospatial libraries needed for this work.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Geospatial Libraries
 import pandas as pd
@@ -39,6 +42,7 @@ import numpy as np
 # Plotting
 import matplotlib.pyplot as plt
 ```
+:::
 
 ## Loading the Data
 
@@ -107,7 +111,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+::: callout-note
+### Interpretation
+
 The distribution is positively skewed, with most MSOAs clustered around moderate rainfall totals and a smaller number of particularly wet locations extending the upper tail of the distribution. This is highlighting how the majority of MSOAs experience a relatively low amount of rainfall however the rainfall countrywide varies with a tail of progressively higher means.
+:::
 
 ## Finding the extreme MSOAs
 
@@ -128,9 +136,11 @@ print("\nDriest MSOAs, 2024:")
 print(driest.to_string(index=False))
 ```
 
-## Outliers
+::: callout-note
+### Outliers
 
 A single year's ranking is sensitive to one unusual season. An MSOA at the top of this list in 2024 or the bottom of this list is solely for this year, and it does not reveal if it is part of a bigger regional pattern, a specific seasonal spike or just an isolated high rainfall year.
+:::
 
 ## Mapping rainfall by local area
 
@@ -155,7 +165,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-## Patterns
+### Patterns
 
 While the sanity check is useful, the other incredibly effective part of it is to see patterns which can highlight other aspects of rainfall. We can clearly highlight from the map that certain parts of the country get lots of rainfall (Scotland, Lancashire, and Wales) while other parts such as the south of England do not. You can also see the south east to north west pattern of less to more rainfall.
 
@@ -302,6 +312,7 @@ Most MSOAs sit close to their LAD's average, appearing pale across much of Engla
 
 This highlights an important point when interpreting regional rainfall statistics. A local authority average can provide a useful summary of overall conditions, but it may also hide variation between individual communities. Looking at both MSOA and LAD scales helps reveal whether rainfall patterns are widespread across an authority or concentrated in particular areas.
 
+::: callout-note
 ## What have we learnt?
 
 This first case study explored how rainfall was distributed across the UK during 2024.
@@ -317,4 +328,4 @@ Understanding where rainfall was concentrated is the first step in investigating
 Two places can record similar annual rainfall totals while experiencing very different seasonal patterns. One may receive rainfall steadily throughout the year, while another may be heavily influenced by a particularly wet season.
 
 In the next case study, we break annual rainfall into spring, summer, autumn, and winter totals to investigate what drove rainfall patterns across the UK during 2024.
-
+:::
