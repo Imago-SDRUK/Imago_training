@@ -8,6 +8,7 @@ jupyter: python3
 **Goal**: Using the Imago precipitation product explore rainfall across the UK, discovering the wettest and driest MSOAs and the regional precipitation characteristics.
 
 **Data**:
+
 - [Precipitation per MSOA 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024/resources/019de403-6547-7391-a7e7-ae4a43b8c9dc)
 - [Precipitation per LAD 2024](https://data.imago.ac.uk/datasets/precipitation-per-lad-in-2024/resources/019de3db-57ad-7239-bd48-57876ee695f1)
 
@@ -61,6 +62,7 @@ precip_msoa.head()
 :::
 
 This file contains multiple rainfall indicators. For this notebook we use 2:
+
 - `rainfall_annual_mm`: total annual rainfall in mm. The central tendency measure of how much rainfall England gets over the year.
 - `geometry`: spatial boundaries for each MSOA.
 
@@ -187,7 +189,7 @@ plt.show()
 ```
 :::
 
-### Patterns
+#### Patterns
 
 While the sanity check is useful, the other incredibly effective part of it is to see patterns which can highlight other aspects of rainfall. We can clearly highlight from the map that certain parts of the country get lots of rainfall (Scotland, Lancashire, and Wales) while other parts such as the south of England do not. You can also see the south east to north west pattern of less to more rainfall.
 
