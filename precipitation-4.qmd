@@ -53,6 +53,7 @@ Together these allow us to identify communities that experienced unusually wet c
 ## Installing Libraries
 
 ::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Geospatial Libraries
 import pandas as pd
@@ -69,12 +70,17 @@ Unlike the previous case studies, this notebook combines several geospatial data
 
 Although the Imago datasets are much smaller than the original national datasets from which they were derived, they still cover every MSOA in England or the UK. Restricting the analysis to Yorkshire and the Humber reduces processing time and allows us to focus on a region containing large urban centres, major river systems and varied rainfall patterns.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 regions = gpd.read_file("../data/Regions_Dec_2020_EN_BGC_2022_-724820876220737106.gpkg")
 
 regions.head()
 ```
+:::
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 study_area = regions[regions["RGN20NM"] == "Yorkshire and The Humber"]
 
@@ -91,6 +97,7 @@ ax.axis("off")
 
 plt.show()
 ```
+:::
 
 As we can see, the Yorkshire and The Humber region is cleanly marked out and has no visible problems. We now need to apply this to our data.
 
@@ -100,6 +107,8 @@ The precipitation product and national flood zone dataset contain information fo
 
 GeoPandas allows us to read only the features intersecting our study area by supplying a spatial mask during loading. This is much faster and is a common approach when working with large spatial datasets.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Imago precipitation product
 precip = gpd.read_file(
@@ -120,9 +129,12 @@ population = pd.read_excel(
     names=["area", "population"],
 )
 ```
+:::
 
 As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 population = population[population["area"].str.startswith("msoa2021:")].copy()
 
@@ -138,6 +150,7 @@ population = population[["MSOA21CD", "MSOA21NM", "population"]]
 
 population.head()
 ```
+:::
 
 ### Joining Population to the Precipitation Data
 
@@ -145,6 +158,8 @@ The precipitation indicators describe weather conditions for each MSOA, while th
 
 We can also clean the dataset to solely have the required data we are using.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 precip = precip.rename(
     columns={
@@ -185,6 +200,7 @@ msoa = precip.merge(
 
 msoa.head()
 ```
+:::
 
 ## Understanding the Flooding Product
 
@@ -202,6 +218,8 @@ The main variables used in this notebook are:
 - `flooded_area_km2_FZ2and3`: The total area (km²) within the MSOA that lies inside Flood Zones 2 or 3.
 - `ratio_flooded_total`: The proportion of the MSOA's total land area that lies within Flood Zones 2 or 3. Values range from 0 to 1, where 0.25 means 25% of the MSOA is within a flood zone.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 msoa[
     [
@@ -212,12 +230,16 @@ msoa[
     ]
 ].head()
 ```
+:::
 
 ### Summary statistics
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 msoa["ratio_flooded_total"].describe()
 ```
+:::
 
 These statistics show how flood exposure varies considerably across the region. Most MSOAs have little or no flood prone land, while some contain substantial proportions within Flood Zones 2 and 3, with some MSOAs being entirely flood prone.
 
@@ -238,9 +260,12 @@ ax.axis("off")
 
 plt.show()
 ```
+:::
 
 ## Mapping Flood Exposure
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -261,6 +286,7 @@ ax.axis("off")
 
 plt.show()
 ```
+:::
 
 As we can see, flood exposure varies continuously with a concentration around the Humber. Darker areas indicate MSOAs where a larger proportion of land lies within Flood Zones 2 and 3.
 
@@ -268,6 +294,8 @@ As we can see, flood exposure varies continuously with a concentration around th
 
 Rather than considering every MSOA with even a very small amount of flood prone land, we define meaningful flood exposure as MSOAs where at least 10% of the area lies within Flood Zones 2 and 3.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 threshold = 0.10
 
@@ -299,9 +327,12 @@ print(
 print(f"Flood zone: {len(msoa[msoa['category'] == 'Flood zone'])}")
 print(f"Both high anomaly and Floodzone: {len(msoa[msoa['category'] == 'Both'])}")
 ```
+:::
 
 ## Mapping Potential Flood Exposure
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 colours = {
     "Neither": "grey",
@@ -335,6 +366,7 @@ ax.legend()
 
 plt.show()
 ```
+:::
 
 ### Interpreting the Results
 
@@ -344,6 +376,8 @@ Of greatest interest are the MSOAs classified as Both, where unusually wet condi
 
 ## Population at Potential Flood Exposure
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 population_summary = msoa.groupby("category").agg(
     MSOAs=("MSOA21CD", "count"),
@@ -352,11 +386,14 @@ population_summary = msoa.groupby("category").agg(
 
 population_summary
 ```
+:::
 
 We can see here that the total population of the region is ~5,9 million people, with **36%** of the region being in a flood zone. Of that group, **60%** experienced anomalous rainfall during 2021. While this is useful to know, it will be more insightful to see which MSOAs specifically were the highest population to make decisions.
 
 ## Largest Potentially Exposed Communities
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 top = msoa[msoa["category"] == "Both"][
     [
@@ -372,6 +409,7 @@ top = msoa[msoa["category"] == "Both"][
 
 top.head(20)
 ```
+:::
 
 The twenty largest communities contain over two hundred thousand residents, illustrating that potential exposure is not distributed evenly across Yorkshire and the Humber. However, a list of communities alone does not tell us whether the majority of exposed residents live within the most flood prone MSOAs, or whether they are spread across many moderately exposed areas.
 
@@ -381,6 +419,8 @@ To investigate this, we now examine how the exposed population is distributed ac
 
 Rather than considering flood exposure as simply present or absent, we divide MSOAs into groups according to the proportion of land that lies within Flood Zones 2 and 3.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 bins = [0.10, 0.25, 0.50, float("inf")]
 
@@ -406,7 +446,10 @@ summary = exposed.groupby("Exposure Band").agg(
 
 summary
 ```
+:::
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 summary["Population"].plot(
     kind="bar",
@@ -420,6 +463,7 @@ plt.ylabel("Population")
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 The results indicate that the largest share of the exposed population is located within moderately flood-prone MSOAs (10–25% of the area at risk), rather than in those where over half of the land is flood prone. Consequently, flood resilience planning should not focus solely on the highest exposure areas, as substantial populations also reside within communities experiencing more moderate levels of flood exposure. Despite this you can see that half of the total population are living in 25%+ exposure MSOAs.
 
@@ -429,6 +473,8 @@ Population alone does not fully describe potential flood exposure. A densely pop
 
 One simple way to identify communities that combine both characteristics is to calculate a potential exposure index by multiplying the resident population by the proportion of the MSOA that is classified as flood prone. While this is not a formal measure of flood risk, it provides a straightforward way of highlighting communities where large numbers of people coincide with extensive flood prone land.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 msoa["potential_exposure"] = msoa["population"] * msoa["ratio_flooded_total"]
 
@@ -459,6 +505,7 @@ ax.axis("off")
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 The map identifies several clusters of communities with comparatively high potential population exposure, particularly across the central and southern parts of Yorkshire and the Humber.
 
