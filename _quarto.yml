@@ -49,6 +49,7 @@ website:
               - precipitation_1.qmd
               - precipitation_2.qmd
               - precipitation_3.qmd
+              - precipitation_4.qmd
           - spf.qmd
       - section: "Reference"
         contents:
