@@ -14,6 +14,7 @@ jupyter: python3
 
 **Goal**: Using the Imago precipitation product alongside the Imago flooding product and Census population estimates, identify which communities in Yorkshire and Humber combine unusually wet conditions with high flood exposure and large resident populations.
 
+::: callout-note
 ## Installing the data
 
 Unlike the previous case studies, this notebook combines two Imago products with census population estimates and county boundaries to create the study region. For the region boundaries install the gpkg. The precipitation and flooding products can both be downloaded directly from Imago. The only external dataset required is the Census population estimates.
@@ -36,6 +37,7 @@ Format:
 - Excel (.xlsx)
 
 Place the downloaded spreadsheet inside the `data/` directory.
+:::
 
 # The Reason for the Data
 
@@ -131,7 +133,9 @@ population = pd.read_excel(
 ```
 :::
 
+::: callout-note
 As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
+:::
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -241,7 +245,9 @@ msoa["ratio_flooded_total"].describe()
 ```
 :::
 
+::: callout-note
 These statistics show how flood exposure varies considerably across the region. Most MSOAs have little or no flood prone land, while some contain substantial proportions within Flood Zones 2 and 3, with some MSOAs being entirely flood prone.
+:::
 
 ## Mapping Rainfall Anomalies
 
@@ -368,11 +374,13 @@ plt.show()
 ```
 :::
 
+::: callout-note
 ### Interpreting the Results
 
 The combined map highlights four distinct groups of communities. Many MSOAs experienced unusually wet conditions during 2021 without substantial flood exposure especially in the west of the region, while parts of the region near rivers and the Humber are typical flood zones but did not receive anomalous rainfall.
 
 Of greatest interest are the MSOAs classified as Both, where unusually wet conditions coincided with meaningful flood exposure. These areas may warrant additional investigation when considering flood resilience or future planning. While they are across most of the region, they are most concentrated around the Humber and its tributaries.
+:::
 
 ## Population at Potential Flood Exposure
 
@@ -465,7 +473,9 @@ plt.show()
 ```
 :::
 
+::: callout-note
 The results indicate that the largest share of the exposed population is located within moderately flood-prone MSOAs (10–25% of the area at risk), rather than in those where over half of the land is flood prone. Consequently, flood resilience planning should not focus solely on the highest exposure areas, as substantial populations also reside within communities experiencing more moderate levels of flood exposure. Despite this you can see that half of the total population are living in 25%+ exposure MSOAs.
+:::
 
 ## Identifying Priority Communities
 
@@ -507,6 +517,7 @@ plt.show()
 ```
 :::
 
+::: callout-note
 The map identifies several clusters of communities with comparatively high potential population exposure, particularly across the central and southern parts of Yorkshire and the Humber.
 
 These areas combine three characteristics:
@@ -516,6 +527,7 @@ These areas combine three characteristics:
 - relatively large resident populations
 
 By contrast, many MSOAs with high rainfall contain relatively small populations or only limited flood prone land, reducing their overall potential societal exposure.The highest priority communities are not necessarily those receiving the most rainfall or those containing the largest flood extents, but those where environmental exposure and population coincide.
+:::
 
 # What have we learnt?
 
