@@ -1,15 +1,17 @@
 ---
-title: Sun Probability Framework - Comparing 2024 and 2025
+title: "Sun Probability Framework - Comparing 2024 and 2025"
 jupyter: python3
 ---
 
-
-**Goal**: Compare the 2024 and 2025 Sun Probability Framework (SPF) products to identify how sunlight conditions changed across the UK.
+# {#sec-spf1 .unnumbered}
 
 **Data**:
 - SPF_LSOA_level_2024.gpkq
 - SPF_LSOA_level_2025.gpkq
 
+**Goal**: Compare the 2024 and 2025 Sun Probability Framework (SPF) products to identify how sunlight conditions changed across the UK.
+
+::: callout-note
 ## Installing the data
 
 Download both SPF datasets from the Imago Data Service.
@@ -17,10 +19,13 @@ Download both SPF datasets from the Imago Data Service.
 Place both GeoPackages inside the data/ directory.
 
 The datasets provide annual estimates of the SPF for every Lower Layer Super Output Area (LSOA) across the United Kingdom. For this notebook we focus on the `cloudprob_corrected_mean` variable, which represents the annual average SPF value for each LSOA.
+:::
 
 ## What is Sunlight Probability Factor?
 
 The Sun Probability Framework (SPF) summarises the probability of sunlight reaching the ground after accounting for cloud cover. Higher SPF values indicate clearer conditions and therefore a greater likelihood of direct sunlight reaching the surface, while lower values indicate cloudier conditions.
+
+------------------------------------------------------------------------
 
 ## The Reason for the Data
 
@@ -94,7 +99,9 @@ fig.suptitle("Sun Probability Framework 2025", fontweight="bold")
 fig.show()
 ```
 
+::: callout-note
 The spatial pattern broadly reflects the well known climate change across the United Kingdom. Higher SPF values are generally observed in southern and eastern Britain, where cloud cover tends to be lower, while western Scotland, The North of Ireland and parts of western Wales exhibit lower SPF values associated with more persistent cloud cover. This provides useful context before examining how conditions changed between 2024 and 2025.
+:::
 
 ### Preparing the Data
 
@@ -145,7 +152,9 @@ print("Maximum increase:", spf["change"].max())
 print("Maximum decrease:", spf["change"].min())
 ```
 
+::: callout-note
 The average SPF declined between 2024 and 2025, indicating that overall sunlight conditions were less favourable during 2025. However, these summary statistics do not reveal whether the change occurred uniformly across the country, which is explored in the following sections.
+:::
 
 ## Distribution of Annual Change
 
@@ -226,9 +235,11 @@ plt.tight_layout()
 plt.show()
 ```
 
+::: callout-note
 Although most of the United Kingdom experienced lower SPF values in 2025, the magnitude of change varies considerably across space. Large parts of eastern and south eastern England experienced some of the greatest decreases, while scattered areas across western Britain, Scotland and Northern Ireland experienced relatively small decreases or modest increases. Rather than occurring randomly, the changes form broad geographical patterns (such as Anglia and The Marches), suggesting that differences in regional weather systems influenced sunlight conditions during the year.
 
 We can see the few positive changes in the centre of England, Derry, and Fermanagh however they are largely non existent showing a significant negative change from 2024 to 2025.
+:::
 
 ## Largest Increases & Decreases
 
@@ -281,7 +292,9 @@ print(f"Decreased SPF: {decrease:,} ({100*decrease/total:.1f}%)")
 print(f"No change: {unchanged:,} ({100*unchanged/total:.1f}%)")
 ```
 
+::: callout-note
 Almost every LSOA recorded a reduction in SPF between 2024 and 2025, demonstrating that the decline was not driven by a handful of extreme locations but represented a widespread national pattern. While the magnitude of change varied spatially, the overall picture is one of generally cloudier conditions during 2025.
+:::
 
 # What Have We Learnt?
 
