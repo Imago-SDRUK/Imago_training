@@ -37,7 +37,8 @@ In this notebook we compare the 2024 and 2025 SPF products to investigate how su
 
 ## Installing Libraries
 
-
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Geospatial Datascience libraries
 import geopandas as gpd
@@ -47,6 +48,7 @@ import numpy as np
 from matplotlib.colors import TwoSlopeNorm
 import matplotlib.pyplot as plt
 ```
+:::
 
 ## Loading the Datasets
 
@@ -54,6 +56,8 @@ Each dataset contains annual SPF estimates for every LSOA in the United Kingdom.
 
 Although several variables are included, this notebook focuses on the `cloudprob_corrected_mean` variable, which contains the annual average SPF.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf_24 = gpd.read_file("../data/SPF_LSOA_level_2024.gpkg")
 
@@ -62,14 +66,18 @@ spf_25 = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
 print(f"SPF 2024: {spf_24.head()}")
 print(f"\nSPF 2025: {spf_25.head()}")
 ```
+:::
 
 ### Understanding the Dataset
 
 Before comparing the two years, it is useful to understand the variables provided by the SPF product.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf_25.columns
 ```
+:::
 
 The principal variables used throughout this notebook are:
 
@@ -84,6 +92,8 @@ For this notebook we only require the annual SPF values.
 
 To have an idea of how SPF looks, it is best if we plot the map of it. For this we will plot `spf_25` as it is the data we are looking at comparing to 2024.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -98,6 +108,7 @@ ax.set_axis_off()
 fig.suptitle("Sun Probability Framework 2025", fontweight="bold")
 fig.show()
 ```
+:::
 
 ::: callout-note
 The spatial pattern broadly reflects the well known climate change across the United Kingdom. Higher SPF values are generally observed in southern and eastern Britain, where cloud cover tends to be lower, while western Scotland, The North of Ireland and parts of western Wales exhibit lower SPF values associated with more persistent cloud cover. This provides useful context before examining how conditions changed between 2024 and 2025.
@@ -107,6 +118,8 @@ The spatial pattern broadly reflects the well known climate change across the Un
 
 To compare the two years, we first rename the SPF variable before joining both datasets using their common LSOA identifier.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf_24 = spf_24.rename(columns={"cloudprob_corrected_mean": "spf_2024"})
 
@@ -124,6 +137,7 @@ spf = spf_24.merge(
 
 spf.head()
 ```
+:::
 
 ## Calculating Annual Change
 
@@ -131,16 +145,21 @@ The difference between the two years provides a simple measure of how sunlight c
 
 Positive values indicate higher SPF values in 2025, while negative values indicate lower SPF values.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf["change"] = spf["spf_2025"] - spf["spf_2024"]
 
 spf["percent_change"] = 100 * spf["change"] / spf["spf_2024"]
 ```
+:::
 
 ## Summary Statistics
 
 Before exploring the spatial patterns, it is useful to summarise the overall national changes.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 print("Average SPF 2024:", spf["spf_2024"].mean())
 print("Average SPF 2025:", spf["spf_2025"].mean())
@@ -151,6 +170,7 @@ print("Median change:", spf["change"].median())
 print("Maximum increase:", spf["change"].max())
 print("Maximum decrease:", spf["change"].min())
 ```
+:::
 
 ::: callout-note
 The average SPF declined between 2024 and 2025, indicating that overall sunlight conditions were less favourable during 2025. However, these summary statistics do not reveal whether the change occurred uniformly across the country, which is explored in the following sections.
@@ -166,6 +186,8 @@ A histogram allows us to see whether most LSOAs experienced similar changes or w
 
 Before plotting the distribution, we estimate an appropriate number of histogram bins using the Freedman–Diaconis rule. This method adapts the bin width according to both the number of observations and the variability of the data, helping to reveal the underlying distribution without choosing an arbitrary number of bins.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Freedman-Diaconis Calculations
 data = spf["change"]
@@ -182,7 +204,10 @@ spf_rainfall_bins = int(np.ceil((data.max() - data.min()) / bin_width))
 spf_rainfall_bins = round(spf_rainfall_bins, 0)
 print(f"Amount of SPF bins: {spf_rainfall_bins}")
 ```
+:::
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -200,6 +225,7 @@ plt.tight_layout()
 plt.title("Distribution of Sun Probability Framework Change United Kingdom")
 plt.show()
 ```
+:::
 
 The distribution is approximately bell shaped but is clearly centred below zero rather than around it. This indicates that most LSOAs experienced lower SPF values in 2025 than in 2024, suggesting that sunlight conditions were generally less favourable across much of the United Kingdom during 2025. Although a small number of LSOAs recorded increases in SPF, these are comparatively rare, with most areas showing decreases of between roughly 5 and 10 SPF units.
 
@@ -207,6 +233,8 @@ The distribution is approximately bell shaped but is clearly centred below zero 
 
 Mapping the changes allows us to investigate whether increases and decreases occur randomly or form larger geographical patterns.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 norm = TwoSlopeNorm(
     vmin=spf["change"].min(),
@@ -234,6 +262,7 @@ ax.axis("off")
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 ::: callout-note
 Although most of the United Kingdom experienced lower SPF values in 2025, the magnitude of change varies considerably across space. Large parts of eastern and south eastern England experienced some of the greatest decreases, while scattered areas across western Britain, Scotland and Northern Ireland experienced relatively small decreases or modest increases. Rather than occurring randomly, the changes form broad geographical patterns (such as Anglia and The Marches), suggesting that differences in regional weather systems influenced sunlight conditions during the year.
@@ -245,6 +274,8 @@ We can see the few positive changes in the centre of England, Derry, and Fermana
 
 We can identify the LSOAs experiencing the greatest increases and decreases in SPF, allowing us to see specifically which LSOAs are changing the most.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 top = spf.sort_values(
     "change",
@@ -260,7 +291,10 @@ top[
     ]
 ].head(20)
 ```
+:::
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 bottom = spf.sort_values("change")
 
@@ -273,6 +307,7 @@ bottom[
     ]
 ].head(20)
 ```
+:::
 
 While national maps reveal broad geographical patterns, ranking individual LSOAs allows us to identify the locations that experienced the largest changes between years. These areas may warrant further investigation to understand the local conditions contributing to unusually large increases or decreases in SPF.
 
@@ -280,6 +315,8 @@ While national maps reveal broad geographical patterns, ranking individual LSOAs
 
 The mean annual change provides a useful national summary, but it does not indicate how widespread the observed changes were. It is therefore helpful to determine how many LSOAs experienced increases and decreases in SPF between 2024 and 2025.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 increase = (spf["change"] > 0).sum()
 decrease = (spf["change"] < 0).sum()
@@ -291,6 +328,7 @@ print(f"Increased SPF: {increase:,} ({100*increase/total:.1f}%)")
 print(f"Decreased SPF: {decrease:,} ({100*decrease/total:.1f}%)")
 print(f"No change: {unchanged:,} ({100*unchanged/total:.1f}%)")
 ```
+:::
 
 ::: callout-note
 Almost every LSOA recorded a reduction in SPF between 2024 and 2025, demonstrating that the decline was not driven by a handful of extreme locations but represented a widespread national pattern. While the magnitude of change varied spatially, the overall picture is one of generally cloudier conditions during 2025.
