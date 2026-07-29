@@ -6,6 +6,7 @@ jupyter: python3
 # {#sec-spf1 .unnumbered}
 
 **Data**:
+
 - SPF_LSOA_level_2024.gpkq
 - SPF_LSOA_level_2025.gpkq
 
