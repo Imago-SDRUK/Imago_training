@@ -75,7 +75,7 @@ Although the Imago datasets are much smaller than the original national datasets
 ::: {.panel-tabset group="language"}
 ### Python
 ```{python}
-regions = gpd.read_file("../data/Regions_Dec_2020_EN_BGC_2022_-724820876220737106.gpkg")
+regions = gpd.read_file("data/Regions_Dec_2020_EN_BGC_2022_-724820876220737106.gpkg")
 
 regions.head()
 ```
@@ -114,19 +114,19 @@ GeoPandas allows us to read only the features intersecting our study area by sup
 ```{python}
 # Imago precipitation product
 precip = gpd.read_file(
-    "../data/precipitation_indicators_MSOA_2021.gpkg",
+    "data/precipitation_indicators_MSOA_2021.gpkg",
     mask=study_area,
 )
 
 # Environment Agency Flood Zones
 flood = gpd.read_file(
-    "../data/flood_indicators_MSOA_2021.gpkg",
+    "data/flood_indicators_MSOA_2021.gpkg",
     mask=study_area,
 )
 
 # Census population
 population = pd.read_excel(
-    "../data/nomis_2026_07_06_155344.xlsx",
+    "data/nomis_2026_07_06_155344.xlsx",
     skiprows=8,
     names=["area", "population"],
 )
