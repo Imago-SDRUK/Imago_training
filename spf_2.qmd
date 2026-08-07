@@ -1,5 +1,5 @@
 ---
-title: Sun Probability Framework - SPF & Mental Health
+title: "Sun Probability Framework - Exploring the Relationship Between SPF and Mental Health"
 jupyter: python3
 ---
 
@@ -62,7 +62,7 @@ display(samhi.head())
 
 The SPF dataset contains annual average SPF values for every LSOA.
 
-The SAMHI dataset contains annual estimates of mental health outcomes between 2011 and 2022.
+The Small Area Mental Health Index (SAMHI) is a composite measure of population mental health. It combines several indicators of mental health need, including hospital admissions, antidepressant prescribing, primary care records and benefit claims relating to mental health, into a single annual index for every LSOA in England.
 
 For this notebook we use the most recent year (2022).
 
@@ -209,7 +209,7 @@ print(f"P-value: {p:.2e}")
 
 The Pearson correlation coefficient measures the strength of the linear relationship between SPF and the SAMHI Index.
 
-We can clearly see that the correlation is a moderately weak positive correlation of *0.270*, meaning LSOAs with higher measured cloud cover (higher SPF) also tend to have higher SAMHI scores, indicating greater estimated mental health need. This does seem to line up correctly with our initial thought with sunlight and mental health, although it is important to remember that this correlation does not mean that lack of sunlight directly causes worse mental health.
+We can clearly see that the correlation is a moderately weak positive correlation of *0.270*, meaning LSOAs with higher measured cloud cover (higher SPF) also tend to have higher SAMHI scores, indicating greater estimated mental health need. This is consistent with the idea that communities experiencing less sunlight may also exhibit greater estimated mental health need.
 
 While the P-value does show this is definitively significant, this is because the dataset contains more than thirty thousand LSOAs, even weak relationships may be statistically significant. The magnitude of the coefficient is therefore more informative than the p-value alone.
 
