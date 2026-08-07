@@ -7,7 +7,7 @@ jupyter: python3
 
 **Data**:
 
-- SPF_LSOA_level_2025.gpkg
+- [Sun Probability Framework 2025](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2025-version-2-0)
 - [Small Area Mental Health Index (SAMHI) 2022](https://pldr.org/dataset/small-area-mental-health-index-samhi-2noyv)
 
 **Goal**: Investigate whether Sun Probability Framework (SPF) values differ across communities with different levels of mental health in England.

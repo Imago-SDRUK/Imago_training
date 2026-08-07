@@ -7,8 +7,8 @@ jupyter: python3
 
 **Data**:
 
-- SPF_LSOA_level_2024.gpkq
-- SPF_LSOA_level_2025.gpkq
+- [Sun Probability Framework 2024](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2024-version-2-0)
+- [Sun Probability Framework 2025](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2025-version-2-0)
 
 **Goal**: Compare the 2024 and 2025 Sun Probability Framework (SPF) products to identify how sunlight conditions changed across the UK.
 
