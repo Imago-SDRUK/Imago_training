@@ -35,6 +35,8 @@ By combining the SPF product with SAMHI we can investigate whether communities e
 
 ## Installing Libraries
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Geospatial libraries
 import geopandas as gpd
@@ -46,22 +48,29 @@ import matplotlib.pyplot as plt
 # Correlation
 from scipy.stats import pearsonr
 ```
+:::
 
 ## Loading the datasets
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
 
 samhi = pd.read_csv("../data/samhi.csv")
 ```
+:::
 
 ### Understanding the datasets
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 display(spf.head())
 
 display(samhi.head())
 ```
+:::
 
 The SPF dataset contains annual average SPF values for every LSOA.
 
@@ -71,6 +80,8 @@ For this notebook we use the most recent year (2022).
 
 ### Preparing SAMHI
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 samhi = samhi[
     [
@@ -86,9 +97,12 @@ samhi = samhi[
     }
 )
 ```
+:::
 
 ### Merge SPF and SAMHI datasets
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf = spf.merge(
     samhi,
@@ -98,6 +112,7 @@ spf = spf.merge(
 
 spf.head()
 ```
+:::
 
 ## Understanding SAMHI
 
@@ -113,6 +128,8 @@ The deciles divide England into ten equally sized groups:
 
 To get a better idea of the SAMHI data, and its spatial layout, we plot it as a map.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -127,11 +144,14 @@ ax.axis("off")
 
 ax.set_title("Small Area Mental Health Index Deciles")
 ```
+:::
 
 Mental health also varies spatially across England, although the pattern is considerably more fragmented than the SPF product.
 
 ## Average SPF by mental health decile
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 summary = spf.groupby("samhi_decile").agg(
     Mean_SPF=("cloudprob_corrected_mean", "mean"),
@@ -141,6 +161,8 @@ summary = spf.groupby("samhi_decile").agg(
 
 summary
 ```
+:::
+
 ::: callout-note
 The summary table suggests a clear trend. Average SPF increases steadily across the SAMHI deciles, indicating that communities with progressively poorer mental health outcomes also tend to experience higher average SPF values.
 
@@ -149,6 +171,8 @@ However, summary tables alone cannot determine whether this represents a consist
 
 ## Mean SPF by Mental Health Decile
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -168,6 +192,7 @@ plt.tight_layout()
 
 plt.show()
 ```
+:::
 
 The increase in average SPF is remarkably consistent across the ten SAMHI groups. On average, LSOAs within the worst mental health decile experience approximately four SPF units more than those within the best mental health decile.
 
@@ -175,6 +200,8 @@ This pattern suggests a positive association between SPF and the Small Area Ment
 
 ## Scatterplot
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(7, 6))
 
@@ -193,6 +220,7 @@ plt.tight_layout()
 
 plt.show()
 ```
+:::
 
 The scatter plot demonstrates that the relationship between SPF and SAMHI is positive but relatively weak. While LSOAs with higher SPF values tend to have higher SAMHI scores on average, there remains considerable variation, indicating that sunlight conditions may explain only a small proportion of the overall variation in mental health need.
 
@@ -200,6 +228,8 @@ To more concretely understand it, we should actually calculate the correlation a
 
 ### Correlation
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 r, p = pearsonr(
     spf["samhi_index"],
@@ -210,9 +240,10 @@ print(f"Correlation coefficient: {r:.3f}")
 
 print(f"P-value: {p:.2e}")
 ```
+:::
 
 ::: callout-note
-**Result**
+## Result
 
 The Pearson correlation coefficient measures the strength of the linear relationship between SPF and the SAMHI Index.
 
@@ -225,6 +256,8 @@ While the P-value does show this is definitively significant, this is because th
 
 To make the relationship easier to interpret, we divide England into five equally sized groups according to SPF. This allows us to compare the average mental health index between areas experiencing relatively low and relatively high sunlight conditions.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf["spf_quintile"] = pd.qcut(
     spf["cloudprob_corrected_mean"],
@@ -240,7 +273,10 @@ summary = spf.groupby("spf_quintile").agg(
 
 summary
 ```
+:::
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 5))
 
@@ -251,6 +287,7 @@ ax.set_xlabel("SPF Quintile")
 
 plt.tight_layout()
 ```
+:::
 
 The difference between groups is clearer than might be expected from the correlation coefficient alone. Average SAMHI values generally increase as SPF increases, with the highest SPF quintile recording the highest average mental health need. The increase is not perfectly linear, but the overall pattern remains positive, supporting the earlier statistical analysis.
 
@@ -258,6 +295,8 @@ The difference between groups is clearer than might be expected from the correla
 
 To see the spatial pattern of these quintiles (and thus SAMHI splits), a map will allow us to quickly see the patterns.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf["spf_quintile"] = pd.qcut(
     spf["cloudprob_corrected_mean"],
@@ -273,6 +312,7 @@ ax.set_title("Sun Probability Framework Quintiles", fontweight="bold")
 
 ax.axis("off")
 ```
+:::
 
 ::: callout-note
 The spatial distribution of SPF quintiles highlights that sunlight conditions are far from uniform across England. The highest SPF quintiles (representing areas with the greatest cloud probability) are concentrated across much of northern and western England, while the lowest SPF quintiles occur predominantly in the east and south east, where cloud probability is generally lower.
