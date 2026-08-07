@@ -3,6 +3,7 @@ title: "Sun Probability Framework - Exploring the Relationship Between SPF and M
 jupyter: python3
 ---
 
+# {#sec-spf2 .unnumbered}
 
 **Data**:
 
@@ -11,6 +12,7 @@ jupyter: python3
 
 **Goal**: Investigate whether Sun Probability Framework (SPF) values differ across communities with different levels of mental health in England.
 
+::: callout-note
 ## Installing the data
 
 Download the 2025 SPF dataset from the Imago Data Service.
@@ -18,6 +20,7 @@ Download the 2025 SPF dataset from the Imago Data Service.
 Download the Small Area Mental Health Index (SAMHI) dataset from the Office for Health Improvement and Disparities.
 
 Place both datasets inside the data/ directory. Rename the SAMHI dataset to `samhi.csv` for easier coding.
+:::
 
 # Why?
 
@@ -138,10 +141,11 @@ summary = spf.groupby("samhi_decile").agg(
 
 summary
 ```
-
+::: callout-note
 The summary table suggests a clear trend. Average SPF increases steadily across the SAMHI deciles, indicating that communities with progressively poorer mental health outcomes also tend to experience higher average SPF values.
 
 However, summary tables alone cannot determine whether this represents a consistent relationship across England.
+:::
 
 ## Mean SPF by Mental Health Decile
 
@@ -207,11 +211,15 @@ print(f"Correlation coefficient: {r:.3f}")
 print(f"P-value: {p:.2e}")
 ```
 
+::: callout-note
+**Result**
+
 The Pearson correlation coefficient measures the strength of the linear relationship between SPF and the SAMHI Index.
 
 We can clearly see that the correlation is a moderately weak positive correlation of *0.270*, meaning LSOAs with higher measured cloud cover (higher SPF) also tend to have higher SAMHI scores, indicating greater estimated mental health need. This is consistent with the idea that communities experiencing less sunlight may also exhibit greater estimated mental health need.
 
 While the P-value does show this is definitively significant, this is because the dataset contains more than thirty thousand LSOAs, even weak relationships may be statistically significant. The magnitude of the coefficient is therefore more informative than the p-value alone.
+:::
 
 ## Looking at SPF Groups
 
@@ -266,9 +274,11 @@ ax.set_title("Sun Probability Framework Quintiles", fontweight="bold")
 ax.axis("off")
 ```
 
+::: callout-note
 The spatial distribution of SPF quintiles highlights that sunlight conditions are far from uniform across England. The highest SPF quintiles (representing areas with the greatest cloud probability) are concentrated across much of northern and western England, while the lowest SPF quintiles occur predominantly in the east and south east, where cloud probability is generally lower.
 
 Comparing this spatial pattern with the earlier analysis helps explain the relationship observed between SPF and SAMHI. Communities located within the cloudier regions of England generally exhibited higher average SAMHI scores, whereas areas experiencing lower cloud probability tended to have lower estimated mental health need. Although this does not demonstrate a causal relationship, it suggests that broad environmental conditions may align with measurable differences in population mental health.
+:::
 
 # What have we learnt?
 
