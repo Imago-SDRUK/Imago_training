@@ -53,4 +53,5 @@ data/UK_MSOA_IZB_SDZ/__MACOSX/
 # Keep intentionally tracked data files
 !data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg
 !data/temperature_indicators_MSOA_2023.csv
+!data/samhi.csv
 .Rprofile
