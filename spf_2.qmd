@@ -1,0 +1,287 @@
+---
+title: Sun Probability Framework - SPF & Mental Health
+jupyter: python3
+---
+
+
+**Data**:
+
+- SPF_LSOA_level_2025.gpkg
+- [Small Area Mental Health Index (SAMHI) 2022](https://pldr.org/dataset/small-area-mental-health-index-samhi-2noyv)
+
+**Goal**: Investigate whether Sun Probability Framework (SPF) values differ across communities with different levels of mental health in England.
+
+## Installing the data
+
+Download the 2025 SPF dataset from the Imago Data Service.
+
+Download the Small Area Mental Health Index (SAMHI) dataset from the Office for Health Improvement and Disparities.
+
+Place both datasets inside the data/ directory. Rename the SAMHI dataset to `samhi.csv` for easier coding.
+
+# Why?
+
+Environmental conditions are often examined alongside social outcomes to investigate whether particular communities experience different environmental exposures.
+
+One factor frequently discussed is sunlight. Previous research has explored whether sunlight exposure is associated with mental wellbeing, although many other factors also influence mental health.
+
+The Small Area Mental Health Index (SAMHI) provides a measure of mental health outcomes for every LSOA in England.
+
+By combining the SPF product with SAMHI we can investigate whether communities experiencing poorer mental health also tend to experience systematically different sunlight conditions.
+
+
+## Installing Libraries
+
+```{python}
+# Geospatial libraries
+import geopandas as gpd
+import pandas as pd
+
+# Plotting
+import matplotlib.pyplot as plt
+
+# Correlation
+from scipy.stats import pearsonr
+```
+
+## Loading the datasets
+
+```{python}
+spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
+
+samhi = pd.read_csv("../data/samhi.csv")
+```
+
+### Understanding the datasets
+
+```{python}
+display(spf.head())
+
+display(samhi.head())
+```
+
+The SPF dataset contains annual average SPF values for every LSOA.
+
+The SAMHI dataset contains annual estimates of mental health outcomes between 2011 and 2022.
+
+For this notebook we use the most recent year (2022).
+
+### Preparing SAMHI
+
+```{python}
+samhi = samhi[
+    [
+        "lsoa11",
+        "samhi_index.2022",
+        "samhi_dec.2022",
+    ]
+].rename(
+    columns={
+        "lsoa11": "data_zone_code",
+        "samhi_index.2022": "samhi_index",
+        "samhi_dec.2022": "samhi_decile",
+    }
+)
+```
+
+### Merge SPF and SAMHI datasets
+
+```{python}
+spf = spf.merge(
+    samhi,
+    on="data_zone_code",
+    how="inner",
+)
+
+spf.head()
+```
+
+## Understanding SAMHI
+
+The Small Area Mental Health Index is a composite measure.
+
+- Negative values correspond to better mental health outcomes (lower mental health need/distress than the national average).
+- Positive values correspond to poorer mental health outcomes (higher mental health need/distress than the national average).
+
+The deciles divide England into ten equally sized groups:
+
+- Decile 1 = best mental health
+- Decile 10 = worst mental health
+
+To get a better idea of the SAMHI data, and its spatial layout, we plot it as a map.
+
+```{python}
+fig, ax = plt.subplots(figsize=(10, 10))
+
+spf.plot(
+    column="samhi_decile",
+    cmap="RdYlGn_r",
+    legend=True,
+    ax=ax,
+)
+
+ax.axis("off")
+
+ax.set_title("Small Area Mental Health Index Deciles")
+```
+
+Mental health also varies spatially across England, although the pattern is considerably more fragmented than the SPF product.
+
+## Average SPF by mental health decile
+
+```{python}
+summary = spf.groupby("samhi_decile").agg(
+    Mean_SPF=("cloudprob_corrected_mean", "mean"),
+    Median_SPF=("cloudprob_corrected_mean", "median"),
+    Count=("data_zone_code", "count"),
+)
+
+summary
+```
+
+The summary table suggests a clear trend. Average SPF increases steadily across the SAMHI deciles, indicating that communities with progressively poorer mental health outcomes also tend to experience higher average SPF values.
+
+However, summary tables alone cannot determine whether this represents a consistent relationship across England.
+
+## Mean SPF by Mental Health Decile
+
+```{python}
+fig, ax = plt.subplots(figsize=(8, 5))
+
+ax.plot(
+    summary.index,
+    summary["Mean_SPF"],
+    color="darkslategrey",
+    marker="o",
+    linewidth=2,
+)
+
+ax.set_xlabel("SAMHI Decile")
+
+ax.set_ylabel("Mean SPF")
+
+plt.tight_layout()
+
+plt.show()
+```
+
+The increase in average SPF is remarkably consistent across the ten SAMHI groups. On average, LSOAs within the worst mental health decile experience approximately four SPF units more than those within the best mental health decile.
+
+This pattern suggests a positive association between SPF and the Small Area Mental Health Index, although further analysis is required before drawing broader conclusions.
+
+## Scatterplot
+
+```{python}
+fig, ax = plt.subplots(figsize=(7, 6))
+
+ax.scatter(
+    spf["samhi_index"],
+    spf["cloudprob_corrected_mean"],
+    s=3,
+    alpha=0.15,
+)
+
+ax.set_xlabel("SAMHI Index")
+
+ax.set_ylabel("Mean SPF")
+
+plt.tight_layout()
+
+plt.show()
+```
+
+The scatter plot demonstrates that the relationship between SPF and SAMHI is positive but relatively weak. While LSOAs with higher SPF values tend to have higher SAMHI scores on average, there remains considerable variation, indicating that sunlight conditions may explain only a small proportion of the overall variation in mental health need.
+
+To more concretely understand it, we should actually calculate the correlation and significance of SAMHI And SPF.
+
+### Correlation
+
+```{python}
+r, p = pearsonr(
+    spf["samhi_index"],
+    spf["cloudprob_corrected_mean"],
+)
+
+print(f"Correlation coefficient: {r:.3f}")
+
+print(f"P-value: {p:.2e}")
+```
+
+The Pearson correlation coefficient measures the strength of the linear relationship between SPF and the SAMHI Index.
+
+We can clearly see that the correlation is a moderately weak positive correlation of *0.270*, meaning LSOAs with higher measured cloud cover (higher SPF) also tend to have higher SAMHI scores, indicating greater estimated mental health need. This does seem to line up correctly with our initial thought with sunlight and mental health, although it is important to remember that this correlation does not mean that lack of sunlight directly causes worse mental health.
+
+While the P-value does show this is definitively significant, this is because the dataset contains more than thirty thousand LSOAs, even weak relationships may be statistically significant. The magnitude of the coefficient is therefore more informative than the p-value alone.
+
+## Looking at SPF Groups
+
+To make the relationship easier to interpret, we divide England into five equally sized groups according to SPF. This allows us to compare the average mental health index between areas experiencing relatively low and relatively high sunlight conditions.
+
+```{python}
+spf["spf_quintile"] = pd.qcut(
+    spf["cloudprob_corrected_mean"],
+    5,
+    labels=["Lowest SPF", "Low", "Medium", "High", "Highest SPF"],
+)
+
+summary = spf.groupby("spf_quintile").agg(
+    Mean_SAMHI=("samhi_index", "mean"),
+    Median_SAMHI=("samhi_index", "median"),
+    Count=("samhi_index", "count"),
+)
+
+summary
+```
+
+```{python}
+fig, ax = plt.subplots(figsize=(8, 5))
+
+summary["Mean_SAMHI"].plot.bar(ax=ax)
+
+ax.set_ylabel("Mean SAMHI")
+ax.set_xlabel("SPF Quintile")
+
+plt.tight_layout()
+```
+
+The difference between groups is clearer than might be expected from the correlation coefficient alone. Average SAMHI values generally increase as SPF increases, with the highest SPF quintile recording the highest average mental health need. The increase is not perfectly linear, but the overall pattern remains positive, supporting the earlier statistical analysis.
+
+## Mapping the Groups
+
+To see the spatial pattern of these quintiles (and thus SAMHI splits), a map will allow us to quickly see the patterns.
+
+```{python}
+spf["spf_quintile"] = pd.qcut(
+    spf["cloudprob_corrected_mean"],
+    q=5,
+    labels=["Lowest SPF", "Low", "Medium", "High", "Highest SPF"],
+)
+
+fig, ax = plt.subplots(figsize=(10, 10))
+
+spf.plot(column="spf_quintile", categorical=True, legend=True, cmap="YlOrBr", ax=ax)
+
+ax.set_title("Sun Probability Framework Quintiles", fontweight="bold")
+
+ax.axis("off")
+```
+
+The spatial distribution of SPF quintiles highlights that sunlight conditions are far from uniform across England. The highest SPF quintiles (representing areas with the greatest cloud probability) are concentrated across much of northern and western England, while the lowest SPF quintiles occur predominantly in the east and south east, where cloud probability is generally lower.
+
+Comparing this spatial pattern with the earlier analysis helps explain the relationship observed between SPF and SAMHI. Communities located within the cloudier regions of England generally exhibited higher average SAMHI scores, whereas areas experiencing lower cloud probability tended to have lower estimated mental health need. Although this does not demonstrate a causal relationship, it suggests that broad environmental conditions may align with measurable differences in population mental health.
+
+# What have we learnt?
+
+In this notebook we have:
+
+- Loaded the 2025 Sun Probability Framework dataset together with the Small Area Mental Health Index.
+- Joined both datasets using their common LSOA identifiers.
+- Explored the national distributions of both variables through maps.
+- Investigated the relationship between SPF and SAMHI using summary statistics, correlation analysis and scatter plots.
+- Compared average SAMHI values across SPF quintiles.
+- Examined the spatial distribution of sunlight conditions across England.
+
+Overall, the analysis identified a moderate positive relationship between SPF and SAMHI. Areas with higher SPF values, which represent greater cloud probability and therefore lower levels of sunshine reaching the ground, generally exhibited higher estimated levels of mental health need.
+
+It is important to emphasise that this relationship is associational rather than causal. Mental health is influenced by a wide range of social, economic, demographic and environmental factors, and this notebook does not attempt to isolate the effect of sunlight alone. Nevertheless, the results demonstrate how environmental datasets such as the Sun Probability Framework can be combined with health indicators to explore spatial patterns and generate hypotheses for further investigation.
+

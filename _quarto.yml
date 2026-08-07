@@ -54,6 +54,7 @@ website:
             contents:
               - spf.qmd
               - spf_1.qmd
+              - spf_2.qmd
       - section: "Reference"
         contents:
           - packages.qmd
