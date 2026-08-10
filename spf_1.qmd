@@ -60,9 +60,9 @@ Although several variables are included, this notebook focuses on the `cloudprob
 ::: {.panel-tabset group="language"}
 ### Python
 ```{python}
-spf_24 = gpd.read_file("../data/SPF_LSOA_level_2024.gpkg")
+spf_24 = gpd.read_file("data/SPF_LSOA_level_2024.gpkg")
 
-spf_25 = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
+spf_25 = gpd.read_file("data/SPF_LSOA_level_2025.gpkg")
 
 print(f"SPF 2024: {spf_24.head()}")
 print(f"\nSPF 2025: {spf_25.head()}")

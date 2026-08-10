@@ -55,9 +55,9 @@ from scipy.stats import pearsonr
 ::: {.panel-tabset group="language"}
 ### Python
 ```{python}
-spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
+spf = gpd.read_file("data/SPF_LSOA_level_2025.gpkg")
 
-samhi = pd.read_csv("../data/samhi.csv")
+samhi = pd.read_csv("data/samhi.csv")
 ```
 :::
 
