@@ -1,337 +1,479 @@
 ---
-title: "Sun Probability Framework - Exploring the Relationship Between SPF and Mental Health"
+title: Sun Probability Framework - SPF & General Health
 jupyter: python3
 ---
 
-# {#sec-spf2 .unnumbered}
 
 **Data**:
 
 - [Sun Probability Framework 2025](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2025-version-2-0)
-- [Small Area Mental Health Index (SAMHI) 2022](https://pldr.org/dataset/small-area-mental-health-index-samhi-2noyv)
+- [Census 2021 General Health, LSOA level](https://www.nomisweb.co.uk/default.asp)
 
-**Goal**: Investigate whether Sun Probability Framework (SPF) values differ across communities with different levels of mental health in England.
+**Goal**: Investigate how Sun Probability Framework (SPF) values vary across communities with different levels of self reported general health in England.
 
-::: callout-note
 ## Installing the data
 
 Download the 2025 SPF dataset from the Imago Data Service.
 
-Download the Small Area Mental Health Index (SAMHI) dataset from the Office for Health Improvement and Disparities.
+Download the Census 2021 General Health data at LSOA level. Select all columns, LSOA, values, and area codes.
 
-Place both datasets inside the data/ directory. Rename the SAMHI dataset to `samhi.csv` for easier coding.
-:::
+Place both files inside the `/data` directory. Rename the census csv to `generalhealth.csv`. 
+
+The SPF dataset provides annual estimates of the Sunlight Probability Factor for each LSOA. The Census dataset provides counts of residents reporting different levels of general health in the 2021 Census.
 
 # Why?
 
-Environmental conditions are often examined alongside social outcomes to investigate whether particular communities experience different environmental exposures.
+Environmental conditions are not necessarily experienced equally across society.
 
-One factor frequently discussed is sunlight. Previous research has explored whether sunlight exposure is associated with mental wellbeing, although many other factors also influence mental health.
+Researchers are often interested in whether environmental characteristics vary systematically with characteristics of the populations living in different areas. Comparing SPF with Census measures of general health allows us to investigate whether communities with different levels of self reported health tend to experience different sunlight conditions.
 
-The Small Area Mental Health Index (SAMHI) provides a measure of mental health outcomes for every LSOA in England.
+This analysis does not attempt to establish that sunlight conditions cause differences in health. Instead, it investigates whether a spatial association exists between the two variables and considers possible explanations and limitations.
 
-By combining the SPF product with SAMHI we can investigate whether communities experiencing poorer mental health also tend to experience systematically different sunlight conditions.
+The Census measure of general health is based on how residents assessed their own health, ranging from very good to very bad.
 
 
 ## Installing Libraries
 
-::: {.panel-tabset group="language"}
-### Python
 ```{python}
-# Geospatial libraries
 import geopandas as gpd
-import pandas as pd
-
-# Plotting
 import matplotlib.pyplot as plt
-
-# Correlation
+import pandas as pd
+from IPython.display import display
 from scipy.stats import pearsonr
 ```
-:::
 
 ## Loading the datasets
 
-::: {.panel-tabset group="language"}
-### Python
 ```{python}
-spf = gpd.read_file("data/SPF_LSOA_level_2025.gpkg")
+spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
 
-samhi = pd.read_csv("data/samhi.csv")
+health = pd.read_csv(
+    "../data/generalhealth.csv", skiprows=6, skipfooter=6, engine="python"
+)
 ```
-:::
 
 ### Understanding the datasets
 
-::: {.panel-tabset group="language"}
-### Python
 ```{python}
 display(spf.head())
 
-display(samhi.head())
+display(health.head())
 ```
-:::
 
 The SPF dataset contains annual average SPF values for every LSOA.
 
-The Small Area Mental Health Index (SAMHI) is a composite measure of population mental health. It combines several indicators of mental health need, including hospital admissions, antidepressant prescribing, primary care records and benefit claims relating to mental health, into a single annual index for every LSOA in England.
+The Census health categories are:
 
-For this notebook we use the most recent year (2022).
+- Very good health  
+- Good health  
+- Fair health  
+- Bad health  
+- Very bad health  
 
-### Preparing SAMHI
+The Census data provides counts rather than percentages. This allows us to calculate the proportions ourselves.
 
-::: {.panel-tabset group="language"}
-### Python
+### Preparing Census Data 
+
 ```{python}
-samhi = samhi[
-    [
-        "lsoa11",
-        "samhi_index.2022",
-        "samhi_dec.2022",
-    ]
-].rename(
+health = health.rename(
     columns={
-        "lsoa11": "data_zone_code",
-        "samhi_index.2022": "samhi_index",
-        "samhi_dec.2022": "samhi_decile",
+        "2021 super output area - lower layer": "lsoa_name",
+        "mnemonic": "data_zone_code",
+        "Total: All usual residents": "total",
+        "Very good health": "very_good",
+        "Good health": "good",
+        "Fair health": "fair",
+        "Bad health": "bad",
+        "Very bad health": "very_bad",
     }
 )
+health.columns
 ```
-:::
 
-### Merge SPF and SAMHI datasets
+## Creating health measures
 
-::: {.panel-tabset group="language"}
-### Python
+Counts are difficult to compare directly because LSOAs contain different numbers of people. Instead, we convert the counts into percentages.
+
+### Good health
+
 ```{python}
-spf = spf.merge(
-    samhi,
+health["good_health_percent"] = (
+    100 * (health["very_good"] + health["good"]) / health["total"]
+)
+```
+
+### Poor health
+
+We will use the inverse of Good health so bad + very bad health as our principal measure.
+
+```{python}
+health["poor_health_percent"] = (
+    100 * (health["bad"] + health["very_bad"]) / health["total"]
+)
+```
+
+### Fair health
+
+Finally we calculate the percentage of fair health.
+
+```{python}
+health["fair_health_percent"] = 100 * health["fair"] / health["total"]
+```
+
+We can inspect the resulting variables:
+
+```{python}
+display(
+    health[
+        [
+            "data_zone_code",
+            "good_health_percent",
+            "fair_health_percent",
+            "poor_health_percent",
+        ]
+    ].head()
+)
+```
+
+We should check the first couple to ensure that they sum to 100%, as small differences would suggest missing data or rounding errors.
+
+```{python}
+health[
+    [
+        "good_health_percent",
+        "fair_health_percent",
+        "poor_health_percent",
+    ]
+].sum(
+    axis=1
+).head(10)
+```
+
+## Merging the datasets
+
+The SPF dataset uses the 2021 LSOA code as data_zone_code.
+
+We therefore merge the health data using the same identifier.
+
+```{python}
+health = health[
+    [
+        "data_zone_code",
+        "good_health_percent",
+        "fair_health_percent",
+        "poor_health_percent",
+    ]
+]
+
+combined = spf.merge(
+    health,
     on="data_zone_code",
     how="inner",
 )
 
-spf.head()
+print(f"SPF LSOAs: {len(combined)}")
+combined.head()
 ```
-:::
 
-## Understanding SAMHI
+## Maps of the Data
 
-The Small Area Mental Health Index is a composite measure.
+Before investigating relationships between the variables, it is useful to visualise them independently.
 
-- Negative values correspond to better mental health outcomes (lower mental health need/distress than the national average).
-- Positive values correspond to poorer mental health outcomes (higher mental health need/distress than the national average).
+This allows us to understand their spatial distributions before comparing them.
 
-The deciles divide England into ten equally sized groups:
+### SPF Map
 
-- Decile 1 = best mental health
-- Decile 10 = worst mental health
-
-To get a better idea of the SAMHI data, and its spatial layout, we plot it as a map.
-
-::: {.panel-tabset group="language"}
-### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
-spf.plot(
-    column="samhi_decile",
-    cmap="RdYlGn_r",
+combined.plot(
+    column="cloudprob_corrected_mean",
+    cmap="YlOrBr",
     legend=True,
     ax=ax,
 )
 
 ax.axis("off")
 
-ax.set_title("Small Area Mental Health Index Deciles")
-```
-:::
-
-Mental health also varies spatially across England, although the pattern is considerably more fragmented than the SPF product.
-
-## Average SPF by mental health decile
-
-::: {.panel-tabset group="language"}
-### Python
-```{python}
-summary = spf.groupby("samhi_decile").agg(
-    Mean_SPF=("cloudprob_corrected_mean", "mean"),
-    Median_SPF=("cloudprob_corrected_mean", "median"),
-    Count=("data_zone_code", "count"),
+ax.set_title(
+    "Mean Sunlight Probability Factor (2025)",
+    fontweight="bold",
 )
-
-summary
-```
-:::
-
-::: callout-note
-The summary table suggests a clear trend. Average SPF increases steadily across the SAMHI deciles, indicating that communities with progressively poorer mental health outcomes also tend to experience higher average SPF values.
-
-However, summary tables alone cannot determine whether this represents a consistent relationship across England.
-:::
-
-## Mean SPF by Mental Health Decile
-
-::: {.panel-tabset group="language"}
-### Python
-```{python}
-fig, ax = plt.subplots(figsize=(8, 5))
-
-ax.plot(
-    summary.index,
-    summary["Mean_SPF"],
-    color="darkslategrey",
-    marker="o",
-    linewidth=2,
-)
-
-ax.set_xlabel("SAMHI Decile")
-
-ax.set_ylabel("Mean SPF")
 
 plt.tight_layout()
-
 plt.show()
 ```
-:::
 
-The increase in average SPF is remarkably consistent across the ten SAMHI groups. On average, LSOAs within the worst mental health decile experience approximately four SPF units more than those within the best mental health decile.
+**Interpretation**
 
-This pattern suggests a positive association between SPF and the Small Area Mental Health Index, although further analysis is required before drawing broader conclusions.
+The SPF map shows substantial spatial variation across England and Wales.
+
+Remember that SPF represents the probability of cloud cover rather than the amount of sunlight itself. This means that:
+
+- Higher SPF = greater probability of cloud cover  
+- Lower SPF = lower probability of cloud cover  
+
+Consequently, areas with lower SPF values represent areas where clearer conditions are more likely.
+
+The map provides the environmental context for the remainder of the analysis.
+
+### General Health Map
+
+We now map the proportion of residents reporting bad or very bad general health.
+
+```{python}
+fig, ax = plt.subplots(figsize=(10, 10))
+
+combined.plot(
+    column="poor_health_percent",
+    cmap="Reds",
+    legend=True,
+    ax=ax,
+)
+
+ax.axis("off")
+
+ax.set_title(
+    "Residents Reporting Bad or Very Bad Health (2021)",
+    fontweight="bold",
+)
+
+plt.tight_layout()
+plt.show()
+```
+
+**Interpretation**
+
+The map shows significant geographical variation in self reported poor health. Higher values indicate LSOAs where a greater proportion of residents reported their general health as bad or very bad.
+
+Despite this, the two maps should be considered independently. Similar looking spatial patterns, or a lack of spatial patterns, do not by themselves demonstrate a relationship or lack of one between SPF and health.
+
+## Comparing SPF Across Health Groups
+
+To investigate whether SPF varies systematically with health, we divide LSOAs into five groups according to their level of poor self reported health.
+
+Quintiles divide the LSOAs into five approximately equal sized groups.
+
+```{python}
+combined["health_quintile"] = pd.qcut(
+    combined["poor_health_percent"],
+    q=5,
+    labels=[
+        "Lowest poor health",
+        "Low",
+        "Medium",
+        "High",
+        "Highest poor health",
+    ],
+)
+```
+
+We can calculate the mean and median SPF within each group.
+
+```{python}
+health_summary = combined.groupby("health_quintile", observed=False).agg(
+    Mean_SPF=("cloudprob_corrected_mean", "mean"),
+    Median_SPF=("cloudprob_corrected_mean", "median"),
+    Count=("cloudprob_corrected_mean", "count"),
+)
+
+health_summary
+```
+
+This comparison allows us to ask a simple question:
+
+- *Do LSOAs with different levels of poor self reported health tend to have different SPF values?*
+
+With the mean SPF increasing marginally between the groups, with a total of **2** SPF difference between the least poor health and highest poor health, this suggests that areas with greater levels of reported poor health tend to experience higher probabilities of cloud cover.
+
+However, a difference between groups does not tell us why the difference exists.
+
+## Correlation
+
+The grouped comparison gives us a broad picture, but it discards some information by putting continuous health values into five groups.
+
+We can therefore examine the relationship directly using a correlation.
+
+```{python}
+correlation, p_value = pearsonr(
+    combined["poor_health_percent"],
+    combined["cloudprob_corrected_mean"],
+)
+
+print(f"Pearson correlation: {correlation:.3f}")
+print(f"P-value: {p_value:.3e}")
+```
+
+The Pearson correlation measures the strength and direction of the linear relationship between the percentage reporting bad or very bad health and SPF.
+
+The positive value of **0.164** suggests that yes, there is a correlation, however it is very weak and making up a rather small portion of the overall change. The p-value being so near zero means that this is guaranteed statistically significant.
+
+However, because the analysis contains thousands of LSOAs, even relatively small correlations can produce extremely small p-values. Statistical significance therefore does not necessarily mean that the relationship is substantively large or important.
 
 ## Scatterplot
 
-::: {.panel-tabset group="language"}
-### Python
+A scatterplot allows us to see the relationship directly, making it potentially more clear if this pattern is even visible.
+
 ```{python}
-fig, ax = plt.subplots(figsize=(7, 6))
+fig, ax = plt.subplots(figsize=(8, 6))
 
 ax.scatter(
-    spf["samhi_index"],
-    spf["cloudprob_corrected_mean"],
-    s=3,
-    alpha=0.15,
+    combined["poor_health_percent"],
+    combined["cloudprob_corrected_mean"],
+    alpha=0.25,
+    s=8,
 )
 
-ax.set_xlabel("SAMHI Index")
+ax.set_xlabel("Residents reporting bad or very bad health (%)")
 
-ax.set_ylabel("Mean SPF")
+ax.set_ylabel("Sunlight Probability Factor (SPF)")
+
+ax.set_title(
+    "SPF and Self-Reported Poor Health",
+    fontweight="bold",
+)
 
 plt.tight_layout()
-
 plt.show()
 ```
-:::
 
-The scatter plot demonstrates that the relationship between SPF and SAMHI is positive but relatively weak. While LSOAs with higher SPF values tend to have higher SAMHI scores on average, there remains considerable variation, indicating that sunlight conditions may explain only a small proportion of the overall variation in mental health need.
+The scatter plot also shows a positive relationship between the proportion of residents reporting bad or very bad health and SPF. LSOAs with higher levels of self reported poor health tend to have higher SPF values, although the relationship is relatively weak visually and there is substantial variation between individual areas.
 
-To more concretely understand it, we should actually calculate the correlation and significance of SAMHI And SPF.
+## Exploring Fair Health
 
-### Correlation
+The previous analysis focused on residents reporting bad or very bad health. However, this represents only the most severe end of the Census health categories.
 
-::: {.panel-tabset group="language"}
-### Python
+It is possible that a relationship with environmental conditions would appear earlier in the health distribution, for example through a shift from good or very good health towards fair health.
+
+Rather than analysing every Census category separately, we therefore use the proportion of residents reporting **fair health** as a secondary measure.
+
+This provides a useful check of whether the relationship observed for poor health is also present further up the health distribution.
+
 ```{python}
-r, p = pearsonr(
-    spf["samhi_index"],
-    spf["cloudprob_corrected_mean"],
+fair_correlation, fair_p_value = pearsonr(
+    combined["fair_health_percent"],
+    combined["cloudprob_corrected_mean"],
 )
 
-print(f"Correlation coefficient: {r:.3f}")
-
-print(f"P-value: {p:.2e}")
+print(f"Pearson correlation: {fair_correlation:.3f}")
+print(f"P-value: {fair_p_value:.3e}")
 ```
-:::
 
-::: callout-note
-## Result
+The correlation between the proportion reporting fair health and SPF is **0.151**, compared with **0.164** for bad or very bad health.
 
-The Pearson correlation coefficient measures the strength of the linear relationship between SPF and the SAMHI Index.
+This provides a useful comparison with the previous result. The correlation is also positive, suggesting a weak correlation that is weaker than the correlation between poor health and fair health.
 
-We can clearly see that the correlation is a moderately weak positive correlation of *0.270*, meaning LSOAs with higher measured cloud cover (higher SPF) also tend to have higher SAMHI scores, indicating greater estimated mental health need. This is consistent with the idea that communities experiencing less sunlight may also exhibit greater estimated mental health need.
+However, the strength of the relationship remains important. As with the poor-health analysis, a statistically significant correlation does not necessarily indicate a large or substantively important relationship.
 
-While the P-value does show this is definitively significant, this is because the dataset contains more than thirty thousand LSOAs, even weak relationships may be statistically significant. The magnitude of the coefficient is therefore more informative than the p-value alone.
-:::
+### Scatterplot
 
-## Looking at SPF Groups
-
-To make the relationship easier to interpret, we divide England into five equally sized groups according to SPF. This allows us to compare the average mental health index between areas experiencing relatively low and relatively high sunlight conditions.
-
-::: {.panel-tabset group="language"}
-### Python
 ```{python}
-spf["spf_quintile"] = pd.qcut(
-    spf["cloudprob_corrected_mean"],
-    5,
-    labels=["Lowest SPF", "Low", "Medium", "High", "Highest SPF"],
+fig, ax = plt.subplots(figsize=(8, 6))
+
+ax.scatter(
+    combined["fair_health_percent"],
+    combined["cloudprob_corrected_mean"],
+    alpha=0.25,
+    s=8,
 )
 
-summary = spf.groupby("spf_quintile").agg(
-    Mean_SAMHI=("samhi_index", "mean"),
-    Median_SAMHI=("samhi_index", "median"),
-    Count=("samhi_index", "count"),
+ax.set_xlabel("Residents reporting fair health (%)")
+ax.set_ylabel("Sunlight Probability Factor (SPF)")
+
+ax.set_title(
+    "SPF and Self-Reported Fair Health",
+    fontweight="bold",
 )
-
-summary
-```
-:::
-
-::: {.panel-tabset group="language"}
-### Python
-```{python}
-fig, ax = plt.subplots(figsize=(8, 5))
-
-summary["Mean_SAMHI"].plot.bar(ax=ax)
-
-ax.set_ylabel("Mean SAMHI")
-ax.set_xlabel("SPF Quintile")
 
 plt.tight_layout()
+plt.show()
 ```
-:::
 
-The difference between groups is clearer than might be expected from the correlation coefficient alone. Average SAMHI values generally increase as SPF increases, with the highest SPF quintile recording the highest average mental health need. The increase is not perfectly linear, but the overall pattern remains positive, supporting the earlier statistical analysis.
+The scatterplot provides a visual check of the correlation. As with poor health, there is substantial variation in SPF between individual LSOAs, meaning that health alone does not explain the environmental variation between communities.
 
-## Mapping the Groups
+## Exploring the Spatial Pattern
 
-To see the spatial pattern of these quintiles (and thus SAMHI splits), a map will allow us to quickly see the patterns.
+The statistical analysis suggests a weak positive relationship between SPF and self reported poor health. However, a correlation does not tell us whether this relationship is spatially concentrated or whether it is distributed relatively evenly across England.
 
-::: {.panel-tabset group="language"}
-### Python
+To explore this, we identify LSOAs that are in the highest quintile for both SPF and the proportion of residents reporting fair or poor health.
+
+This does not mean that these areas have worse health because of cloudier conditions. Instead, it highlights areas where the two characteristics occur together and allows us to consider whether any clear spatial pattern is visible.
+
 ```{python}
-spf["spf_quintile"] = pd.qcut(
-    spf["cloudprob_corrected_mean"],
+# Create quintiles for SPF, fair health and poor health
+
+combined["spf_quintile"] = pd.qcut(
+    combined["cloudprob_corrected_mean"],
     q=5,
-    labels=["Lowest SPF", "Low", "Medium", "High", "Highest SPF"],
+    labels=False,
+)
+
+combined["fair_health_quintile"] = pd.qcut(
+    combined["fair_health_percent"],
+    q=5,
+    labels=False,
+)
+
+combined["poor_health_quintile"] = pd.qcut(
+    combined["poor_health_percent"],
+    q=5,
+    labels=False,
+)
+
+# Identify areas in the highest quintile for each combination
+
+combined["high_spf_high_fair"] = (combined["spf_quintile"] == 4) & (
+    combined["fair_health_quintile"] == 4
+)
+
+combined["high_spf_high_poor"] = (combined["spf_quintile"] == 4) & (
+    combined["poor_health_quintile"] == 4
 )
 
 fig, ax = plt.subplots(figsize=(10, 10))
 
-spf.plot(column="spf_quintile", categorical=True, legend=True, cmap="YlOrBr", ax=ax)
+combined.plot(
+    color="lightgrey",
+    ax=ax,
+)
 
-ax.set_title("Sun Probability Framework Quintiles", fontweight="bold")
+combined[combined["high_spf_high_fair"]].plot(
+    color="darkred",
+    ax=ax,
+)
+
+combined[combined["high_spf_high_poor"]].plot(
+    color="blue",
+    ax=ax,
+)
 
 ax.axis("off")
+
+ax.set_title(
+    "LSOAs with High SPF and High Levels of Fair/Poor Health",
+    fontweight="bold",
+)
+
+plt.tight_layout()
+plt.show()
 ```
-:::
 
-::: callout-note
-The spatial distribution of SPF quintiles highlights that sunlight conditions are far from uniform across England. The highest SPF quintiles (representing areas with the greatest cloud probability) are concentrated across much of northern and western England, while the lowest SPF quintiles occur predominantly in the east and south east, where cloud probability is generally lower.
+Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country. 
 
-Comparing this spatial pattern with the earlier analysis helps explain the relationship observed between SPF and SAMHI. Communities located within the cloudier regions of England generally exhibited higher average SAMHI scores, whereas areas experiencing lower cloud probability tended to have lower estimated mental health need. Although this does not demonstrate a causal relationship, it suggests that broad environmental conditions may align with measurable differences in population mental health.
-:::
-
-# What have we learnt?
+# What Have We Learnt?
 
 In this notebook we have:
 
-- Loaded the 2025 Sun Probability Framework dataset together with the Small Area Mental Health Index.
-- Joined both datasets using their common LSOA identifiers.
-- Explored the national distributions of both variables through maps.
-- Investigated the relationship between SPF and SAMHI using summary statistics, correlation analysis and scatter plots.
-- Compared average SAMHI values across SPF quintiles.
-- Examined the spatial distribution of sunlight conditions across England.
+- combined the 2025 Sunlight Probability Factor with Census 2021 general health data  
+- examined the spatial distribution of SPF across England  
+- examined the spatial distribution of self reported poor health  
+- calculated the proportion of residents reporting bad or very bad health for each LSOA  
+- compared SPF across groups with different levels of poor health  
+- calculated the correlation between SPF and poor/fair health  
+- visualised the relationships using a scatterplot  
+- identified areas where high SPF and high levels of poor/fair health occur together  
 
-Overall, the analysis identified a moderate positive relationship between SPF and SAMHI. Areas with higher SPF values, which represent greater cloud probability and therefore lower levels of sunshine reaching the ground, generally exhibited higher estimated levels of mental health need.
+The analysis suggests that there is an association between SPF and self reported general health, but the relationship should not be interpreted as evidence that cloud cover or sunlight conditions directly affect population health.
 
-It is important to emphasise that this relationship is associational rather than causal. Mental health is influenced by a wide range of social, economic, demographic and environmental factors, and this notebook does not attempt to isolate the effect of sunlight alone. Nevertheless, the results demonstrate how environmental datasets such as the Sun Probability Framework can be combined with health indicators to explore spatial patterns and generate hypotheses for further investigation.
+The analysis is conducted at the LSOA level, meaning that it describes spatial patterns between communities rather than relationships between individuals. This is particularly important when interpreting health data, as an association between areas does not imply that individuals experiencing poorer health necessarily experience different sunlight conditions.
 
