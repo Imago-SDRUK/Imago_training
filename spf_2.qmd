@@ -1,8 +1,9 @@
 ---
-title: Sun Probability Framework - SPF & General Health
+title: "Sun Probability Framework - SPF & General Health"
 jupyter: python3
 ---
 
+# {#sec-spf1 .unnumbered}
 
 **Data**:
 
@@ -17,7 +18,7 @@ Download the 2025 SPF dataset from the Imago Data Service.
 
 Download the Census 2021 General Health data at LSOA level. Select all columns, LSOA, values, and area codes.
 
-Place both files inside the `/data` directory. Rename the census csv to `generalhealth.csv`. 
+Place both files inside the `/data` directory. Rename the census csv to `generalhealth.csv`.
 
 The SPF dataset provides annual estimates of the Sunlight Probability Factor for each LSOA. The Census dataset provides counts of residents reporting different levels of general health in the 2021 Census.
 
@@ -64,15 +65,15 @@ The SPF dataset contains annual average SPF values for every LSOA.
 
 The Census health categories are:
 
-- Very good health  
-- Good health  
-- Fair health  
-- Bad health  
-- Very bad health  
+- Very good health
+- Good health
+- Fair health
+- Bad health
+- Very bad health
 
 The Census data provides counts rather than percentages. This allows us to calculate the proportions ourselves.
 
-### Preparing Census Data 
+### Preparing Census Data
 
 ```{python}
 health = health.rename(
@@ -210,8 +211,8 @@ The SPF map shows substantial spatial variation across England and Wales.
 
 Remember that SPF represents the probability of cloud cover rather than the amount of sunlight itself. This means that:
 
-- Higher SPF = greater probability of cloud cover  
-- Lower SPF = lower probability of cloud cover  
+- Higher SPF = greater probability of cloud cover
+- Lower SPF = lower probability of cloud cover
 
 Consequently, areas with lower SPF values represent areas where clearer conditions are more likely.
 
@@ -458,20 +459,20 @@ plt.tight_layout()
 plt.show()
 ```
 
-Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country. 
+Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country.
 
 # What Have We Learnt?
 
 In this notebook we have:
 
-- combined the 2025 Sunlight Probability Factor with Census 2021 general health data  
-- examined the spatial distribution of SPF across England  
-- examined the spatial distribution of self reported poor health  
-- calculated the proportion of residents reporting bad or very bad health for each LSOA  
-- compared SPF across groups with different levels of poor health  
-- calculated the correlation between SPF and poor/fair health  
-- visualised the relationships using a scatterplot  
-- identified areas where high SPF and high levels of poor/fair health occur together  
+- combined the 2025 Sunlight Probability Factor with Census 2021 general health data
+- examined the spatial distribution of SPF across England
+- examined the spatial distribution of self reported poor health
+- calculated the proportion of residents reporting bad or very bad health for each LSOA
+- compared SPF across groups with different levels of poor health
+- calculated the correlation between SPF and poor/fair health
+- visualised the relationships using a scatterplot
+- identified areas where high SPF and high levels of poor/fair health occur together
 
 The analysis suggests that there is an association between SPF and self reported general health, but the relationship should not be interpreted as evidence that cloud cover or sunlight conditions directly affect population health.
 
