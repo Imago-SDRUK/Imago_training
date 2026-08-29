@@ -37,6 +37,8 @@ The Census measure of general health is based on how residents assessed their ow
 
 ## Installing Libraries
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -44,9 +46,12 @@ import pandas as pd
 from IPython.display import display
 from scipy.stats import pearsonr
 ```
+:::
 
 ## Loading the datasets
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
 
@@ -54,14 +59,19 @@ health = pd.read_csv(
     "../data/generalhealth.csv", skiprows=6, skipfooter=6, engine="python"
 )
 ```
+:::
 
 ### Understanding the datasets
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 display(spf.head())
 
 display(health.head())
 ```
+:::
+
 ::: callout-note
 The SPF dataset contains annual average SPF values for every LSOA.
 
@@ -78,6 +88,8 @@ The Census data provides counts rather than percentages. This allows us to calcu
 
 ### Preparing Census Data
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health = health.rename(
     columns={
@@ -93,6 +105,7 @@ health = health.rename(
 )
 health.columns
 ```
+:::
 
 ## Creating health measures
 
@@ -100,32 +113,43 @@ Counts are difficult to compare directly because LSOAs contain different numbers
 
 ### Good health
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health["good_health_percent"] = (
     100 * (health["very_good"] + health["good"]) / health["total"]
 )
 ```
+:::
 
 ### Poor health
 
 We will use the inverse of Good health so bad + very bad health as our principal measure.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health["poor_health_percent"] = (
     100 * (health["bad"] + health["very_bad"]) / health["total"]
 )
 ```
+:::
 
 ### Fair health
 
 Finally we calculate the percentage of fair health.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health["fair_health_percent"] = 100 * health["fair"] / health["total"]
 ```
+:::
 
 We can inspect the resulting variables:
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 display(
     health[
@@ -138,9 +162,12 @@ display(
     ].head()
 )
 ```
+:::
 
 We should check the first couple to ensure that they sum to 100%, as small differences would suggest missing data or rounding errors.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health[
     [
@@ -152,6 +179,7 @@ health[
     axis=1
 ).head(10)
 ```
+:::
 
 ## Merging the datasets
 
@@ -159,6 +187,8 @@ The SPF dataset uses the 2021 LSOA code as data_zone_code.
 
 We therefore merge the health data using the same identifier.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health = health[
     [
@@ -178,6 +208,7 @@ combined = spf.merge(
 print(f"SPF LSOAs: {len(combined)}")
 combined.head()
 ```
+:::
 
 ## Maps of the Data
 
@@ -187,6 +218,8 @@ This allows us to understand their spatial distributions before comparing them.
 
 ### SPF Map
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -207,6 +240,7 @@ ax.set_title(
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 ::: callout-note
 **Interpretation**
@@ -227,6 +261,8 @@ The map provides the environmental context for the remainder of the analysis.
 
 We now map the proportion of residents reporting bad or very bad general health.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -247,6 +283,7 @@ ax.set_title(
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 **Interpretation**
 
@@ -260,6 +297,8 @@ To investigate whether SPF varies systematically with health, we divide LSOAs in
 
 Quintiles divide the LSOAs into five approximately equal sized groups.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 combined["health_quintile"] = pd.qcut(
     combined["poor_health_percent"],
@@ -273,9 +312,12 @@ combined["health_quintile"] = pd.qcut(
     ],
 )
 ```
+:::
 
 We can calculate the mean and median SPF within each group.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 health_summary = combined.groupby("health_quintile", observed=False).agg(
     Mean_SPF=("cloudprob_corrected_mean", "mean"),
@@ -285,6 +327,7 @@ health_summary = combined.groupby("health_quintile", observed=False).agg(
 
 health_summary
 ```
+:::
 
 This comparison allows us to ask a simple question:
 
@@ -300,6 +343,8 @@ The grouped comparison gives us a broad picture, but it discards some informatio
 
 We can therefore examine the relationship directly using a correlation.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 correlation, p_value = pearsonr(
     combined["poor_health_percent"],
@@ -309,6 +354,7 @@ correlation, p_value = pearsonr(
 print(f"Pearson correlation: {correlation:.3f}")
 print(f"P-value: {p_value:.3e}")
 ```
+:::
 
 ::: callout-note
 The Pearson correlation measures the strength and direction of the linear relationship between the percentage reporting bad or very bad health and SPF.
@@ -322,6 +368,8 @@ However, because the analysis contains thousands of LSOAs, even relatively small
 
 A scatterplot allows us to see the relationship directly, making it potentially more clear if this pattern is even visible.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 6))
 
@@ -344,6 +392,7 @@ ax.set_title(
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 The scatter plot also shows a positive relationship between the proportion of residents reporting bad or very bad health and SPF. LSOAs with higher levels of self reported poor health tend to have higher SPF values, although the relationship is relatively weak visually and there is substantial variation between individual areas.
 
@@ -357,6 +406,8 @@ Rather than analysing every Census category separately, we therefore use the pro
 
 This provides a useful check of whether the relationship observed for poor health is also present further up the health distribution.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fair_correlation, fair_p_value = pearsonr(
     combined["fair_health_percent"],
@@ -366,6 +417,7 @@ fair_correlation, fair_p_value = pearsonr(
 print(f"Pearson correlation: {fair_correlation:.3f}")
 print(f"P-value: {fair_p_value:.3e}")
 ```
+:::
 
 The correlation between the proportion reporting fair health and SPF is **0.151**, compared with **0.164** for bad or very bad health.
 
@@ -375,6 +427,8 @@ However, the strength of the relationship remains important. As with the poor-he
 
 ### Scatterplot
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 6))
 
@@ -396,6 +450,7 @@ ax.set_title(
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 ::: callout-note
 The scatterplot provides a visual check of the correlation. As with poor health, there is substantial variation in SPF between individual LSOAs, meaning that health alone does not explain the environmental variation between communities.
@@ -409,6 +464,8 @@ To explore this, we identify LSOAs that are in the highest quintile for both SPF
 
 This does not mean that these areas have worse health because of cloudier conditions. Instead, it highlights areas where the two characteristics occur together and allows us to consider whether any clear spatial pattern is visible.
 
+::: {.panel-tabset group="language"}
+### Python
 ```{python}
 # Create quintiles for SPF, fair health and poor health
 
@@ -467,6 +524,7 @@ ax.set_title(
 plt.tight_layout()
 plt.show()
 ```
+:::
 
 ::: callout-note
 Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country.
