@@ -3,7 +3,7 @@ title: "Sun Probability Framework - SPF & General Health"
 jupyter: python3
 ---
 
-# {#sec-spf1 .unnumbered}
+# {#sec-spf2 .unnumbered}
 
 **Data**:
 
@@ -12,6 +12,7 @@ jupyter: python3
 
 **Goal**: Investigate how Sun Probability Framework (SPF) values vary across communities with different levels of self reported general health in England.
 
+::: callout-note
 ## Installing the data
 
 Download the 2025 SPF dataset from the Imago Data Service.
@@ -21,6 +22,7 @@ Download the Census 2021 General Health data at LSOA level. Select all columns, 
 Place both files inside the `/data` directory. Rename the census csv to `generalhealth.csv`.
 
 The SPF dataset provides annual estimates of the Sunlight Probability Factor for each LSOA. The Census dataset provides counts of residents reporting different levels of general health in the 2021 Census.
+:::
 
 # Why?
 
@@ -60,7 +62,7 @@ display(spf.head())
 
 display(health.head())
 ```
-
+::: callout-note
 The SPF dataset contains annual average SPF values for every LSOA.
 
 The Census health categories are:
@@ -72,6 +74,7 @@ The Census health categories are:
 - Very bad health
 
 The Census data provides counts rather than percentages. This allows us to calculate the proportions ourselves.
+:::
 
 ### Preparing Census Data
 
@@ -205,6 +208,7 @@ plt.tight_layout()
 plt.show()
 ```
 
+::: callout-note
 **Interpretation**
 
 The SPF map shows substantial spatial variation across England and Wales.
@@ -217,6 +221,7 @@ Remember that SPF represents the probability of cloud cover rather than the amou
 Consequently, areas with lower SPF values represent areas where clearer conditions are more likely.
 
 The map provides the environmental context for the remainder of the analysis.
+:::
 
 ### General Health Map
 
@@ -305,11 +310,13 @@ print(f"Pearson correlation: {correlation:.3f}")
 print(f"P-value: {p_value:.3e}")
 ```
 
+::: callout-note
 The Pearson correlation measures the strength and direction of the linear relationship between the percentage reporting bad or very bad health and SPF.
 
 The positive value of **0.164** suggests that yes, there is a correlation, however it is very weak and making up a rather small portion of the overall change. The p-value being so near zero means that this is guaranteed statistically significant.
 
 However, because the analysis contains thousands of LSOAs, even relatively small correlations can produce extremely small p-values. Statistical significance therefore does not necessarily mean that the relationship is substantively large or important.
+:::
 
 ## Scatterplot
 
@@ -390,7 +397,9 @@ plt.tight_layout()
 plt.show()
 ```
 
+::: callout-note
 The scatterplot provides a visual check of the correlation. As with poor health, there is substantial variation in SPF between individual LSOAs, meaning that health alone does not explain the environmental variation between communities.
+:::
 
 ## Exploring the Spatial Pattern
 
@@ -459,7 +468,9 @@ plt.tight_layout()
 plt.show()
 ```
 
+::: callout-note
 Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country.
+:::
 
 # What Have We Learnt?
 
