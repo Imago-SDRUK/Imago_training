@@ -8,7 +8,7 @@ jupyter: python3
 **Data**:
 
 - [Sun Probability Framework 2025](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2025-version-2-0)
-- [Census 2021 General Health, LSOA level](https://www.nomisweb.co.uk/default.asp)
+- [Census 2021 General Health, LSOA level](https://www.nomisweb.co.uk/datasets/c2021ts037)
 
 **Goal**: Investigate how Sun Probability Framework (SPF) values vary across communities with different levels of self-reported general health in England and Wales.
 
@@ -41,6 +41,7 @@ The Census measure of general health is based on how residents assessed their ow
 
 ```{python}
 import geopandas as gpd
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from IPython.display import display
@@ -94,18 +95,7 @@ The Census data provides counts rather than percentages. This allows us to calcu
 ### Python
 
 ```{python}
-
-code_col = health.columns[0]
-
-health[["data_zone_code", "data_zone_name"]] = (
-    health[code_col]
-    .str.split(" : ", n=1, expand=True)
-)
-
-health = health.drop(columns=code_col)
-
-health.head()
-
+health.drop(health.index[0], inplace = True)
 health = health.rename(
     columns={
         "2021 super output area - lower layer": "lsoa_name",
@@ -117,8 +107,9 @@ health = health.rename(
         "Bad health": "bad",
         "Very bad health": "very_bad",
     }
-)
+).reindex()
 health.columns
+health.head()
 ```
 :::
 
@@ -434,8 +425,6 @@ A scatterplot allows us to see the relationship directly, making it potentially 
 ### Python
 
 ```{python}
-import numpy as np
-
 fig, ax = plt.subplots(figsize=(8, 6))
 
 ax.scatter(
@@ -509,7 +498,8 @@ This provides a useful comparison with the previous result. The fair-health corr
 ### Python
 
 ```{python}
-import numpy as np
+
+combined = combined.dropna(subset=["fair_health_percent", "cloud_probability"]) # Remove any rows with missing values for the variables of interest
 
 fig, ax = plt.subplots(figsize=(8, 6))
 
