@@ -413,6 +413,8 @@ A scatterplot allows us to see the relationship directly, making it potentially 
 ### Python
 
 ```{python}
+
+combined = combined.dropna(subset=["poor_health_percent", "cloud_probability"]) # Remove any rows with missing values for the variables of interest
 fig, ax = plt.subplots(figsize=(8, 6))
 
 ax.scatter(
