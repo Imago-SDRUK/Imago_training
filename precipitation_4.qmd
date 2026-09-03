@@ -3,7 +3,7 @@ title: "Precipitation - Flood Exposure and Flood Risk"
 jupyter: python3
 ---
 
-# {#sec-precip4 .unnumbered}
+#  {#sec-precip4 .unnumbered}
 
 **Data**:
 
@@ -23,18 +23,13 @@ Unlike the previous case studies, this notebook combines two Imago products with
 
 Population estimates are taken from the 2021 Census at MSOA level. Download the dataset from the Office for National Statistics using the following options:
 
-Geography:
-- England and Wales
-- 2021 Middle Layer Super Output Areas (MSOAs)
+Geography: - England and Wales - 2021 Middle Layer Super Output Areas (MSOAs)
 
-Residence type:
-- Total: All usual residents
+Residence type: - Total: All usual residents
 
-Output:
-- Value
+Output: - Value
 
-Format:
-- Excel (.xlsx)
+Format: - Excel (.xlsx)
 
 Place the downloaded spreadsheet inside the `data/` directory.
 :::
@@ -51,11 +46,11 @@ Flooding provides one example where environmental conditions become socially sig
 
 Together these allow us to identify communities that experienced unusually wet conditions, have meaningful flood exposure, and contain substantial resident populations.
 
-
 ## Installing Libraries
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Geospatial Libraries
 import pandas as pd
@@ -74,6 +69,7 @@ Although the Imago datasets are much smaller than the original national datasets
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 regions = gpd.read_file("data/Regions_Dec_2020_EN_BGC_2022_-724820876220737106.gpkg")
 
@@ -83,6 +79,7 @@ regions.head()
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 study_area = regions[regions["RGN20NM"] == "Yorkshire and The Humber"]
 
@@ -109,8 +106,9 @@ The precipitation product and national flood zone dataset contain information fo
 
 GeoPandas allows us to read only the features intersecting our study area by supplying a spatial mask during loading. This is much faster and is a common approach when working with large spatial datasets.
 
-::: {.panel-tabset group="language"}
+::::::::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Imago precipitation product
 precip = gpd.read_file(
@@ -123,37 +121,33 @@ flood = gpd.read_file(
     "data/flood_indicators_MSOA_2021.gpkg",
     mask=study_area,
 )
-
-# Census population
-population = pd.read_excel(
-    "data/nomis_2026_07_06_155344.xlsx",
-    skiprows=8,
-    names=["area", "population"],
-)
 ```
-:::
 
-::: callout-note
-As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
-:::
-
+Population estimates are taken from the 2021 Census, dataset TS001 – *Number of usual residents in households and communal establishments*, at MSOA level. This dataset is published by the Office for National Statistics and accessed via a stable Nomis livelink.
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-population = population[population["area"].str.startswith("msoa2021:")].copy()
+url = "http://www.nomisweb.co.uk/livelinks/19099.xlsx"
 
-population["MSOA21CD"] = population["area"].str.extract(r"(E\d{8}|W\d{8})")
+population = pd.read_excel(url, skiprows=6, engine="openpyxl")
 
-population["MSOA21NM"] = (
-    population["area"]
-    .str.replace(r"msoa2021:E\d{8}\s:\s", "", regex=True)
-    .str.replace(r"msoa2021:W\d{8}\s:\s", "", regex=True)
+population[["MSOA21CD", "MSOA21NM"]] = (
+    population["Unnamed: 0"]
+    .str.split(" : ", n=1, expand=True)
 )
-
+population = population.rename(columns={"Unnamed: 1": "population"})
 population = population[["MSOA21CD", "MSOA21NM", "population"]]
+population = population.drop(index=0).reset_index(drop=True)
 
 population.head()
 ```
+:::
+
+The resulting table gives one row per MSOA with the total usual resident population count, which can be merged with other MSOA-level datasets in this notebook via the `MSOA21CD` column we made.
+
+::: callout-note
+As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
 :::
 
 ### Joining Population to the Precipitation Data
@@ -164,6 +158,7 @@ We can also clean the dataset to solely have the required data we are using.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 precip = precip.rename(
     columns={
@@ -224,6 +219,7 @@ The main variables used in this notebook are:
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 msoa[
     [
@@ -240,6 +236,7 @@ msoa[
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 msoa["ratio_flooded_total"].describe()
 ```
@@ -272,6 +269,7 @@ plt.show()
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
@@ -302,6 +300,7 @@ Rather than considering every MSOA with even a very small amount of flood prone 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 threshold = 0.10
 
@@ -339,6 +338,7 @@ print(f"Both high anomaly and Floodzone: {len(msoa[msoa['category'] == 'Both'])}
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 colours = {
     "Neither": "grey",
@@ -386,6 +386,7 @@ Of greatest interest are the MSOAs classified as Both, where unusually wet condi
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 population_summary = msoa.groupby("category").agg(
     MSOAs=("MSOA21CD", "count"),
@@ -396,12 +397,13 @@ population_summary
 ```
 :::
 
-We can see here that the total population of the region is ~5,9 million people, with **36%** of the region being in a flood zone. Of that group, **60%** experienced anomalous rainfall during 2021. While this is useful to know, it will be more insightful to see which MSOAs specifically were the highest population to make decisions.
+We can see here that the total population of the region is \~5,9 million people, with **36%** of the region being in a flood zone. Of that group, **60%** experienced anomalous rainfall during 2021. While this is useful to know, it will be more insightful to see which MSOAs specifically were the highest population to make decisions.
 
 ## Largest Potentially Exposed Communities
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 top = msoa[msoa["category"] == "Both"][
     [
@@ -429,6 +431,7 @@ Rather than considering flood exposure as simply present or absent, we divide MS
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 bins = [0.10, 0.25, 0.50, float("inf")]
 
@@ -458,6 +461,7 @@ summary
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 summary["Population"].plot(
     kind="bar",
@@ -485,6 +489,7 @@ One simple way to identify communities that combine both characteristics is to c
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 msoa["potential_exposure"] = msoa["population"] * msoa["ratio_flooded_total"]
 
@@ -540,4 +545,3 @@ In this notebook we have:
 - quantified how many MSOAs and residents fall within these communities
 - identified the largest potentially exposed communities using simple population summaries
 - demonstrated how environmental and demographic datasets can be combined to support spatial analysis
-

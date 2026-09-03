@@ -3,7 +3,7 @@ title: "Precipitation - Seasonal Patterns"
 jupyter: python3
 ---
 
-**Goal**: Using the Imago MSOA Precipitation Product, explore how rainfall changes across the seasons and identify which seasons contribute most to annual rainfall across different parts of the UK.
+*Goal**: Using the Imago MSOA Precipitation Product, explore how rainfall changes across the seasons and identify which seasons contribute most to annual rainfall across different parts of the UK.
 
 **Data**:
 
@@ -18,7 +18,6 @@ In the first case study, we mapped how rainfall was distributed across the UK. H
 A local authority experiencing a particularly wet year may have received consistently high rainfall throughout the year, or it may have been heavily influenced by a single unusually wet season.
 
 To investigate this, we break annual rainfall into winter, spring, summer, and autumn totals and examine how seasonal rainfall patterns vary across the country.
-
 ## Installing Libraries
 
 ::: {.panel-tabset group="language"}
@@ -41,6 +40,7 @@ Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundar
 ::: {.panel-tabset group="language"}
 ### Python
 
+
 ```{python}
 precip_msoa = gpd.read_file("data/precipitation_indicators_MSOA_2024.gpkg")
 precip_msoa.head()
@@ -58,6 +58,7 @@ This file contains multiple rainfall indicators. For this notebook, we are using
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 seasonal_cols = [
@@ -81,6 +82,7 @@ Summary statistics provide a useful overview of each season, but they do not cle
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 season_cols = [
@@ -126,6 +128,7 @@ The most intuitive way to see the seasonal affects across the year in the UK is 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 season_cols = {
@@ -175,6 +178,7 @@ To understand which seasons had the greatest influence on annual rainfall in 202
 ::: {.panel-tabset group="language"}
 ### Python
 
+
 ```{python}
 season_cols = [
     "winter_rainfall",
@@ -215,6 +219,8 @@ To explore this local variation, we identify the season that contributes the mos
 ### Python
 
 ```{python}
+precip_msoa["dominant_season"] = precip_msoa[season_cols].idxmax(axis=1)
+
 import pandas as pd
 import matplotlib.colors as mcolors
 

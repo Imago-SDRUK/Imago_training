@@ -58,7 +58,7 @@ For this case study we will be using four of the variables:
 ::: callout-note
 The two anomaly measures describe different aspects of unusual rainfall.
 
-annual_anomaly_abs tells us how much wetter or drier conditions were than expected (in mm). annual_anomaly_std tells us how unusual that difference was relative to the normal variability experienced in that location (in standard deviations).
+`annual_anomaly_abs` tells us how much wetter or drier conditions were than expected (in mm). `annual_anomaly_std` tells us how unusual that difference was relative to the normal variability experienced in that location (in standard deviations).
 
 A large absolute anomaly does not necessarily imply a large standardised anomaly, and vice a versa.
 

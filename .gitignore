@@ -54,4 +54,5 @@ data/UK_MSOA_IZB_SDZ/__MACOSX/
 !data/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ/UK_MSOA_IZB_SDZ.gpkg
 !data/temperature_indicators_MSOA_2023.csv
 !/data/nomis_2026_07_06_155344.xlsx
+!data/samhi.csv
 .Rprofile
