@@ -155,18 +155,6 @@ health["fair_health_percent"] = 100 * health["fair"] / health["total"]
 ```
 :::
 
-### Good health
-
-Finally we calculate the percentage of fair health.
-
-::: {.panel-tabset group="language"}
-### Python
-
-```{python}
-health["good_health_percent"] = 100 * (health["very_good"] + health["good"]) / health["total"]
-```
-:::
-
 We can inspect the resulting variables:
 
 ::: {.panel-tabset group="language"}

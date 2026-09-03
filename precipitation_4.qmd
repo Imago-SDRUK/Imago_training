@@ -146,9 +146,7 @@ population.head()
 ```
 :::
 
-The resulting table gives one row per MSOA with the total usual resident population count, which can be merged with other MSOA-level datasets in this notebook via the `GEOGRAPHY_CODE` column.
-```
-:::
+The resulting table gives one row per MSOA with the total usual resident population count, which can be merged with other MSOA-level datasets in this notebook via the `MSOA21CD` column we made.
 
 ::: callout-note
 As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
