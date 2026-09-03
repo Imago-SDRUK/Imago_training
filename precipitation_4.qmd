@@ -112,47 +112,46 @@ GeoPandas allows us to read only the features intersecting our study area by sup
 ```{python}
 # Imago precipitation product
 precip = gpd.read_file(
-    "../data/precipitation_indicators_MSOA_2021.gpkg",
+    "data/precipitation_indicators_MSOA_2021.gpkg",
     mask=study_area,
 )
 
 # Environment Agency Flood Zones
 flood = gpd.read_file(
-    "../data/flood_indicators_MSOA_2021.gpkg",
+    "data/flood_indicators_MSOA_2021.gpkg",
     mask=study_area,
 )
-
-# Census population
-population = pd.read_excel(
-    "../data/nomis_2026_07_06_155344.xlsx",
-    skiprows=8,
-    names=["area", "population"],
-)
 ```
-:::
 
-::: callout-note
-As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
-:::
+
+Population estimates are taken from the 2021 Census, dataset TS001 – *Number of usual residents in households and communal establishments*, at MSOA level. This dataset is published by the Office for National Statistics and accessed via a stable Nomis livelink.
 
 ::: {.panel-tabset group="language"}
 ### Python
 
 ```{python}
-population = population[population["area"].str.startswith("msoa2021:")].copy()
+url = "http://www.nomisweb.co.uk/livelinks/19099.xlsx"
 
-population["MSOA21CD"] = population["area"].str.extract(r"(E\d{8}|W\d{8})")
+population = pd.read_excel(url, skiprows=6, engine="openpyxl")
 
-population["MSOA21NM"] = (
-    population["area"]
-    .str.replace(r"msoa2021:E\d{8}\s:\s", "", regex=True)
-    .str.replace(r"msoa2021:W\d{8}\s:\s", "", regex=True)
+population[["MSOA21CD", "MSOA21NM"]] = (
+    population["Unnamed: 0"]
+    .str.split(" : ", n=1, expand=True)
 )
-
+population = population.rename(columns={"Unnamed: 1": "population"})
 population = population[["MSOA21CD", "MSOA21NM", "population"]]
+population = population.drop(index=0).reset_index(drop=True)
 
 population.head()
 ```
+:::
+
+The resulting table gives one row per MSOA with the total usual resident population count, which can be merged with other MSOA-level datasets in this notebook via the `GEOGRAPHY_CODE` column.
+```
+:::
+
+::: callout-note
+As NOMIS excel spreadsheets can be rather annoying in metadata and information, we need to clean it up.
 :::
 
 ### Joining Population to the Precipitation Data
