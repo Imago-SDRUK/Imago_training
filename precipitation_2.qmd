@@ -1,25 +1,24 @@
 ---
-title: "Precipitation - Seasonal Rainfall Patterns"
+title: "Precipitation - Seasonal Patterns"
 jupyter: python3
 ---
 
-#  {#sec-precip2 .unnumbered}
+*Goal**: Using the Imago MSOA Precipitation Product, explore how rainfall changes across the seasons and identify which seasons contribute most to annual rainfall across different parts of the UK.
 
 **Data**:
 
 - [Precipitation per MSOA 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024/resources/019de403-6547-7391-a7e7-ae4a43b8c9dc)
 
-**Goal**: Using the Imago Precipitation Product, explore how rainfall changes across the seasons and identify which seasons contribute most to annual rainfall across different parts of the UK.
-
 ------------------------------------------------------------------------
 
 # A question for the data
 
-In Case Study 1 we identified where rainfall was concentrated across the UK. However, annual rainfall totals alone cannot explain why an area was wet.
+In the first case study, we mapped how rainfall was distributed across the UK. However, annual totals alone do not tell the whole story, as they hide the seasonal patterns behind those figures.
 
 A local authority experiencing a particularly wet year may have received consistently high rainfall throughout the year, or it may have been heavily influenced by a single unusually wet season.
 
-To investigate this, we break annual rainfall into winter, spring, summer, and autumn totals and examine how seasonal rainfall patterns vary across the country. \## Installing Libraries
+To investigate this, we break annual rainfall into winter, spring, summer, and autumn totals and examine how seasonal rainfall patterns vary across the country.
+## Installing Libraries
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -41,13 +40,14 @@ Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundar
 ::: {.panel-tabset group="language"}
 ### Python
 
+
 ```{python}
 precip_msoa = gpd.read_file("data/precipitation_indicators_MSOA_2024.gpkg")
 precip_msoa.head()
 ```
 :::
 
-This file contains multiple rainfall indicators. For this notebook we are using the 4 seasonal ones:
+This file contains multiple rainfall indicators. For this notebook, we are using the four seasonal indicators, which follow meteorological seasons:
 
 - `winter_rainfall`: Mean rainfall in millimeters during the winter season (December to February)
 - `spring_rainfall`: Mean rainfall in millimeters during the spring season (March to May)
@@ -58,6 +58,7 @@ This file contains multiple rainfall indicators. For this notebook we are using 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 seasonal_cols = [
@@ -72,7 +73,7 @@ precip_msoa[seasonal_cols].agg(["mean", "std", "min", "max"])
 :::
 
 ::: callout-note
-As expected, winter receives the highest average rainfall while summer receives the lowest. This reflects the UK's temperate maritime climate, where rainfall generally increases through autumn into winter before declining again through spring and summer. What is more interesting is how summer has a more extreme high than both spring and autumn, which with spatial mapping will be interesting to see if the UK as a whole is dominated by winter rainfall, or if seasonality is significant.
+As expected, winter receives the highest average rainfall while summer receives the lowest. This reflects the UK's temperate maritime climate, where rainfall generally increases through autumn into winter before declining again through spring and summer. Interestingly, the maximum rainfall recorded in summer exceeds that of both spring and autumn. Mapping these data will help us examine whether the UK is universally dominated by winter rainfall, or if there is significant regional variation in seasonal patterns.
 :::
 
 ## Comparing Seasonal Rainfall
@@ -81,6 +82,7 @@ Summary statistics provide a useful overview of each season, but they do not cle
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 season_cols = [
@@ -122,10 +124,11 @@ While this comparison tells us how rainfall varies statistically between the sea
 
 ## Visualising Seasonal Rainfall
 
-The absolute easiest way to see the seasonal affects across the year in the UK is through mapping each individual season. It allows us to identify how rainfall patterns change through the year and whether annual rainfall totals are driven by the same seasons across the country.
+The most intuitive way to see the seasonal affects across the year in the UK is through mapping each individual season. It allows us to identify how rainfall patterns change through the year and whether annual rainfall totals are driven by the same seasons across the country.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 season_cols = {
@@ -161,9 +164,9 @@ plt.show()
 :::
 
 ::: callout-note
-We can clearly see that each season is spatially very unique. The biggest one is that summer is incredibly concentrated, with Scotland, North England, and Wales having the highest summer rainfall relative to the rest of the country while the rest is receiving relatively little, especially the rest of England. The inverse is true with autumn, the majority of the country is receiving a less extreme but more universal level of rainfall most especially in the south west.
+We can clearly see that each season is spatially very unique. Most notably, summer rainfall is highly concentrated, with Scotland, northern England, and Wales receiving the highest rainfall totals while the rest of the country, especially southern and eastern England, receives relatively little. In contrast, autumn rainfall is far more evenly distributed across the country.
 
-The general UK pattern of north west being wetter and south east being less so does hold for the most part, however once seen season by season the north south divide mostly disappears and the quantity of rain is a west east split. We can see that one of the rainest part of the country across all the seasons is Cumbria.
+Although the general pattern of a wetter northwest and drier southeast holds true, a season-by-season view shows that the divide is primarily a west-east split. We can see that one of the rainiest parts of the country across all seasons is Cumbria.
 :::
 
 ## Contribution of each season to total rainfall
@@ -174,6 +177,7 @@ To understand which seasons had the greatest influence on annual rainfall in 202
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 
 ```{python}
 season_cols = [
@@ -217,16 +221,41 @@ To explore this local variation, we identify the season that contributes the mos
 ```{python}
 precip_msoa["dominant_season"] = precip_msoa[season_cols].idxmax(axis=1)
 
-fig, ax = plt.subplots(figsize=(15, 20))
+import pandas as pd
+import matplotlib.colors as mcolors
+
+# Map raw column names to clean, readable names for the legend
+season_display_names = {
+    "winter_rainfall": "Winter",
+    "spring_rainfall": "Spring",
+    "summer_rainfall": "Summer",
+    "autumn_rainfall": "Autumn",
+}
+precip_msoa["dominant_season_name"] = precip_msoa[season_cols].idxmax(axis=1).map(season_display_names)
+
+# Order categories so they display in a logical seasonal flow in the legend
+precip_msoa["dominant_season_name"] = pd.Categorical(
+    precip_msoa["dominant_season_name"],
+    categories=["Winter", "Spring", "Summer", "Autumn"],
+    ordered=True,
+)
+
+# Nordic Frost color palette (Summer modified to soft beige):
+# Winter = Midnight Blue, Spring = Ice Blue, Summer = Soft Beige, Autumn = Steel Blue
+colors_nordic = ["#2c3e50", "#a8dadc", "#e8d7c3", "#457b9d"]
+cmap_seasons = mcolors.ListedColormap(colors_nordic)
+
+fig, ax = plt.subplots(figsize=(7, 9))
 
 precip_msoa.plot(
-    column="dominant_season",
+    column="dominant_season_name",
     categorical=True,
     legend=True,
     ax=ax,
+    cmap=cmap_seasons,
 )
 
-ax.set_title("Dominant Rainfall Season by MSOA")
+ax.set_title("Dominant Rainfall Season by MSOA", fontweight="bold")
 ax.axis("off")
 plt.show()
 ```
@@ -235,9 +264,9 @@ plt.show()
 ::: callout-note
 The dominant season map simplifies the four seasonal rainfall maps into a single question: which season contributes the most rainfall to each MSOA?
 
-It is not an overly unexpected that winter is the most dominant season for contribution, especially in Wales, Scotland, most of England, and the North of Ireland. Despite this, there is a prominence of MSOAs where their rainfall is made up of autumn rainfall, in a lot of the south of England and border of Wales. This clearly suggests that parts of the UK are affected by rainfall September to November.
+Winter dominates annual rainfall across Scotland, Wales, Northern Ireland, and most of England. However, autumn is the leading contributor in many MSOAs across southern England and along the Welsh border.
 
-Spring has a dominance but solely in very select areas, most specifically County Down and Northumberland/Southern Scotland. On the other hand summer more or less does not have dominance anywhere, except for 1 MSOA in County Tyrone. So while summer rainfall may be important or extreme for an MSOA, it doesn't seem to drive the most of the rainfall in a given year.
+Spring dominance is limited to County Down and the Northumberland-Scotland border, while summer is the dominant season in just a single MSOA in County Tyrone. Consequently, summer rainfall, though sometimes extreme, rarely drives annual totals.
 :::
 
 ## What have we learnt?

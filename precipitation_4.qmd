@@ -106,7 +106,7 @@ The precipitation product and national flood zone dataset contain information fo
 
 GeoPandas allows us to read only the features intersecting our study area by supplying a spatial mask during loading. This is much faster and is a common approach when working with large spatial datasets.
 
-::: {.panel-tabset group="language"}
+::::::::: {.panel-tabset group="language"}
 ### Python
 
 ```{python}
@@ -123,9 +123,7 @@ flood = gpd.read_file(
 )
 ```
 
-
 Population estimates are taken from the 2021 Census, dataset TS001 – *Number of usual residents in households and communal establishments*, at MSOA level. This dataset is published by the Office for National Statistics and accessed via a stable Nomis livelink.
-
 ::: {.panel-tabset group="language"}
 ### Python
 
@@ -265,7 +263,6 @@ ax.axis("off")
 
 plt.show()
 ```
-
 :::
 
 ## Mapping Flood Exposure

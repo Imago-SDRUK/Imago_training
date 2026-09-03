@@ -1,23 +1,23 @@
 ---
-title: "Precipitation - Are Wet Places Also the Most Unusual?"
+title: "Precipitation - Annual Rainfall vs. Anomalies"
 jupyter: python3
 ---
 
 #  {#sec-precip3 .unnumbered}
 
+**Goal**: Using the Imago MSOA Precipitation Product, we compare annual rainfall totals with long-term rainfall anomalies to investigate whether the wettest locations in 2024 were also the locations that departed furthest from their historical rainfall patterns.
+
 **Data**:
 
 - [Precipitation per MSOA 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024/resources/019de403-6547-7391-a7e7-ae4a43b8c9dc)
 
-**Goal**: Using the Imago Precipitation Product, compare annual rainfall totals with long term rainfall anomalies to investigate whether the wettest locations in 2024 were also the locations that departed furthest from their historical rainfall patterns.
-
 # A question for the data
 
-In the previous case studies we identified where rainfall was concentrated and which seasons contributed most to annual totals. However, high rainfall alone does not necessarily mean conditions were unusual.
+In the previous case studies, we explored where UK rainfall was concentrated and how seasonal patterns drove annual totals. However, a high annual total does not necessarily mean a region's rainfall deviated from its long-term historical baseline.
 
 Some parts of the UK are consistently wet and regularly receive large amounts of rainfall. Other areas are typically much drier and may appear unremarkable in annual rainfall rankings while still experiencing an exceptionally unusual year.
 
-To investigate this, we compare annual rainfall totals against rainfall anomalies derived from a long term climatological baseline, as well as the persistence of rainfall across a year.
+To investigate this, we compare annual rainfall totals against anomalies derived from a long-term climatological baseline, as well as the frequency of extreme daily rainfall events.
 
 ## Installing Libraries
 
@@ -37,7 +37,7 @@ import matplotlib.pyplot as plt
 
 ## Loading the Data
 
-Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundaries and will not need a separate boundary file.
+Using geopandas, we read the gpkg directly as it contains both the boundary and the rainfall data.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -52,22 +52,22 @@ For this case study we will be using four of the variables:
 
 - `rainfall_annual_mm`: Total annual rainfall in millimetres.
 - `annual_anomaly_abs`: The absolute annual precipitation anomaly from historical baseline in mm (so it is *actual* - *expected*).
-- `annual_anomaly_std`: Standardised rainfall anomaly relative to historical variability.
-- `extreme_days_4sd`: number of days where daily rainfall exceeded 4 standard deviations above historical mean.
+- `annual_anomaly_std`: Standardised rainfall anomaly relative to historical variability (in standard deviations).
+- `extreme_days_4sd`: number of days where daily rainfall exceeded 4 standard deviations above historical daily mean.
 
 ::: callout-note
 The two anomaly measures describe different aspects of unusual rainfall.
 
-annual_anomaly_abs tells us how much wetter or drier conditions were than expected. annual_anomaly_std tells us how unusual that difference was relative to the normal variability experienced in that location.
+`annual_anomaly_abs` tells us how much wetter or drier conditions were than expected (in mm). `annual_anomaly_std` tells us how unusual that difference was relative to the normal variability experienced in that location (in standard deviations).
 
 A large absolute anomaly does not necessarily imply a large standardised anomaly, and vice a versa.
 
-`extreme_days_4sd` identifies unusually intense rainfall events rather than the general wetness. It is possible that a location may receive high annual rainfall, but very few or no extreme days. The inverse is also true where a location receives modest rainfall but most of that rainfall comes in a select amount of extreme rainfall events in the year.
+`extreme_days_4sd` identifies unusually intense rainfall events rather than the general wetness. It is possible that a location may receive high annual rainfall, but very few or no extreme days. Conversely, an area with modest annual rainfall might receive the majority of its precipitation during just a few intense storm events.
 :::
 
 ## Summary Statistics
 
-Before mapping the data, it is handy to understand the whole range of values.
+Before mapping the data, it is useful to understand the whole range of values.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -86,7 +86,7 @@ precip_msoa[
 
 ## Mapping Annual Rainfall
 
-Annual rainfall was explored previously however it is still handy as a baseline for comparison.
+To begin, let's remind ourselves of what the annual rainfall looks like across the country so we have a clear baseline for comparison.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -116,7 +116,7 @@ plt.show()
 
 ## Mapping Standardised Rainfall Anomalies
 
-Standardised anomalies account for local variability and therefore provide a clearer indication of how unusual conditions were. We are looking to see the visual difference between this and the total rainfall plot, as that shows where there is a difference between anomalous rainfall and total volume of rainfall.
+Standardised anomalies account for local variability and therefore provide a clearer indication of how unusual conditions were. By comparing this map with the total rainfall plot, we can visually identify regions where the climate anomalies did not align with absolute rainfall totals.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -147,12 +147,12 @@ plt.show()
 :::
 
 ::: callout-note
-The anomaly maps differ noticeably from the annual rainfall map. The wettest parts of the UK are not automatically the most anomalous. While you can see that there is overlap with parts of the country, some parts which have large rainfall totals show modest anomalies while those with much lower total rainfalls (such as south England) are having fairly strong anomalies. The most interesting one is actually the north of Ireland, where the anomalies are negative.
+The anomaly maps differ noticeably from the annual rainfall map. The wettest parts of the UK are not automatically the most anomalous. While you can see that there is overlap with parts of the country, some parts which have large rainfall totals show modest anomalies while those with much lower total rainfalls (such as south England) are having fairly strong anomalies. Most interesting is Northern Ireland, which was the only major region to record negative anomalies, indicating it was drier than its historical average.
 
 This shows why rainfall totals and rainfall anomalies are answering different questions.
 :::
 
-## Are Wet Places also Unusual?
+## Does high annual rainfall imply unusual climatic conditions?
 
 To investigate the relationship directly, we compare annual rainfall against standardised anomaly values.
 
@@ -163,7 +163,7 @@ To investigate the relationship directly, we compare annual rainfall against sta
 fig, ax = plt.subplots(figsize=(7, 6))
 
 ax.scatter(
-    precip_msoa["rainfall_annual_mm"], precip_msoa["annual_anomaly_std"], alpha=0.5
+    precip_msoa["rainfall_annual_mm"], precip_msoa["annual_anomaly_std"], alpha=0.5, s=2
 )
 ax.axhline(
     0,
@@ -201,14 +201,14 @@ print(f"Correlation: {corr:.2f}")
 ::: callout-note
 If wet places were also always the most unusual places, we would expect a strong positive relationship between annual rainfall and standardised anomaly.
 
-Despite this, we actually have a weak to moderate correlation of *r = 0.3* and a scatter graph which shows a much more complex relationship. For one, the vast majority of MSOAs experienced a positively anomalous year, suggesting as a whole 2024 was a wet year for the UK. The most extreme MSOAs, especially the two 6+ standard deviations, are actually very normal MSOAs for total rainfall. The other interesting one is the incredibly high annual rainfall MSOA, roughly \~2800mm total rainfall, had an almost 0 standard anomaly meaning it is typical for the MSOA.
+Despite this, we actually have a weak to moderate correlation of *r = 0.3* and a scatter graph which shows a much more complex relationship. For one, the vast majority of MSOAs experienced a positively anomalous year, suggesting as a whole 2024 was a wet year for the UK. The most extreme MSOAs, especially the two 6+ standard deviations, are actually very normal MSOAs for total rainfall. Meanwhile, the MSOA with the highest absolute rainfall (roughly 2,800 mm) had a standardised anomaly of nearly zero, meaning this high total was typical for the area.
 
 This reinforces the distinction between rainfall amount and rainfall unusuality and how the total rainfall doesn't define anomalous rainfall.
 :::
 
 ## Locating the Most Anomalous Places
 
-As the wettest places and the most anomalous places are not the same, we need to get their specific names.
+As the wettest places and the most anomalous places are not the same, we next identify the specific locations behind these extremes.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -222,17 +222,17 @@ least_anomalous = precip_msoa.nsmallest(10, "annual_anomaly_std")[
     ["dt_zn_c", "dt_zn_n", "annual_anomaly_std"]
 ]
 
-print("Most positive anomalies:")
+print("Highest anomalies:")
 print(most_anomalous.to_string(index=False))
 
-print("\nMost negative anomalies:")
+print("\nLowest anomalies:")
 print(least_anomalous.to_string(index=False))
 ```
 :::
 
-We can now see listed out that compared to the list of most total rainfall MSOAs, the top 10 most and least anomalous MSOAs are incredibly different. Scotland isn't in the top 10 most positively anomalous MSOAs, while suddenly many more English MSOAs are there. The incredibly interesting factor of the most negatively anomalous list (although with the map obvious) is that the entire top 10 is in the North of Ireland, and if we zoom in even more 9/10 of the MSOAs are in County Armagh (and Cusher is just across the border in County Tyrone). When we look at the total rainfall map, Armagh is one of the driest parts of the North of Ireland, however this is actually unusual for the area.
+Comparing these rankings to the absolute rainfall list highlights a clear divergence. Although Scotland dominated absolute totals, it has no MSOAs in the top 10 highest anomalies, which are instead occupied by English and Welsh locations. On the other end, the ten lowest anomalies are concentrated entirely in Northern Ireland, specifically in County Armagh and neighbouring County Tyrone. While Armagh is typically a drier part of Northern Ireland, in 2024 it was unusually dry even by its own historical standards.
 
-To very clearly visualise where these MSOAs are, we can quickly map them so it highlights solely those MSOAs.
+To clearly visualise where these MSOAs are, we can quickly map them so it highlights solely those MSOAs.
 
 ::: {.panel-tabset group="language"}
 ### Python
@@ -243,7 +243,7 @@ target_msoas = pd.concat([most_anomalous, least_anomalous])
 colors = target_msoas["annual_anomaly_std"].apply(lambda x: "blue" if x >= 0 else "red")
 target_msoas["plot_color"] = colors
 
-fig, ax = plt.subplots(figsize=(15, 15))
+fig, ax = plt.subplots(figsize= (7,7))
 
 precip_msoa.plot(
     ax=ax,
@@ -309,11 +309,11 @@ plt.show()
 ```
 :::
 
-The spatial pattern of extreme rainfall differs significantly from annual rainfall and more westerly than rainfall anomalies.
+The geographic pattern of extreme rainfall is concentrated much further west than annual rainfall or anomalies.
 
-Some areas that experienced very high annual rainfall also experienced many extreme rainfall days, while others accumulated large rainfall totals despite relatively few extreme events. Likewise, several areas with only moderate annual rainfall experienced an unusually high number of extreme rainfall days. A major pattern than differs from both is the higher concentration of extreme rainfall days in the Welsh Marches.
+While some high-rainfall areas recorded many extreme days, others accumulated large totals with very few extreme events. Similarly, some moderate-rainfall areas saw unusually high counts of extreme days. Notably, the Welsh Marches stands out with a high concentration of extreme days.
 
-This immediately suggests that annual rainfall totals can develop through different rainfall regimes.
+This shows that annual totals can be driven by completely different rainfall regimes.
 
 ## Annual Rainfall and Extreme Rainfall Days
 
@@ -358,11 +358,11 @@ print(f"Correlation: {corr:.2f}")
 ```
 :::
 
-If annual rainfall was driven by extreme rainfall events, we would expect MSOAs with higher annual rainfall totals to also experience substantially more extreme rainfall days. Instead, the relationship is basically absent shown with a **0.07** correlation.
+If annual rainfall was driven by extreme rainfall events, we would expect MSOAs with higher annual rainfall totals to also experience substantially more extreme rainfall days. Instead, the relationship is virtually absent, as shown by a weak correlation of **0.07**.
 
-While there is a very slight positive trend, the spread of points shows that locations with similar annual rainfall totals can experience very different numbers of extreme rainfall days. Likewise, some relatively dry locations experience just as many extreme rainfall days as much wetter areas.
+While there is a very slight positive trend, the spread oif points shows that locations with similar annual rainfall totals can experience very different numbers of extreme rainfall days. Likewise, some relatively dry locations experience just as many extreme rainfall days as much wetter areas.
 
-This suggests that annual rainfall volume and rainfall extremity capture different characteristics of the UK's climate. High annual rainfall does not necessarily imply that rainfall occurred through unusually intense events.
+This suggests that annual rainfall and rainfall extremity capture different characteristics of the UK's climate. High annual rainfall does not necessarily imply that rainfall occurred through unusually intense events.
 
 ## Extreme Rainfall Relative to Total Rainfall
 
@@ -417,11 +417,11 @@ plt.show()
 :::
 
 ::: callout-note
-Although annual rainfall and extreme rainfall days show almost no overall relationship, that does not mean there are no spatial patterns.
+Although annual rainfall and extreme rainfall days show almost no overall statistical relationship, distinct spatial patterns are still visible when mapped.
 
-By comparing the number of extreme days to the expected amount of annual rainfall for each MSOA, we can see location where rainfall was disproportionately concentrated in extreme events. The most clear of this is the North of Ireland, where across the vast majority of the 6 counties it is receiving much more rainfall compared to its extreme days, suggesting its rainfall is received in small amounts across the year. While less extreme, we can also see a similar pattern in North Wales and Scotland, receiving more rain than extreme days. The inverse is with the Welsh Marches, and somewhat the rest of south/mid england, where there is more extreme days than expected rainfall.
+By comparing the number of extreme days to the expected amount of annual rainfall for each MSOA, we can identify locations where rainfall was disproportionately concentrated in extreme events. The clearest example is Northern Ireland; across the vast majority of its six counties, regions receive substantial annual rainfall with relatively few extreme days, suggesting that precipitation is distributed in smaller, more consistent amounts throughout the year. Although less pronounced, a similar pattern appears in North Wales and Scotland, which also record more rainfall relative to their extreme days.
 
-This map shows that while there is no correlation between the two variables, there are still spatial patterns to notice with mapping around where extreme days happen.
+Conversely, the Welsh Marches—and to some extent central and southern England—exhibit the opposite pattern, experiencing a higher number of extreme days than expected based on their annual rainfall totals. This demonstrates that even in the absence of a strong statistical correlation, mapping can reveal meaningful geographical trends in how rainfall is delivered.
 :::
 
 ## What have we learnt?
