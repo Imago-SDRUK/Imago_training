@@ -91,6 +91,7 @@ jobs:
             any::gifski
             any::fixest
             any::patchwork
+            any::scales
 
       - name: Install TinyTeX
         run: quarto install tinytex
