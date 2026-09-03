@@ -3,14 +3,14 @@ title: "Sun Probability Framework - SPF & General Health"
 jupyter: python3
 ---
 
-# {#sec-spf2 .unnumbered}
+#  {#sec-spf2 .unnumbered}
 
 **Data**:
 
 - [Sun Probability Framework 2025](https://data.imago.ac.uk/datasets/cloud-probability-statistics-per-small-area-in-2025-version-2-0)
 - [Census 2021 General Health, LSOA level](https://www.nomisweb.co.uk/default.asp)
 
-**Goal**: Investigate how Sun Probability Framework (SPF) values vary across communities with different levels of self reported general health in England.
+**Goal**: Investigate how Sun Probability Framework (SPF) values vary across communities with different levels of self-reported general health in England and Wales.
 
 ::: callout-note
 ## Installing the data
@@ -21,24 +21,24 @@ Download the Census 2021 General Health data at LSOA level. Select all columns, 
 
 Place both files inside the `/data` directory. Rename the census csv to `generalhealth.csv`.
 
-The SPF dataset provides annual estimates of the Sunlight Probability Factor for each LSOA. The Census dataset provides counts of residents reporting different levels of general health in the 2021 Census.
+The SPF dataset provides annual estimates of the SPF for every small area across the UK. The Census dataset provides counts of residents reporting different levels of general health in the 2021 Census.
 :::
 
 # Why?
 
 Environmental conditions are not necessarily experienced equally across society.
 
-Researchers are often interested in whether environmental characteristics vary systematically with characteristics of the populations living in different areas. Comparing SPF with Census measures of general health allows us to investigate whether communities with different levels of self reported health tend to experience different sunlight conditions.
+Researchers are often interested in whether environmental characteristics vary systematically with characteristics of the populations living in different areas. Comparing SPF with Census measures of general health allows us to investigate whether communities with different levels of self-reported health tend to experience different cloud cover conditions.
 
-This analysis does not attempt to establish that sunlight conditions cause differences in health. Instead, it investigates whether a spatial association exists between the two variables and considers possible explanations and limitations.
+This analysis does not attempt to establish that cloud cover conditions cause differences in health. Instead, it investigates whether a spatial association exists between the two variables and considers possible explanations and limitations.
 
 The Census measure of general health is based on how residents assessed their own health, ranging from very good to very bad.
-
 
 ## Installing Libraries
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 import geopandas as gpd
 import matplotlib.pyplot as plt
@@ -52,11 +52,12 @@ from scipy.stats import pearsonr
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-spf = gpd.read_file("../data/SPF_LSOA_level_2025.gpkg")
+spf = gpd.read_file("data/Cloud probability statistics per small area in 2025 (GeoPackage).gpkg")
 
 health = pd.read_csv(
-    "../data/generalhealth.csv", skiprows=6, skipfooter=6, engine="python"
+    "data/general_health.csv", skiprows=6, skipfooter=6, engine="python"
 )
 ```
 :::
@@ -65,6 +66,7 @@ health = pd.read_csv(
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 display(spf.head())
 
@@ -73,7 +75,7 @@ display(health.head())
 :::
 
 ::: callout-note
-The SPF dataset contains annual average SPF values for every LSOA.
+The SPF dataset contains annual average SPF values for every small area.
 
 The Census health categories are:
 
@@ -90,7 +92,20 @@ The Census data provides counts rather than percentages. This allows us to calcu
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
+
+code_col = health.columns[0]
+
+health[["data_zone_code", "data_zone_name"]] = (
+    health[code_col]
+    .str.split(" : ", n=1, expand=True)
+)
+
+health = health.drop(columns=code_col)
+
+health.head()
+
 health = health.rename(
     columns={
         "2021 super output area - lower layer": "lsoa_name",
@@ -115,6 +130,7 @@ Counts are difficult to compare directly because LSOAs contain different numbers
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 health["good_health_percent"] = (
     100 * (health["very_good"] + health["good"]) / health["total"]
@@ -128,6 +144,7 @@ We will use the inverse of Good health so bad + very bad health as our principal
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 health["poor_health_percent"] = (
     100 * (health["bad"] + health["very_bad"]) / health["total"]
@@ -141,8 +158,21 @@ Finally we calculate the percentage of fair health.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 health["fair_health_percent"] = 100 * health["fair"] / health["total"]
+```
+:::
+
+### Good health
+
+Finally we calculate the percentage of fair health.
+
+::: {.panel-tabset group="language"}
+### Python
+
+```{python}
+health["good_health_percent"] = 100 * (health["very_good"] + health["good"]) / health["total"]
 ```
 :::
 
@@ -150,6 +180,7 @@ We can inspect the resulting variables:
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 display(
     health[
@@ -164,31 +195,15 @@ display(
 ```
 :::
 
-We should check the first couple to ensure that they sum to 100%, as small differences would suggest missing data or rounding errors.
-
-::: {.panel-tabset group="language"}
-### Python
-```{python}
-health[
-    [
-        "good_health_percent",
-        "fair_health_percent",
-        "poor_health_percent",
-    ]
-].sum(
-    axis=1
-).head(10)
-```
-:::
-
 ## Merging the datasets
 
-The SPF dataset uses the 2021 LSOA code as data_zone_code.
+The SPF dataset uses the 2021 LSOA code as `data_zone_code`. However, it includes Northern Ireland as well as Wales, Scotland and England. The Census dataset only includes England and Wales, so we will commit to a `right` join. This will automatically drop areas where we have no health data.
 
 We therefore merge the health data using the same identifier.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 health = health[
     [
@@ -202,7 +217,7 @@ health = health[
 combined = spf.merge(
     health,
     on="data_zone_code",
-    how="inner",
+    how="right"
 )
 
 print(f"SPF LSOAs: {len(combined)}")
@@ -210,7 +225,7 @@ combined.head()
 ```
 :::
 
-## Maps of the Data
+## Maps!
 
 Before investigating relationships between the variables, it is useful to visualise them independently.
 
@@ -220,12 +235,13 @@ This allows us to understand their spatial distributions before comparing them.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(figsize=(10, 10))
 
 combined.plot(
-    column="cloudprob_corrected_mean",
-    cmap="YlOrBr",
+    column="cloud_probability",
+    cmap="Blues",
     legend=True,
     ax=ax,
 )
@@ -233,7 +249,7 @@ combined.plot(
 ax.axis("off")
 
 ax.set_title(
-    "Mean Sunlight Probability Factor (2025)",
+    "Mean Annual Cloud Probability (2025)",
     fontweight="bold",
 )
 
@@ -252,7 +268,7 @@ Remember that SPF represents the probability of cloud cover rather than the amou
 - Higher SPF = greater probability of cloud cover
 - Lower SPF = lower probability of cloud cover
 
-Consequently, areas with lower SPF values represent areas where clearer conditions are more likely.
+Consequently, areas with lower SPF values represent areas where clearer conditions are more likely - for example in the South East of England - while areas with higher SPF values represent areas where cloudier conditions are more likely - for example in Wales or along the Pennines.
 
 The map provides the environmental context for the remainder of the analysis.
 :::
@@ -263,20 +279,41 @@ We now map the proportion of residents reporting bad or very bad general health.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
+from matplotlib.colors import TwoSlopeNorm
+
+mean_val = combined["poor_health_percent"].mean()
+median_val = combined["poor_health_percent"].median()
+
+norm = TwoSlopeNorm(
+    vmin=combined["poor_health_percent"].min(),
+    vcenter=mean_val,
+    vmax=combined["poor_health_percent"].max(),
+)
+
 fig, ax = plt.subplots(figsize=(10, 10))
 
 combined.plot(
     column="poor_health_percent",
-    cmap="Reds",
+    cmap="RdBu_r",
+    norm=norm,
     legend=True,
     ax=ax,
 )
 
+# Mark the mean and median on the colorbar
+cbar = ax.get_figure().axes[-1]
+cbar.axhline(mean_val, color="black", linewidth=1.2)
+cbar.axhline(median_val, color="black", linewidth=1.2, linestyle="--")
+
+cbar.text(1.3, mean_val, f"Mean: {mean_val:.1f}%", va="center", transform=cbar.get_yaxis_transform())
+cbar.text(1.3, median_val, f"Median: {median_val:.1f}%", va="center", transform=cbar.get_yaxis_transform())
+
 ax.axis("off")
 
 ax.set_title(
-    "Residents Reporting Bad or Very Bad Health (2021)",
+    "Residents Reporting Bad or Very Bad Health, Relative to the National Mean (2021)",
     fontweight="bold",
 )
 
@@ -287,18 +324,19 @@ plt.show()
 
 **Interpretation**
 
-The map shows significant geographical variation in self reported poor health. Higher values indicate LSOAs where a greater proportion of residents reported their general health as bad or very bad.
+Self-expressed poor health, relative to the national mean, provides a clearer picture, highlighting vulnerable LSOAs. Most of England is below average — fewer people self-assessed their health as bad or very bad than the national mean — across London, the South East, the South West, and East Anglia, with very little red mixed in.
 
-Despite this, the two maps should be considered independently. Similar looking spatial patterns, or a lack of spatial patterns, do not by themselves demonstrate a relationship or lack of one between SPF and health.
+Poor health is instead concentrated in a small number of distinct clusters: South Wales, particularly the coastal belt through Swansea and Llanelli and into the Valleys, and the area around Hull and the Humber estuary, which stands out clearly from the rest of Yorkshire. Smaller, more scattered pockets of poorer health also appear around some former mill towns in West Yorkshire, but without the same regional coherence as the South Wales and Hull clusters.
 
 ## Comparing SPF Across Health Groups
 
-To investigate whether SPF varies systematically with health, we divide LSOAs into five groups according to their level of poor self reported health.
+To investigate whether SPF varies systematically with health, we divide LSOAs into five groups according to their level of poor self-reported health.
 
 Quintiles divide the LSOAs into five approximately equal sized groups.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 combined["health_quintile"] = pd.qcut(
     combined["poor_health_percent"],
@@ -318,50 +356,74 @@ We can calculate the mean and median SPF within each group.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 health_summary = combined.groupby("health_quintile", observed=False).agg(
-    Mean_SPF=("cloudprob_corrected_mean", "mean"),
-    Median_SPF=("cloudprob_corrected_mean", "median"),
-    Count=("cloudprob_corrected_mean", "count"),
+    Mean_SPF=("cloud_probability", "mean"),
+    Median_SPF=("cloud_probability", "median"),
+    SD_SPF=("cloud_probability", "std"),
+    Count=("cloud_probability", "count"),
+).round(1)
+health_summary
+```
+
+And a figure to visualise the distribution of SPF across the health quintiles.
+
+```{python}
+fig, ax = plt.subplots(figsize=(8, 5))
+
+combined.boxplot(
+    column="cloud_probability",
+    by="health_quintile",
+    ax=ax,
+    grid=False,
 )
 
-health_summary
+ax.set_title("SPF Distribution by Health Quintile")
+plt.suptitle("")
+ax.set_xlabel("Health Quintile")
+ax.set_ylabel("SPF (cloud probability)")
+
+plt.tight_layout()
+plt.show()
 ```
 :::
 
 This comparison allows us to ask a simple question:
 
-- *Do LSOAs with different levels of poor self reported health tend to have different SPF values?*
+- *Do LSOAs with different levels of poor self-reported health tend to have different SPF values?*
 
-With the mean SPF increasing marginally between the groups, with a total of **2** SPF difference between the least poor health and highest poor health, this suggests that areas with greater levels of reported poor health tend to experience higher probabilities of cloud cover.
+Mean SPF rises consistently across the quintiles, from 68.8 in the lowest poor-health group to 70.8 in the highest — a difference of 2 points, or roughly half a standard deviation (SD ≈ 4 within each quintile). The increase is also monotonic: each successive quintile has a higher mean SPF than the one before it. This is a moderate but real shift rather than a dramatic one — individual LSOAs vary considerably within any given quintile, and the boxplots below show substantial overlap between adjacent groups — but the consistent, stepwise pattern across all five groups suggests areas with greater levels of reported poor health tend to experience higher probabilities of cloud cover.
+
+Notably, the highest poor-health quintile also contains a distinct cluster of low-SPF outliers. There is a sizeable group of LSOAs combining high poor-health with comparatively clear skies, running counter to that group's overall pattern. This is a reminder that quintile averages can mask meaningful sub-groups within them.
 
 However, a difference between groups does not tell us why the difference exists.
 
 ## Correlation
 
-The grouped comparison gives us a broad picture, but it discards some information by putting continuous health values into five groups.
-
-We can therefore examine the relationship directly using a correlation.
+So, we can use a simple correlation to examine the relationship in more detail.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
+clean = combined[["poor_health_percent", "cloud_probability"]].dropna()
+
 correlation, p_value = pearsonr(
-    combined["poor_health_percent"],
-    combined["cloudprob_corrected_mean"],
+    clean["poor_health_percent"],
+    clean["cloud_probability"],
 )
 
 print(f"Pearson correlation: {correlation:.3f}")
 print(f"P-value: {p_value:.3e}")
+print(f"N used: {len(clean)} (dropped {len(combined) - len(clean)})")
 ```
 :::
 
 ::: callout-note
 The Pearson correlation measures the strength and direction of the linear relationship between the percentage reporting bad or very bad health and SPF.
 
-The positive value of **0.164** suggests that yes, there is a correlation, however it is very weak and making up a rather small portion of the overall change. The p-value being so near zero means that this is guaranteed statistically significant.
-
-However, because the analysis contains thousands of LSOAs, even relatively small correlations can produce extremely small p-values. Statistical significance therefore does not necessarily mean that the relationship is substantively large or important.
+The positive value of **0.164** confirms a real association in the expected direction, but it is a weak one — SPF explains only a small fraction of the variation in poor health across LSOAs (r² ≈ 0.027, or about 2.7%). The p-value is effectively zero, meaning a correlation this strong (or stronger) would be extremely unlikely to arise by chance alone if no relationship existed in the population.
 :::
 
 ## Scatterplot
@@ -370,19 +432,36 @@ A scatterplot allows us to see the relationship directly, making it potentially 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
+import numpy as np
+
 fig, ax = plt.subplots(figsize=(8, 6))
 
 ax.scatter(
     combined["poor_health_percent"],
-    combined["cloudprob_corrected_mean"],
+    combined["cloud_probability"],
     alpha=0.25,
     s=8,
 )
 
+# Fit and plot a simple linear regression line
+x = combined["poor_health_percent"]
+y = combined["cloud_probability"]
+
+slope, intercept = np.polyfit(x, y, 1)
+x_line = np.linspace(x.min(), x.max(), 100)
+
+ax.plot(
+    x_line,
+    slope * x_line + intercept,
+    color="red",
+    linewidth=2,
+)
+
 ax.set_xlabel("Residents reporting bad or very bad health (%)")
 
-ax.set_ylabel("Sunlight Probability Factor (SPF)")
+ax.set_ylabel("SPF (cloud probability)")
 
 ax.set_title(
     "SPF and Self-Reported Poor Health",
@@ -394,24 +473,25 @@ plt.show()
 ```
 :::
 
-The scatter plot also shows a positive relationship between the proportion of residents reporting bad or very bad health and SPF. LSOAs with higher levels of self reported poor health tend to have higher SPF values, although the relationship is relatively weak visually and there is substantial variation between individual areas.
+The scatter plot also shows a positive relationship between the proportion of residents reporting bad or very bad health and SPF. LSOAs with higher levels of self-reported poor health tend to have higher SPF values, although the relationship is relatively weak visually and there is substantial variation between individual areas. The density of points also thins out considerably above around 15% poor health, so the regression line's slope at the higher end of the range is based on comparatively few, more scattered LSOAs than the dense cluster of areas below 10%.
 
 ## Exploring Fair Health
 
 The previous analysis focused on residents reporting bad or very bad health. However, this represents only the most severe end of the Census health categories.
 
-It is possible that a relationship with environmental conditions would appear earlier in the health distribution, for example through a shift from good or very good health towards fair health.
+It is possible that a relationship with environmental conditions would appear earlier in the health distribution — for example, as a shift from good or very good health towards fair health, rather than all the way to bad or very bad health.
 
-Rather than analysing every Census category separately, we therefore use the proportion of residents reporting **fair health** as a secondary measure.
+Rather than analysing every Census category separately, we therefore use the proportion of residents reporting **fair health** as a secondary measure, since it sits between the "good" and "bad" categories and is well placed to capture a milder version of the same pattern.
 
-This provides a useful check of whether the relationship observed for poor health is also present further up the health distribution.
+This provides a useful check of whether the relationship observed for poor health also holds for a less severe measure of self-reported health.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fair_correlation, fair_p_value = pearsonr(
     combined["fair_health_percent"],
-    combined["cloudprob_corrected_mean"],
+    combined["cloud_probability"],
 )
 
 print(f"Pearson correlation: {fair_correlation:.3f}")
@@ -421,26 +501,41 @@ print(f"P-value: {fair_p_value:.3e}")
 
 The correlation between the proportion reporting fair health and SPF is **0.151**, compared with **0.164** for bad or very bad health.
 
-This provides a useful comparison with the previous result. The correlation is also positive, suggesting a weak correlation that is weaker than the correlation between poor health and fair health.
-
-However, the strength of the relationship remains important. As with the poor-health analysis, a statistically significant correlation does not necessarily indicate a large or substantively important relationship.
+This provides a useful comparison with the previous result. The fair-health correlation is also positive and of a similar, weak magnitude — slightly smaller than the correlation observed for bad or very bad health — suggesting the relationship with SPF holds broadly across the health distribution rather than being specific to its most severe end.
 
 ### Scatterplot
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
+import numpy as np
+
 fig, ax = plt.subplots(figsize=(8, 6))
 
 ax.scatter(
     combined["fair_health_percent"],
-    combined["cloudprob_corrected_mean"],
+    combined["cloud_probability"],
     alpha=0.25,
     s=8,
 )
 
+# Fit and plot a simple linear regression line
+x = combined["fair_health_percent"]
+y = combined["cloud_probability"]
+
+slope, intercept = np.polyfit(x, y, 1)
+x_line = np.linspace(x.min(), x.max(), 100)
+
+ax.plot(
+    x_line,
+    slope * x_line + intercept,
+    color="red",
+    linewidth=2,
+)
+
 ax.set_xlabel("Residents reporting fair health (%)")
-ax.set_ylabel("Sunlight Probability Factor (SPF)")
+ax.set_ylabel("SPF (cloud probability)")
 
 ax.set_title(
     "SPF and Self-Reported Fair Health",
@@ -453,12 +548,12 @@ plt.show()
 :::
 
 ::: callout-note
-The scatterplot provides a visual check of the correlation. As with poor health, there is substantial variation in SPF between individual LSOAs, meaning that health alone does not explain the environmental variation between communities.
+The scatterplot provides a visual check of the correlation. As with poor health, there is substantial variation in SPF among LSOAs at any given level of fair health, meaning that SPF alone does not explain the health differences between communities.
 :::
 
 ## Exploring the Spatial Pattern
 
-The statistical analysis suggests a weak positive relationship between SPF and self reported poor health. However, a correlation does not tell us whether this relationship is spatially concentrated or whether it is distributed relatively evenly across England.
+The statistical analysis suggests a weak positive relationship between SPF and self-reported poor health. However, a correlation does not tell us whether this relationship is spatially concentrated or whether it is distributed relatively evenly across England and Wales.
 
 To explore this, we identify LSOAs that are in the highest quintile for both SPF and the proportion of residents reporting fair or poor health.
 
@@ -466,84 +561,91 @@ This does not mean that these areas have worse health because of cloudier condit
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-# Create quintiles for SPF, fair health and poor health
+import numpy as np
 
-combined["spf_quintile"] = pd.qcut(
-    combined["cloudprob_corrected_mean"],
-    q=5,
-    labels=False,
-)
+# Continuous bivariate colour scale via bilinear interpolation between
+# four corner colours, using each variable's percentile rank (0-1)
+# rather than discrete tercile/quintile bins
 
-combined["fair_health_quintile"] = pd.qcut(
-    combined["fair_health_percent"],
-    q=5,
-    labels=False,
-)
+def hex_to_rgb(h):
+    h = h.lstrip("#")
+    return np.array([int(h[i:i+2], 16) for i in (0, 2, 4)]) / 255
 
-combined["poor_health_quintile"] = pd.qcut(
-    combined["poor_health_percent"],
-    q=5,
-    labels=False,
-)
+# Corners: (low SPF, low health), (high SPF, low health),
+#          (low SPF, high health), (high SPF, high health)
+c00 = hex_to_rgb("#e8e8e8")  # low, low
+c10 = hex_to_rgb("#4393c3")  # high SPF, low health
+c01 = hex_to_rgb("#fdb863")  # low SPF, high health
+c11 = hex_to_rgb("#5e3c99")  # high, high  (blends toward purple)
 
-# Identify areas in the highest quintile for each combination
+combined["spf_pct"] = combined["cloud_probability"].rank(pct=True)
+combined["health_pct"] = combined["poor_health_percent"].rank(pct=True)
 
-combined["high_spf_high_fair"] = (combined["spf_quintile"] == 4) & (
-    combined["fair_health_quintile"] == 4
-)
+def bilinear_color(x, y):
+    top = c00 * (1 - x) + c10 * x
+    bottom = c01 * (1 - x) + c11 * x
+    rgb = top * (1 - y) + bottom * y
+    return tuple(rgb)
 
-combined["high_spf_high_poor"] = (combined["spf_quintile"] == 4) & (
-    combined["poor_health_quintile"] == 4
+combined["bivariate_color"] = combined.apply(
+    lambda row: bilinear_color(row["spf_pct"], row["health_pct"]), axis=1
 )
 
 fig, ax = plt.subplots(figsize=(10, 10))
 
 combined.plot(
-    color="lightgrey",
-    ax=ax,
-)
-
-combined[combined["high_spf_high_fair"]].plot(
-    color="darkred",
-    ax=ax,
-)
-
-combined[combined["high_spf_high_poor"]].plot(
-    color="blue",
+    color=combined["bivariate_color"],
     ax=ax,
 )
 
 ax.axis("off")
-
 ax.set_title(
-    "LSOAs with High SPF and High Levels of Fair/Poor Health",
+    "SPF and Poor Health: A Bivariate View",
     fontweight="bold",
 )
 
-plt.tight_layout()
+# Continuous legend: render as a small image, not a discrete grid
+legend_ax = fig.add_axes([0.15, 0.15, 0.12, 0.12])
+n = 100
+legend_img = np.zeros((n, n, 3))
+for i in range(n):
+    for j in range(n):
+        legend_img[n - 1 - i, j] = bilinear_color(j / (n - 1), i / (n - 1))
+
+legend_ax.imshow(legend_img, origin="lower", extent=[0, 1, 0, 1])
+legend_ax.set_xlabel("Poor health →", fontsize=8)
+legend_ax.set_ylabel("Sunnier → Cloudier", fontsize=8)
+legend_ax.set_xticks([])
+legend_ax.set_yticks([])
+
 plt.show()
 ```
 :::
 
 ::: callout-note
-Among LSOAs in the highest SPF quintile, there is a clear spatial difference between areas with high levels of fair health and those with high levels of poor or very poor health. The LSOAs seem to overlap quite heavily stretching from Wales up to North England, lining up quite heavily with the idea of the weather being worse in the north west of the country.
+### A note on interpreting this map
+
+The dominant pattern on this map runs counter to the weak positive relationship observed nationally. A broad belt of blue-purple tones extends from North West England down through Wales, combining high SPF (cloudier conditions) with comparatively low levels of poor health. Across most of the South East and East of England, the opposite combination dominates: low SPF (clearer skies) paired with comparatively high poor health.
+
+The one region where SPF and poor health align in the direction suggested by the national correlation is Wales, particularly the central and southern parts, where the map's darkest purple tones mark LSOAs combining both high SPF and high poor health simultaneously — consistent with the earlier LSOA-level health map, which also identified South Wales as a distinct poor-health cluster.
+
+This is a useful illustration of why a weak aggregate correlation should not be read as a consistent local relationship. Other factors that vary regionally — such as deprivation, urban form, age structure, or access to healthcare — are likely to have a far stronger influence on self-reported health than SPF, and may dominate or even reverse the national pattern within particular regions.
 :::
 
 # What Have We Learnt?
 
 In this notebook we have:
 
-- combined the 2025 Sunlight Probability Factor with Census 2021 general health data
-- examined the spatial distribution of SPF across England
-- examined the spatial distribution of self reported poor health
-- calculated the proportion of residents reporting bad or very bad health for each LSOA
+- combined the 2025 Sun Probability Framework (SPF) data with Census 2021 general health data
+- calculated the proportion of residents reporting bad or very bad, and fair, health for each LSOA
+- examined the spatial distribution of SPF and self-reported poor health across England and Wales
 - compared SPF across groups with different levels of poor health
 - calculated the correlation between SPF and poor/fair health
-- visualised the relationships using a scatterplot
-- identified areas where high SPF and high levels of poor/fair health occur together
+- visualised the relationships using scatterplots
+- identified areas where high SPF and high levels of poor/fair health occur together, using a bivariate map
 
-The analysis suggests that there is an association between SPF and self reported general health, but the relationship should not be interpreted as evidence that cloud cover or sunlight conditions directly affect population health.
+The analysis suggests a weak positive association between SPF and self-reported poor health at the national level, but the bivariate map shows this relationship is far from consistent across the country — running in the opposite direction across much of North West England and Wales, and only aligning with the national pattern in parts of Wales. This relationship should not be interpreted as evidence that cloud cover or sunlight conditions directly affect population health.
 
 The analysis is conducted at the LSOA level, meaning that it describes spatial patterns between communities rather than relationships between individuals. This is particularly important when interpreting health data, as an association between areas does not imply that individuals experiencing poorer health necessarily experience different sunlight conditions.
-
