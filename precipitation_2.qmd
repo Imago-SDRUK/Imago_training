@@ -3,7 +3,7 @@ title: "Precipitation - Seasonal Rainfall Patterns"
 jupyter: python3
 ---
 
-# {#sec-precip2 .unnumbered}
+#  {#sec-precip2 .unnumbered}
 
 **Data**:
 
@@ -19,11 +19,11 @@ In Case Study 1 we identified where rainfall was concentrated across the UK. How
 
 A local authority experiencing a particularly wet year may have received consistently high rainfall throughout the year, or it may have been heavily influenced by a single unusually wet season.
 
-To investigate this, we break annual rainfall into winter, spring, summer, and autumn totals and examine how seasonal rainfall patterns vary across the country.
-## Installing Libraries
+To investigate this, we break annual rainfall into winter, spring, summer, and autumn totals and examine how seasonal rainfall patterns vary across the country. \## Installing Libraries
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Geospatial Libraries
 import geopandas as gpd
@@ -40,8 +40,9 @@ Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundar
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-precip_msoa = gpd.read_file("../data/precipitation_indicators_MSOA_2024.gpkg")
+precip_msoa = gpd.read_file("data/precipitation_indicators_MSOA_2024.gpkg")
 precip_msoa.head()
 ```
 :::
@@ -57,6 +58,7 @@ This file contains multiple rainfall indicators. For this notebook we are using 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 seasonal_cols = [
     "winter_rainfall",
@@ -79,6 +81,7 @@ Summary statistics provide a useful overview of each season, but they do not cle
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 season_cols = [
     "winter_rainfall",
@@ -123,6 +126,7 @@ The absolute easiest way to see the seasonal affects across the year in the UK i
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 season_cols = {
     "winter_rainfall": "Winter",
@@ -170,6 +174,7 @@ To understand which seasons had the greatest influence on annual rainfall in 202
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 season_cols = [
     "winter_rainfall",
@@ -208,6 +213,7 @@ To explore this local variation, we identify the season that contributes the mos
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 precip_msoa["dominant_season"] = precip_msoa[season_cols].idxmax(axis=1)
 
@@ -245,4 +251,3 @@ Spring has a dominance but solely in very select areas, most specifically County
 Understanding these seasonal drivers provides important context when interpreting annual rainfall statistics. A wet year is not necessarily the result of consistently high rainfall throughout the year, it may have instead be driven by one particularly influential season.
 
 In the next case study, we move beyond rainfall totals and investigate whether the wettest places were also the most unusual by comparing annual rainfall against long term norms.
-

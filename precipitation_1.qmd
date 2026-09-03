@@ -3,7 +3,7 @@ title: "Precipitation - Exploring Rainfall Across the UK"
 jupyter: python3
 ---
 
-# {#sec-precip1 .unnumbered}
+#  {#sec-precip1 .unnumbered}
 
 **Goal**: Using the Imago precipitation product explore rainfall across the UK, discovering the wettest and driest MSOAs and the regional precipitation characteristics.
 
@@ -20,7 +20,7 @@ The Imago precipitation data is hosted on the [data catalogue](https://data.imag
 1.  **Sign up** for a free account on the [data catalogue](https://data.imago.ac.uk/) and log in.
 2.  **Search** for `precipitation MSOA` (or browse the [precipitation datasets](https://data.imago.ac.uk/datasets?vocab_general=precipitation)).
 3.  Open the data link, [Precipitation per MSOA in 2024](https://data.imago.ac.uk/datasets/precipitation-per-msoa-in-2024), and download the `.gpkg` file.
-4.  Save the files into a `../data/` folder in your project, keeping the original filenames (`precipitation_indicators_MSOA_2024.gpkg`).
+4.  Save the files into a `data/` folder in your project, keeping the original filenames (`precipitation_indicators_MSOA_2024.gpkg`).
 
 For this notebook you'll need the 2024 file of MSOA, and then repeat for also the 2024 file of LAD.
 :::
@@ -31,13 +31,13 @@ For this notebook you'll need the 2024 file of MSOA, and then repeat for also th
 
 A local authority believes that 2024 was an exceptionally wet year. Before investigating whether rainfall was unusual, we first need to understand how rainfall was distributed across the UK and whether wet conditions were concentrated in specific regions or spread more evenly across the country.
 
-
 ## Installing Libraries
 
 We install core geospatial libraries needed for this work.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Geospatial Libraries
 import pandas as pd
@@ -55,8 +55,9 @@ Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundar
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-precip_msoa = gpd.read_file("../data/precipitation_indicators_MSOA_2024.gpkg")
+precip_msoa = gpd.read_file("data/precipitation_indicators_MSOA_2024.gpkg")
 precip_msoa.head()
 ```
 :::
@@ -76,6 +77,7 @@ Summary statistics provide an overview of the range of rainfall conditions obser
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 (precip_msoa[["rainfall_annual_mm"]].agg(["mean", "std", "min", "max"]))
 ```
@@ -89,6 +91,7 @@ To calculate bins for the histograms Freedman-Diaconis rule is used because it a
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Freedman-Diaconis Calculations
 data = precip_msoa["rainfall_annual_mm"]
@@ -109,6 +112,7 @@ print(f"Amount of rainfall bins: {ann_rainfall_bins}")
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(1, figsize=(11, 4))
 
@@ -141,6 +145,7 @@ One simple way to understand rainfall concentration is to rank areas by total an
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 wettest = precip_msoa.nlargest(10, "rainfall_annual_mm")[
     ["dt_zn_c", "dt_zn_n", "rainfall_annual_mm"]
@@ -169,6 +174,7 @@ Mapping rainfall reveals the spatial structure hidden within the rankings. Neigh
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(1, figsize=(8, 6))
 
@@ -203,6 +209,7 @@ It functions the same as the loading of the MSOA data, and comes as a gpkg so it
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 precip_lad = gpd.read_file("data/precipitation_indicators_LAD_2024.gpkg")
 precip_lad.head()
@@ -211,6 +218,7 @@ precip_lad.head()
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 wettest_lad = precip_lad.nlargest(10, "rainfall_annual_mm")[
     ["LAD21CD", "LAD21NM", "rainfall_annual_mm"]
@@ -229,6 +237,7 @@ print(driest_lad.to_string(index=False))
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(figsize=(8, 10))
 
@@ -273,6 +282,7 @@ As the North of Ireland does not have LADs in the precipitation product, it is n
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Spatial overlay in order to compare
 msoa_lad_overlap = gpd.overlay(
@@ -358,11 +368,6 @@ Understanding where rainfall was concentrated is the first step in investigating
 
 Two places can record similar annual rainfall totals while experiencing very different seasonal patterns. One may receive rainfall steadily throughout the year, while another may be heavily influenced by a particularly wet season.
 
-We found that:
-- Rainfall is not evenly distributed across the country.
-- Clear regional patterns emerge when rainfall is mapped.
-- The wettest and driest areas can be identified through both rankings and maps.
-- Local authority averages capture broad regional trends, but can sometimes mask variation between individual MSOAs.
+We found that: - Rainfall is not evenly distributed across the country. - Clear regional patterns emerge when rainfall is mapped. - The wettest and driest areas can be identified through both rankings and maps. - Local authority averages capture broad regional trends, but can sometimes mask variation between individual MSOAs.
 
 In the next case study, we break annual rainfall into spring, summer, autumn, and winter totals to investigate what drove rainfall patterns across the UK during 2024.
-

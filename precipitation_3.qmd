@@ -3,7 +3,7 @@ title: "Precipitation - Are Wet Places Also the Most Unusual?"
 jupyter: python3
 ---
 
-# {#sec-precip3 .unnumbered}
+#  {#sec-precip3 .unnumbered}
 
 **Data**:
 
@@ -23,6 +23,7 @@ To investigate this, we compare annual rainfall totals against rainfall anomalie
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 # Geospatial Libraries
 import pandas as pd
@@ -40,8 +41,9 @@ Using geopandas, we can read the gpkg. As it's a gpkg it already has the boundar
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
-precip_msoa = gpd.read_file("../data/precipitation_indicators_MSOA_2024.gpkg")
+precip_msoa = gpd.read_file("data/precipitation_indicators_MSOA_2024.gpkg")
 precip_msoa.head()
 ```
 :::
@@ -56,8 +58,7 @@ For this case study we will be using four of the variables:
 ::: callout-note
 The two anomaly measures describe different aspects of unusual rainfall.
 
-annual_anomaly_abs tells us how much wetter or drier conditions were than expected.
-annual_anomaly_std tells us how unusual that difference was relative to the normal variability experienced in that location.
+annual_anomaly_abs tells us how much wetter or drier conditions were than expected. annual_anomaly_std tells us how unusual that difference was relative to the normal variability experienced in that location.
 
 A large absolute anomaly does not necessarily imply a large standardised anomaly, and vice a versa.
 
@@ -70,6 +71,7 @@ Before mapping the data, it is handy to understand the whole range of values.
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 precip_msoa[
     [
@@ -88,6 +90,7 @@ Annual rainfall was explored previously however it is still handy as a baseline 
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 p01 = precip_msoa["rainfall_annual_mm"].quantile(0.01)
 p99 = precip_msoa["rainfall_annual_mm"].quantile(0.99)
@@ -117,6 +120,7 @@ Standardised anomalies account for local variability and therefore provide a cle
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 p01 = precip_msoa["annual_anomaly_std"].quantile(0.01)
 p99 = precip_msoa["annual_anomaly_std"].quantile(0.99)
@@ -154,6 +158,7 @@ To investigate the relationship directly, we compare annual rainfall against sta
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(figsize=(7, 6))
 
@@ -196,7 +201,7 @@ print(f"Correlation: {corr:.2f}")
 ::: callout-note
 If wet places were also always the most unusual places, we would expect a strong positive relationship between annual rainfall and standardised anomaly.
 
-Despite this, we actually have a weak to moderate correlation of *r = 0.3* and a scatter graph which shows a much more complex relationship. For one, the vast majority of MSOAs experienced a positively anomalous year, suggesting as a whole 2024 was a wet year for the UK. The most extreme MSOAs, especially the two 6+ standard deviations, are actually very normal MSOAs for total rainfall. The other interesting one is the incredibly high annual rainfall MSOA, roughly ~2800mm total rainfall, had an almost 0 standard anomaly meaning it is typical for the MSOA.
+Despite this, we actually have a weak to moderate correlation of *r = 0.3* and a scatter graph which shows a much more complex relationship. For one, the vast majority of MSOAs experienced a positively anomalous year, suggesting as a whole 2024 was a wet year for the UK. The most extreme MSOAs, especially the two 6+ standard deviations, are actually very normal MSOAs for total rainfall. The other interesting one is the incredibly high annual rainfall MSOA, roughly \~2800mm total rainfall, had an almost 0 standard anomaly meaning it is typical for the MSOA.
 
 This reinforces the distinction between rainfall amount and rainfall unusuality and how the total rainfall doesn't define anomalous rainfall.
 :::
@@ -207,6 +212,7 @@ As the wettest places and the most anomalous places are not the same, we need to
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 most_anomalous = precip_msoa.nlargest(10, "annual_anomaly_std")[
     ["dt_zn_c", "dt_zn_n", "annual_anomaly_std"]
@@ -230,6 +236,7 @@ To very clearly visualise where these MSOAs are, we can quickly map them so it h
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 target_msoas = pd.concat([most_anomalous, least_anomalous])
 
@@ -277,6 +284,7 @@ If areas with the highest rainfall anomalies also experienced many extreme rainf
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 p01 = precip_msoa["extreme_days_4sd"].quantile(0.01)
 p99 = precip_msoa["extreme_days_4sd"].quantile(0.99)
@@ -313,6 +321,7 @@ While the maps provide a useful visual comparison, we can investigate the relati
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 fig, ax = plt.subplots(figsize=(7, 6))
 
@@ -359,6 +368,7 @@ This suggests that annual rainfall volume and rainfall extremity capture differe
 
 ::: {.panel-tabset group="language"}
 ### Python
+
 ```{python}
 m, c = np.polyfit(
     precip_msoa["rainfall_annual_mm"],
@@ -421,4 +431,3 @@ Throughout this notebook we investigated whether the wettest places in the UK we
 The analysis suggests that neither assumption consistently holds.
 
 The wettest MSOAs are not automatically the most anomalous relative to their historical climate, demonstrating why anomaly measures provide important context beyond annual rainfall totals. Similarly, annual rainfall and extreme rainfall days show almost no overall relationship, indicating that total rainfall alone cannot explain how rainfall was experienced.
-
